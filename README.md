@@ -1,2 +1,0 @@
-# geodiametrics
-Geodiametrics site
