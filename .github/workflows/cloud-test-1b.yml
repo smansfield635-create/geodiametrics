@@ -26,11 +26,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install numpy pandas requests scikit-learn
 
-      - name: Validate corrected Cloud Test 1B syntax
-        run: python -m py_compile cloud_test_1b/run_cloud_test_1b_fixed.py
-
-      - name: Execute Cloud Test 1B
-        run: python cloud_test_1b/run_cloud_test_1b_fixed.py
+      - name: Preflight and execute Cloud Test 1B
+        run: python cloud_test_1b/preflight_and_run.py
 
       - name: Upload result package
         if: always()
