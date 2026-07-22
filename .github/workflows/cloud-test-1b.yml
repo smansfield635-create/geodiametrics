@@ -8,6 +8,10 @@ on:
       - '.github/workflows/cloud-test-1b.yml'
   workflow_dispatch:
 
+concurrency:
+  group: cloud-test-1b-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   run-cloud-test-1b:
     runs-on: ubuntu-latest
