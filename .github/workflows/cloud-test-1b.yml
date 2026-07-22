@@ -5,13 +5,17 @@ on:
     branches:
       - cloud-test-1b-clean-execution
     paths:
-      - 'cloud_test_1b/**'
+      - 'cloud_test_1b/preflight_and_run.py'
+      - 'cloud_test_1b/run_cloud_test_1b.py'
       - '.github/workflows/cloud-test-1b.yml'
   workflow_dispatch:
 
 concurrency:
   group: cloud-test-1b-clean-execution
   cancel-in-progress: true
+
+permissions:
+  contents: write
 
 jobs:
   run-cloud-test-1b:
@@ -20,6 +24,8 @@ jobs:
     steps:
       - name: Checkout isolated execution branch
         uses: actions/checkout@v4
+        with:
+          ref: cloud-test-1b-clean-execution
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -33,6 +39,23 @@ jobs:
 
       - name: Preflight and execute Cloud Test 1B
         run: python cloud_test_1b/preflight_and_run.py
+
+      - name: Persist compact empirical return
+        run: |
+          mkdir -p cloud_test_1b/results
+          cp cloud_test_1b/outputs/metrics.json cloud_test_1b/results/
+          cp cloud_test_1b/outputs/confusion_matrix.csv cloud_test_1b/results/
+          cp cloud_test_1b/outputs/ablations.csv cloud_test_1b/results/
+          cp cloud_test_1b/outputs/run_receipt.json cloud_test_1b/results/
+          cp cloud_test_1b/outputs/run_log.txt cloud_test_1b/results/
+          cp cloud_test_1b/outputs/source_registry.json cloud_test_1b/results/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cloud_test_1b/results
+          if ! git diff --cached --quiet; then
+            git commit -m "Store Cloud Test 1B empirical return [skip ci]"
+            git push origin HEAD:cloud-test-1b-clean-execution
+          fi
 
       - name: Upload result package
         if: always()
