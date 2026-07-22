@@ -1,0 +1,180 @@
+{
+  "B": [
+    {
+      "variable": "total_cpu",
+      "development_auc_high_value": 0.5353656096788745,
+      "distance_from_chance": 0.03536560967887448,
+      "selected": true,
+      "empirical_risk_direction": "HIGHER_RISK",
+      "axis_semantics": "RISK_HIGH"
+    },
+    {
+      "variable": "total_mem",
+      "development_auc_high_value": 0.5537988695448722,
+      "distance_from_chance": 0.05379886954487223,
+      "selected": true,
+      "empirical_risk_direction": "HIGHER_RISK",
+      "axis_semantics": "RISK_HIGH"
+    },
+    {
+      "variable": "total_gpu",
+      "development_auc_high_value": 0.539356176973076,
+      "distance_from_chance": 0.03935617697307603,
+      "selected": true,
+      "empirical_risk_direction": "HIGHER_RISK",
+      "axis_semantics": "RISK_HIGH"
+    },
+    {
+      "variable": "task_count",
+      "development_auc_high_value": 0.47408266918483133,
+      "distance_from_chance": 0.02591733081516867,
+      "selected": true,
+      "empirical_risk_direction": "LOWER_RISK",
+      "axis_semantics": "RISK_HIGH"
+    },
+    {
+      "variable": "planned_instances",
+      "development_auc_high_value": 0.487576992070408,
+      "distance_from_chance": 0.012423007929592,
+      "selected": false,
+      "empirical_risk_direction": "LOWER_RISK",
+      "axis_semantics": "RISK_HIGH"
+    },
+    {
+      "variable": "launch_spread",
+      "development_auc_high_value": 0.37815998133029854,
+      "distance_from_chance": 0.12184001866970146,
+      "selected": true,
+      "empirical_risk_direction": "LOWER_RISK",
+      "axis_semantics": "RISK_HIGH"
+    }
+  ],
+  "P": [
+    {
+      "variable": "task_wait",
+      "development_auc_high_value": 0.5,
+      "distance_from_chance": 0.0,
+      "selected": false,
+      "empirical_risk_direction": "HIGHER_RISK",
+      "axis_semantics": "RISK_HIGH"
+    },
+    {
+      "variable": "instance_wait",
+      "development_auc_high_value": 0.6073905720590267,
+      "distance_from_chance": 0.10739057205902669,
+      "selected": true,
+      "empirical_risk_direction": "HIGHER_RISK",
+      "axis_semantics": "RISK_HIGH"
+    },
+    {
+      "variable": "cluster_density_5m",
+      "development_auc_high_value": 0.5424887059549083,
+      "distance_from_chance": 0.04248870595490828,
+      "selected": true,
+      "empirical_risk_direction": "HIGHER_RISK",
+      "axis_semantics": "RISK_HIGH"
+    },
+    {
+      "variable": "user_density_5m",
+      "development_auc_high_value": 0.4324162026494523,
+      "distance_from_chance": 0.0675837973505477,
+      "selected": true,
+      "empirical_risk_direction": "LOWER_RISK",
+      "axis_semantics": "RISK_HIGH"
+    },
+    {
+      "variable": "gpu_scarcity",
+      "development_auc_high_value": 0.4930964381748246,
+      "distance_from_chance": 0.006903561825175375,
+      "selected": false,
+      "empirical_risk_direction": "LOWER_RISK",
+      "axis_semantics": "RISK_HIGH"
+    }
+  ],
+  "E": [
+    {
+      "variable": "cpu_capacity_ratio",
+      "development_auc_high_value": 0.5272411144742681,
+      "distance_from_chance": 0.027241114474268135,
+      "selected": true,
+      "empirical_risk_direction": "HIGHER_RISK",
+      "axis_semantics": "HEALTH_HIGH"
+    },
+    {
+      "variable": "mem_capacity_ratio",
+      "development_auc_high_value": 0.5351553504836801,
+      "distance_from_chance": 0.035155350483680126,
+      "selected": true,
+      "empirical_risk_direction": "HIGHER_RISK",
+      "axis_semantics": "HEALTH_HIGH"
+    },
+    {
+      "variable": "gpu_capacity_ratio",
+      "development_auc_high_value": 0.5320443076938309,
+      "distance_from_chance": 0.03204430769383093,
+      "selected": true,
+      "empirical_risk_direction": "HIGHER_RISK",
+      "axis_semantics": "HEALTH_HIGH"
+    }
+  ],
+  "I": [
+    {
+      "variable": "task_complete",
+      "development_auc_high_value": 0.5295124101321533,
+      "distance_from_chance": 0.029512410132153333,
+      "selected": true,
+      "empirical_risk_direction": "HIGHER_RISK",
+      "axis_semantics": "HEALTH_HIGH"
+    },
+    {
+      "variable": "instance_complete",
+      "development_auc_high_value": 0.3398150711219241,
+      "distance_from_chance": 0.1601849288780759,
+      "selected": true,
+      "empirical_risk_direction": "LOWER_RISK",
+      "axis_semantics": "HEALTH_HIGH"
+    },
+    {
+      "variable": "spec_coverage",
+      "development_auc_high_value": 0.48263840318353896,
+      "distance_from_chance": 0.017361596816461045,
+      "selected": false,
+      "empirical_risk_direction": "LOWER_RISK",
+      "axis_semantics": "HEALTH_HIGH"
+    },
+    {
+      "variable": "ordering_consistent",
+      "development_auc_high_value": 0.500001706176016,
+      "distance_from_chance": 1.7061760160252959e-06,
+      "selected": false,
+      "empirical_risk_direction": "HIGHER_RISK",
+      "axis_semantics": "HEALTH_HIGH"
+    }
+  ],
+  "V": [
+    {
+      "variable": "instance_ratio",
+      "development_auc_high_value": 0.5188791558910479,
+      "distance_from_chance": 0.01887915589104794,
+      "selected": false,
+      "empirical_risk_direction": "HIGHER_RISK",
+      "axis_semantics": "HEALTH_HIGH"
+    },
+    {
+      "variable": "instance_launch_coverage",
+      "development_auc_high_value": 0.33989868302995,
+      "distance_from_chance": 0.16010131697004998,
+      "selected": true,
+      "empirical_risk_direction": "LOWER_RISK",
+      "axis_semantics": "HEALTH_HIGH"
+    },
+    {
+      "variable": "launch_spread",
+      "development_auc_high_value": 0.37815998133029854,
+      "distance_from_chance": 0.12184001866970146,
+      "selected": true,
+      "empirical_risk_direction": "LOWER_RISK",
+      "axis_semantics": "HEALTH_HIGH"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "source_partition_seed": 256,
+  "closure_partition_seed": 451,
+  "metrics_sha256": "07065f8c3c7f74134f8f038c2fa645316a107d72ffeda7ea58772c5d9da86fb9",
+  "direction_registry_sha256": "3c26290459c59faf6739febdc7df5b494a5adff76004890ebda77c110c978c05",
+  "fresh_holdout_panel_sha256": "daff3ce1bb0cdd54d4dff198f72a7c3d01808ae5a28de28497e106dd8bd893cd"
+}

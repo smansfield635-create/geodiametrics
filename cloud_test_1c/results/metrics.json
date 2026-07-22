@@ -1,0 +1,254 @@
+{
+  "artifact_id": "CLOUD_TEST_1C_FINAL_INSTRUMENT_CLOSURE_EMPIRICAL_RETURN_v1",
+  "status": "COMPLETE",
+  "claim_boundary": "Development-only direction audit and variable selection within the prior Test 1B development cohort, followed by one frozen evaluation on a fresh user-disjoint holdout from that cohort. This is Alibaba cloud-instrument closure, not independent-provider replication or universal validation.",
+  "seeds": {
+    "source_partition_seed": 256,
+    "closure_partition_seed": 451
+  },
+  "thresholds": {
+    "B_q75": 0.5567429262886481,
+    "P_q75": 0.5842568927690951,
+    "epsilon_d": 0.14787564279514642
+  },
+  "coverage": {
+    "prior_development_terminal_jobs": 741727,
+    "repair_development_jobs": 353681,
+    "fresh_holdout_jobs": 388004,
+    "fresh_holdout_failure_prevalence": 0.36823331718229707,
+    "repair_development_users": 829,
+    "fresh_holdout_users": 218,
+    "user_overlap": 0
+  },
+  "direction_registry": {
+    "B": [
+      {
+        "variable": "total_cpu",
+        "development_auc_high_value": 0.5353656096788745,
+        "distance_from_chance": 0.03536560967887448,
+        "selected": true,
+        "empirical_risk_direction": "HIGHER_RISK",
+        "axis_semantics": "RISK_HIGH"
+      },
+      {
+        "variable": "total_mem",
+        "development_auc_high_value": 0.5537988695448722,
+        "distance_from_chance": 0.05379886954487223,
+        "selected": true,
+        "empirical_risk_direction": "HIGHER_RISK",
+        "axis_semantics": "RISK_HIGH"
+      },
+      {
+        "variable": "total_gpu",
+        "development_auc_high_value": 0.539356176973076,
+        "distance_from_chance": 0.03935617697307603,
+        "selected": true,
+        "empirical_risk_direction": "HIGHER_RISK",
+        "axis_semantics": "RISK_HIGH"
+      },
+      {
+        "variable": "task_count",
+        "development_auc_high_value": 0.47408266918483133,
+        "distance_from_chance": 0.02591733081516867,
+        "selected": true,
+        "empirical_risk_direction": "LOWER_RISK",
+        "axis_semantics": "RISK_HIGH"
+      },
+      {
+        "variable": "planned_instances",
+        "development_auc_high_value": 0.487576992070408,
+        "distance_from_chance": 0.012423007929592,
+        "selected": false,
+        "empirical_risk_direction": "LOWER_RISK",
+        "axis_semantics": "RISK_HIGH"
+      },
+      {
+        "variable": "launch_spread",
+        "development_auc_high_value": 0.37815998133029854,
+        "distance_from_chance": 0.12184001866970146,
+        "selected": true,
+        "empirical_risk_direction": "LOWER_RISK",
+        "axis_semantics": "RISK_HIGH"
+      }
+    ],
+    "P": [
+      {
+        "variable": "task_wait",
+        "development_auc_high_value": 0.5,
+        "distance_from_chance": 0.0,
+        "selected": false,
+        "empirical_risk_direction": "HIGHER_RISK",
+        "axis_semantics": "RISK_HIGH"
+      },
+      {
+        "variable": "instance_wait",
+        "development_auc_high_value": 0.6073905720590267,
+        "distance_from_chance": 0.10739057205902669,
+        "selected": true,
+        "empirical_risk_direction": "HIGHER_RISK",
+        "axis_semantics": "RISK_HIGH"
+      },
+      {
+        "variable": "cluster_density_5m",
+        "development_auc_high_value": 0.5424887059549083,
+        "distance_from_chance": 0.04248870595490828,
+        "selected": true,
+        "empirical_risk_direction": "HIGHER_RISK",
+        "axis_semantics": "RISK_HIGH"
+      },
+      {
+        "variable": "user_density_5m",
+        "development_auc_high_value": 0.4324162026494523,
+        "distance_from_chance": 0.0675837973505477,
+        "selected": true,
+        "empirical_risk_direction": "LOWER_RISK",
+        "axis_semantics": "RISK_HIGH"
+      },
+      {
+        "variable": "gpu_scarcity",
+        "development_auc_high_value": 0.4930964381748246,
+        "distance_from_chance": 0.006903561825175375,
+        "selected": false,
+        "empirical_risk_direction": "LOWER_RISK",
+        "axis_semantics": "RISK_HIGH"
+      }
+    ],
+    "E": [
+      {
+        "variable": "cpu_capacity_ratio",
+        "development_auc_high_value": 0.5272411144742681,
+        "distance_from_chance": 0.027241114474268135,
+        "selected": true,
+        "empirical_risk_direction": "HIGHER_RISK",
+        "axis_semantics": "HEALTH_HIGH"
+      },
+      {
+        "variable": "mem_capacity_ratio",
+        "development_auc_high_value": 0.5351553504836801,
+        "distance_from_chance": 0.035155350483680126,
+        "selected": true,
+        "empirical_risk_direction": "HIGHER_RISK",
+        "axis_semantics": "HEALTH_HIGH"
+      },
+      {
+        "variable": "gpu_capacity_ratio",
+        "development_auc_high_value": 0.5320443076938309,
+        "distance_from_chance": 0.03204430769383093,
+        "selected": true,
+        "empirical_risk_direction": "HIGHER_RISK",
+        "axis_semantics": "HEALTH_HIGH"
+      }
+    ],
+    "I": [
+      {
+        "variable": "task_complete",
+        "development_auc_high_value": 0.5295124101321533,
+        "distance_from_chance": 0.029512410132153333,
+        "selected": true,
+        "empirical_risk_direction": "HIGHER_RISK",
+        "axis_semantics": "HEALTH_HIGH"
+      },
+      {
+        "variable": "instance_complete",
+        "development_auc_high_value": 0.3398150711219241,
+        "distance_from_chance": 0.1601849288780759,
+        "selected": true,
+        "empirical_risk_direction": "LOWER_RISK",
+        "axis_semantics": "HEALTH_HIGH"
+      },
+      {
+        "variable": "spec_coverage",
+        "development_auc_high_value": 0.48263840318353896,
+        "distance_from_chance": 0.017361596816461045,
+        "selected": false,
+        "empirical_risk_direction": "LOWER_RISK",
+        "axis_semantics": "HEALTH_HIGH"
+      },
+      {
+        "variable": "ordering_consistent",
+        "development_auc_high_value": 0.500001706176016,
+        "distance_from_chance": 1.7061760160252959e-06,
+        "selected": false,
+        "empirical_risk_direction": "HIGHER_RISK",
+        "axis_semantics": "HEALTH_HIGH"
+      }
+    ],
+    "V": [
+      {
+        "variable": "instance_ratio",
+        "development_auc_high_value": 0.5188791558910479,
+        "distance_from_chance": 0.01887915589104794,
+        "selected": false,
+        "empirical_risk_direction": "HIGHER_RISK",
+        "axis_semantics": "HEALTH_HIGH"
+      },
+      {
+        "variable": "instance_launch_coverage",
+        "development_auc_high_value": 0.33989868302995,
+        "distance_from_chance": 0.16010131697004998,
+        "selected": true,
+        "empirical_risk_direction": "LOWER_RISK",
+        "axis_semantics": "HEALTH_HIGH"
+      },
+      {
+        "variable": "launch_spread",
+        "development_auc_high_value": 0.37815998133029854,
+        "distance_from_chance": 0.12184001866970146,
+        "selected": true,
+        "empirical_risk_direction": "LOWER_RISK",
+        "axis_semantics": "HEALTH_HIGH"
+      }
+    ]
+  },
+  "hard_MQ": {
+    "TN": 238496,
+    "FP": 6632,
+    "FN": 138633,
+    "TP": 4243,
+    "sensitivity": 0.02969707998544192,
+    "specificity": 0.9729447472340981,
+    "precision": 0.3901609195402299,
+    "balanced_accuracy": 0.50132091360977,
+    "f1": 0.05519313695520679,
+    "mcc": 0.007720064261546302
+  },
+  "continuous_H_star": {
+    "AUROC": 0.3902531771361645,
+    "AUPRC": 0.3201288191308642,
+    "Brier": 0.4302735443742703
+  },
+  "axis_logistic": {
+    "AUROC": 0.4108619573768595,
+    "AUPRC": 0.3490843032969876,
+    "Brier": 0.25395662753642817
+  },
+  "raw_logistic": {
+    "AUROC": 0.818580411247453,
+    "AUPRC": 0.7072020762955148,
+    "Brier": 0.2013522371920653
+  },
+  "raw_plus_MQ": {
+    "AUROC": 0.8158715566413971,
+    "AUPRC": 0.705405720658949,
+    "Brier": 0.20196453181017401
+  },
+  "raw_plus_H_star": {
+    "AUROC": 0.7666008247908797,
+    "AUPRC": 0.6496868734128984,
+    "Brier": 0.19771916750562682
+  },
+  "components_AUROC": {
+    "B": 0.33382261735007,
+    "P": 0.5902302820756782,
+    "one_minus_E": 0.36722118144774524,
+    "one_minus_I": 0.5506814623592299,
+    "one_minus_V": 0.5624607596977677,
+    "one_minus_W": 0.37616871104336636
+  },
+  "closure_rule": {
+    "mq_augmentation_supported": false,
+    "h_star_augmentation_supported": false,
+    "hard_mq_above_chance": false,
+    "continuous_h_star_above_chance": false
+  }
+}
