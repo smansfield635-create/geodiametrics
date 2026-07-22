@@ -25,7 +25,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
 
       - name: Install dependencies
         run: |
@@ -33,7 +32,7 @@ jobs:
           pip install numpy pandas requests scikit-learn
 
       - name: Execute frozen Cloud Test 1
-        run: python cloud_test_1/run_cloud_test_1.py
+        run: python cloud_test_1/run_cloud_test_1_v2.py
 
       - name: Upload result package
         if: always()
