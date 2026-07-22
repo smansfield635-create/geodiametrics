@@ -6,6 +6,11 @@ on:
     paths:
       - 'cloud_test_1/**'
       - '.github/workflows/cloud-test-1.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cloud_test_1/**'
+      - '.github/workflows/cloud-test-1.yml'
   workflow_dispatch:
 
 jobs:
