@@ -1,0 +1,142 @@
+{
+  "artifact_id": "CLOUD_TEST_1B_ALIBABA_INSTANCE_CAPACITY_EMPIRICAL_RETURN_v1",
+  "status": "COMPLETE",
+  "claim_boundary": "Post-placement pre-terminal held-out discrimination; no lifetime sensor metrics and no early-warning lead-time claim.",
+  "thresholds": {
+    "B_q75": 0.8254292572154805,
+    "P_q75": 0.7591518173128388,
+    "epsilon_d": 0.10382955648574999
+  },
+  "coverage": {
+    "terminal_jobs": 988910,
+    "evaluable_jobs": 988830,
+    "development_jobs": 741685,
+    "evaluation_jobs": 247145,
+    "evaluation_failure_prevalence": 0.21450565457524934
+  },
+  "hard_MQ": {
+    "TN": 188352,
+    "FP": 5779,
+    "FN": 50868,
+    "TP": 2146,
+    "sensitivity": 0.040479873241030674,
+    "specificity": 0.970231441655377,
+    "precision": 0.27078864353312304,
+    "balanced_accuracy": 0.5053556574482039,
+    "f1": 0.07043108682452945,
+    "mcc": 0.024956699015351594
+  },
+  "continuous_H_star": {
+    "AUROC": 0.4476527589968575,
+    "AUPRC": 0.21738803815328167,
+    "Brier": 0.5551175057088127
+  },
+  "axis_logistic": {
+    "AUROC": 0.7892935258966192,
+    "AUPRC": 0.5296845311651226,
+    "Brier": 0.17338919759645305
+  },
+  "raw_logistic": {
+    "AUROC": 0.8607738684152598,
+    "AUPRC": 0.6890932670454641,
+    "Brier": 0.12643524410410714
+  },
+  "raw_plus_MQ": {
+    "AUROC": 0.8535152008197242,
+    "AUPRC": 0.6808196418446865,
+    "Brier": 0.12871054457033557
+  },
+  "raw_plus_H_star": {
+    "AUROC": 0.8381447376795665,
+    "AUPRC": 0.6607258777932934,
+    "Brier": 0.13222698969433827
+  },
+  "raw_gradient_boosting": {
+    "AUROC": 0.7284570520175383,
+    "AUPRC": 0.5606554871562563,
+    "Brier": 0.13665596679345754
+  },
+  "components_AUROC": {
+    "B": 0.419257143487012,
+    "P": 0.762159616850817,
+    "one_minus_E": 0.43064208002834387,
+    "one_minus_I": 0.510691406690793,
+    "one_minus_V": 0.5149296598458036,
+    "one_minus_W": 0.399150592772051,
+    "one_minus_mean_EIV": 0.449377467941925
+  },
+  "ablations": {
+    "B_only": {
+      "TN": 79500,
+      "FP": 114631,
+      "FN": 27360,
+      "TP": 25654,
+      "sensitivity": 0.48390991058965555,
+      "specificity": 0.4095172847201117,
+      "precision": 0.18287058488077843,
+      "balanced_accuracy": 0.4467135976548836,
+      "f1": 0.2654333441973316,
+      "mcc": -0.0883030948171478
+    },
+    "P_only": {
+      "TN": 181863,
+      "FP": 12268,
+      "FN": 31780,
+      "TP": 21234,
+      "sensitivity": 0.40053570754894935,
+      "specificity": 0.9368055591327505,
+      "precision": 0.6338129066921377,
+      "balanced_accuracy": 0.66867063334085,
+      "f1": 0.49086874104211936,
+      "mcc": 0.4045130183881535
+    },
+    "W_only": {
+      "TN": 115898,
+      "FP": 78233,
+      "FN": 37102,
+      "TP": 15912,
+      "sensitivity": 0.30014713094654244,
+      "specificity": 0.5970092360313397,
+      "precision": 0.16901587975994475,
+      "balanced_accuracy": 0.4485781834889411,
+      "f1": 0.21625588649012292,
+      "mcc": -0.08693122456642052
+    },
+    "B_P": {
+      "TN": 183142,
+      "FP": 10989,
+      "FN": 44141,
+      "TP": 8873,
+      "sensitivity": 0.1673708831629381,
+      "specificity": 0.943393893813971,
+      "precision": 0.44673245393213173,
+      "balanced_accuracy": 0.5553823884884546,
+      "f1": 0.24350952302541304,
+      "mcc": 0.16724357587497418
+    },
+    "P_W": {
+      "TN": 188115,
+      "FP": 6016,
+      "FN": 50573,
+      "TP": 2441,
+      "sensitivity": 0.046044441091032555,
+      "specificity": 0.9690106165424378,
+      "precision": 0.2886366323755469,
+      "balanced_accuracy": 0.5075275288167351,
+      "f1": 0.07941956369670251,
+      "mcc": 0.03399395514977441
+    },
+    "full_MQ": {
+      "TN": 188352,
+      "FP": 5779,
+      "FN": 50868,
+      "TP": 2146,
+      "sensitivity": 0.040479873241030674,
+      "specificity": 0.970231441655377,
+      "precision": 0.27078864353312304,
+      "balanced_accuracy": 0.5053556574482039,
+      "f1": 0.07043108682452945,
+      "mcc": 0.024956699015351594
+    }
+  }
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "file": "pai_job_table.tar.gz",
+    "url": "https://aliopentrace.oss-cn-beijing.aliyuncs.com/v2020GPUTraces/pai_job_table.tar.gz",
+    "bytes": 62065432,
+    "sha256": "5aad7f7caac501136d14ed6a48e40546f825d7b0617a3a4f337e2348fe0a6cb0",
+    "expected_sha256": "5aad7f7caac501136d14ed6a48e40546f825d7b0617a3a4f337e2348fe0a6cb0",
+    "checksum_pass": true
+  },
+  {
+    "file": "pai_task_table.tar.gz",
+    "url": "https://aliopentrace.oss-cn-beijing.aliyuncs.com/v2020GPUTraces/pai_task_table.tar.gz",
+    "bytes": 35514117,
+    "sha256": "cd1d6dc3215d2a8607ccf6b6dd952b5db776df86926c73259fea7c1499ac40e5",
+    "expected_sha256": "cd1d6dc3215d2a8607ccf6b6dd952b5db776df86926c73259fea7c1499ac40e5",
+    "checksum_pass": true
+  },
+  {
+    "file": "pai_instance_table.tar.gz",
+    "url": "https://aliopentrace.oss-cn-beijing.aliyuncs.com/v2020GPUTraces/pai_instance_table.tar.gz",
+    "bytes": 694839139,
+    "sha256": "1bf1e423a7ce3f8d086699801c362fd56a7182abdb234139e5ebbed97995ca06",
+    "expected_sha256": "1bf1e423a7ce3f8d086699801c362fd56a7182abdb234139e5ebbed97995ca06",
+    "checksum_pass": true
+  },
+  {
+    "file": "pai_machine_spec.tar.gz",
+    "url": "https://aliopentrace.oss-cn-beijing.aliyuncs.com/v2020GPUTraces/pai_machine_spec.tar.gz",
+    "bytes": 30449,
+    "sha256": "cc0d38a4045af1b1af8179de8b1b54b1ddd995e6160d6d061a6b1000f1276c2d",
+    "expected_sha256": "cc0d38a4045af1b1af8179de8b1b54b1ddd995e6160d6d061a6b1000f1276c2d",
+    "checksum_pass": true
+  }
+]
