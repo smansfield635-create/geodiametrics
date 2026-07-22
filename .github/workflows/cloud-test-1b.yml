@@ -1,15 +1,16 @@
-name: Cloud Test 1B Alibaba Instance Capacity
+name: Cloud Test 1B Clean Execution
 
 on:
-  pull_request:
-    branches: [main]
+  push:
+    branches:
+      - cloud-test-1b-clean-execution
     paths:
       - 'cloud_test_1b/**'
       - '.github/workflows/cloud-test-1b.yml'
   workflow_dispatch:
 
 concurrency:
-  group: cloud-test-1b-${{ github.event.pull_request.number || github.ref }}
+  group: cloud-test-1b-clean-execution
   cancel-in-progress: true
 
 jobs:
@@ -17,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
-      - name: Checkout
+      - name: Checkout isolated execution branch
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -37,7 +38,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: CLOUD_TEST_1B_ALIBABA_INSTANCE_CAPACITY_RESULT_PACKAGE
+          name: CLOUD_TEST_1B_CLEAN_RESULT_PACKAGE
           path: cloud_test_1b/outputs/
           if-no-files-found: warn
           retention-days: 90
