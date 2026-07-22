@@ -1,0 +1,39 @@
+name: Cloud Test 1B Alibaba Instance Capacity
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cloud_test_1b/**'
+      - '.github/workflows/cloud-test-1b.yml'
+  workflow_dispatch:
+
+jobs:
+  run-cloud-test-1b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy pandas requests scikit-learn
+
+      - name: Execute Cloud Test 1B
+        run: python cloud_test_1b/run_cloud_test_1b.py
+
+      - name: Upload result package
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CLOUD_TEST_1B_ALIBABA_INSTANCE_CAPACITY_RESULT_PACKAGE
+          path: cloud_test_1b/outputs/
+          if-no-files-found: warn
+          retention-days: 90
