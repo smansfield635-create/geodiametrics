@@ -1,25 +1,25 @@
-name: Battery Test 1 CALCE Schema Inspection
+name: Battery Test 1 CALCE Schema-Locked Run-to-Failure
 
 on:
   push:
     branches:
       - battery-test-1-calce-cs2
     paths:
-      - 'battery_test_1/inspect_calce_schema.py'
+      - 'battery_test_1/run_battery_test_1_schema_locked.py'
       - '.github/workflows/battery-test-1.yml'
   workflow_dispatch:
 
 concurrency:
-  group: battery-test-1-calce-schema-inspection
+  group: battery-test-1-calce-schema-locked
   cancel-in-progress: true
 
 permissions:
   contents: write
 
 jobs:
-  inspect-calce-schema:
+  run-battery-test-1:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 180
     steps:
       - name: Checkout isolated battery branch
         uses: actions/checkout@v4
@@ -31,34 +31,37 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install schema-inspection dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas requests openpyxl xlrd
+          pip install numpy pandas requests scikit-learn openpyxl xlrd
 
-      - name: Inspect one canonical CALCE archive
-        run: python battery_test_1/inspect_calce_schema.py
+      - name: Compile schema-locked runner
+        run: python -m py_compile battery_test_1/run_battery_test_1_schema_locked.py
 
-      - name: Persist schema manifest
+      - name: Execute schema-locked battery coherence test
+        run: python battery_test_1/run_battery_test_1_schema_locked.py
+
+      - name: Persist compact empirical return
         if: success()
         run: |
-          mkdir -p battery_test_1/schema_results
-          cp battery_test_1/schema_inspection/results/schema_manifest.json battery_test_1/schema_results/
-          cp battery_test_1/schema_inspection/results/schema_report.txt battery_test_1/schema_results/
-          cp battery_test_1/schema_inspection/results/schema_receipt.json battery_test_1/schema_results/
+          mkdir -p battery_test_1/results
+          cp battery_test_1/outputs/metrics.json battery_test_1/results/
+          cp battery_test_1/outputs/run_receipt.json battery_test_1/results/
+          cp battery_test_1/outputs/source_registry.json battery_test_1/results/
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add battery_test_1/schema_results
+          git add battery_test_1/results
           if ! git diff --cached --quiet; then
-            git commit -m "Store CALCE CS2_33 schema manifest [skip ci]"
+            git commit -m "Store schema-locked Battery Test 1 empirical return [skip ci]"
             git push origin HEAD:battery-test-1-calce-cs2
           fi
 
-      - name: Upload schema package
+      - name: Upload complete result package
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: BATTERY_TEST_1_CALCE_SCHEMA_INSPECTION
-          path: battery_test_1/schema_inspection/results/
+          name: BATTERY_TEST_1_CALCE_SCHEMA_LOCKED_RESULT_PACKAGE
+          path: battery_test_1/outputs/
           if-no-files-found: warn
           retention-days: 90
