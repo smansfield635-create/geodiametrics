@@ -1,0 +1,40 @@
+name: Cloud Test 1 Alibaba GPU 2020
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cloud_test_1/**'
+      - '.github/workflows/cloud-test-1.yml'
+  workflow_dispatch:
+
+jobs:
+  run-cloud-test-1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy pandas requests scikit-learn
+
+      - name: Execute frozen Cloud Test 1
+        run: python cloud_test_1/run_cloud_test_1.py
+
+      - name: Upload result package
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CLOUD_TEST_1_ALIBABA_GPU_2020_RESULT_PACKAGE
+          path: cloud_test_1/outputs/
+          if-no-files-found: warn
+          retention-days: 90
