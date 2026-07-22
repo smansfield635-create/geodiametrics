@@ -1,0 +1,89 @@
+name: Cloud Test 1C Final Instrument Closure
+
+on:
+  push:
+    branches:
+      - cloud-test-1c-final-closure
+    paths:
+      - 'cloud_test_1c/run_final_closure.py'
+      - '.github/workflows/cloud-test-1c-final-closure.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: cloud-test-1c-final-closure
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  run-final-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout isolated final-closure branch
+        uses: actions/checkout@v4
+        with:
+          ref: cloud-test-1c-final-closure
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy pandas requests scikit-learn
+
+      - name: Preflight syntax and feature contracts
+        run: |
+          python -m py_compile cloud_test_1c/run_final_closure.py
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+          source = Path('cloud_test_1c/run_final_closure.py').read_text()
+          tree = ast.parse(source)
+          assignments = {
+              node.targets[0].id: ast.literal_eval(node.value)
+              for node in tree.body
+              if isinstance(node, ast.Assign)
+              and len(node.targets) == 1
+              and isinstance(node.targets[0], ast.Name)
+              and node.targets[0].id == 'GROUPS'
+          }
+          groups = assignments['GROUPS']
+          assert set(groups) == {'B', 'P', 'E', 'I', 'V'}
+          for axis, cols in groups.items():
+              assert cols and len(cols) == len(set(cols)), (axis, cols)
+          print('PRECHECK PASS: syntax and axis feature contracts verified')
+          PY
+
+      - name: Execute bounded final closure test
+        run: python cloud_test_1c/run_final_closure.py
+
+      - name: Persist compact closure result
+        run: |
+          mkdir -p cloud_test_1c/results
+          cp cloud_test_1c/outputs/metrics.json cloud_test_1c/results/
+          cp cloud_test_1c/outputs/direction_registry.json cloud_test_1c/results/
+          cp cloud_test_1c/outputs/confusion_matrix.csv cloud_test_1c/results/
+          cp cloud_test_1c/outputs/run_receipt.json cloud_test_1c/results/
+          cp cloud_test_1c/outputs/run_log.txt cloud_test_1c/results/
+          cp cloud_test_1c/outputs/source_registry.json cloud_test_1c/results/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cloud_test_1c/results
+          if ! git diff --cached --quiet; then
+            git commit -m "Store final Alibaba cloud-instrument closure result [skip ci]"
+            git push origin HEAD:cloud-test-1c-final-closure
+          fi
+
+      - name: Upload complete closure package
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CLOUD_TEST_1C_FINAL_CLOSURE_PACKAGE
+          path: cloud_test_1c/outputs/
+          if-no-files-found: warn
+          retention-days: 90
