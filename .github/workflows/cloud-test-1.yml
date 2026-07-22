@@ -1,17 +1,11 @@
 name: Cloud Test 1 Alibaba GPU 2020
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'cloud_test_1/**'
-      - '.github/workflows/cloud-test-1.yml'
-  pull_request:
-    branches: [main]
-    paths:
-      - 'cloud_test_1/**'
-      - '.github/workflows/cloud-test-1.yml'
   workflow_dispatch:
+
+concurrency:
+  group: cloud-test-1
+  cancel-in-progress: true
 
 jobs:
   run-cloud-test-1:
