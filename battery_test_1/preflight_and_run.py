@@ -3,12 +3,11 @@ from pathlib import Path
 runner = Path("battery_test_1/run_battery_test_1.py")
 source = runner.read_text()
 
-# Replace the original workbook-collapsing parser. The CALCE archives contain
-# repeated cycle worksheets inside workbooks; the prior parser selected only
-# the single largest worksheet and therefore produced too few cycle rows.
+# CALCE Arbin workbooks contain many cycles inside worksheet rows. Replace the
+# workbook/worksheet collapsing parser with row-level grouping by cycle index.
 start = source.index("def extract_cycle(")
 end = source.index("\ndef ecdf(", start)
-replacement = r'''def extract_frame(df: pd.DataFrame, cell: str, cycle_index: int, source_name: str, sheet_name: str) -> dict | None:
+replacement = r'''def summarize_cycle(df: pd.DataFrame, cell: str, raw_cycle: int, source_name: str, sheet_name: str) -> dict | None:
     v = numeric_series(df, ("voltage",))
     i = numeric_series(df, ("current",))
     t = numeric_series(df, ("test", "time"))
@@ -53,7 +52,7 @@ replacement = r'''def extract_frame(df: pd.DataFrame, cell: str, cycle_index: in
 
     row = {
         "cell": cell,
-        "cycle": cycle_index,
+        "raw_cycle": int(raw_cycle),
         "source_file": source_name,
         "source_sheet": sheet_name,
         "capacity_ah": capacity,
@@ -80,14 +79,13 @@ replacement = r'''def extract_frame(df: pd.DataFrame, cell: str, cycle_index: in
     return row
 
 
-def extract_workbook(path: Path, cell: str, cycle_start: int) -> list[dict]:
+def extract_workbook(path: Path, cell: str) -> list[dict]:
     try:
         book = pd.ExcelFile(path)
     except Exception:
         return []
 
     rows = []
-    next_cycle = cycle_start
     for sheet in book.sheet_names:
         try:
             raw = pd.read_excel(path, sheet_name=sheet, header=None)
@@ -96,10 +94,23 @@ def extract_workbook(path: Path, cell: str, cycle_start: int) -> list[dict]:
                 continue
             df = pd.read_excel(path, sheet_name=sheet, header=h)
             df.columns = [norm_name(c) for c in df.columns]
-            row = extract_frame(df, cell, next_cycle, path.name, str(sheet))
-            if row is not None:
-                rows.append(row)
-                next_cycle += 1
+
+            cycle_col = None
+            for c in df.columns:
+                name = norm_name(c)
+                if name in {"cycle_index", "cycle", "cycle_number", "cycle_no"} or ("cycle" in name and "index" in name):
+                    cycle_col = c
+                    break
+            if cycle_col is None:
+                continue
+
+            cycle_values = pd.to_numeric(df[cycle_col], errors="coerce")
+            valid = df.loc[cycle_values.notna()].copy()
+            valid["__cycle__"] = cycle_values[cycle_values.notna()].astype(int)
+            for raw_cycle, group in valid.groupby("__cycle__", sort=True):
+                row = summarize_cycle(group.drop(columns=["__cycle__"]), cell, int(raw_cycle), path.name, str(sheet))
+                if row is not None:
+                    rows.append(row)
         except Exception:
             continue
     return rows
@@ -111,16 +122,26 @@ old_loop = '''        for idx, file in enumerate(files, start=1):
             if row is not None:
                 rows.append(row)
 '''
-new_loop = '''        cycle_index = 1
+new_loop = '''        cell_rows = []
         for file in files:
-            workbook_rows = extract_workbook(file, cell, cycle_index)
-            rows.extend(workbook_rows)
-            cycle_index += len(workbook_rows)
-        print(f"Parsed {cell}: {cycle_index - 1} cycle worksheets", flush=True)
+            cell_rows.extend(extract_workbook(file, cell))
+        rows.extend(cell_rows)
+        print(f"Parsed {cell}: {len(cell_rows)} row-grouped cycles", flush=True)
 '''
 if old_loop not in source:
     raise RuntimeError("Expected original workbook loop was not found")
 source = source.replace(old_loop, new_loop)
+
+old_panel = '    panel = pd.DataFrame(rows).sort_values(["cell", "cycle"]).reset_index(drop=True)'
+new_panel = '''    panel = pd.DataFrame(rows)
+    if panel.empty:
+        raise RuntimeError("No row-grouped battery cycles were parsed")
+    panel = panel.sort_values(["cell", "source_file", "source_sheet", "raw_cycle"]).reset_index(drop=True)
+    panel = panel.drop_duplicates(["cell", "source_file", "source_sheet", "raw_cycle"], keep="last")
+    panel["cycle"] = panel.groupby("cell").cumcount() + 1'''
+if old_panel not in source:
+    raise RuntimeError("Expected original panel construction was not found")
+source = source.replace(old_panel, new_panel)
 
 old_guard = '        raise RuntimeError("Both development and evaluation require positive and negative horizon outcomes")'
 new_guard = '''        counts = {
@@ -129,10 +150,10 @@ new_guard = '''        counts = {
             "cycles_per_cell": panel.groupby("cell").size().to_dict(),
             "eol_cycle": eol_cycle,
         }
-        raise RuntimeError(f"Outcome class support still insufficient after worksheet-level parsing: {counts}")'''
+        raise RuntimeError(f"Outcome class support insufficient after Arbin row-level parsing: {counts}")'''
 source = source.replace(old_guard, new_guard)
 
 compile(source, str(runner), "exec")
-print("PRECHECK PASS: worksheet-level cycle parser installed; syntax compiled", flush=True)
+print("PRECHECK PASS: Arbin row-level cycle parser installed; syntax compiled", flush=True)
 namespace = {"__name__": "__main__", "__file__": str(runner)}
 exec(compile(source, str(runner), "exec"), namespace)
