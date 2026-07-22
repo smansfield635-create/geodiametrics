@@ -1,0 +1,180 @@
+BATTERY TEST 1 — CALCE CS2_33 SCHEMA INSPECTION
+Archive SHA-256: ce375e3826e840ff0986ceade0d324ba6515f0446697c947353aca097f232505
+Workbook count: 23
+Empirical equations executed: FALSE
+
+WORKBOOK: CS2_33_10_04_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+
+WORKBOOK: CS2_33_10_05_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+
+WORKBOOK: CS2_33_10_15_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+
+WORKBOOK: CS2_33_10_26_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+
+WORKBOOK: CS2_33_11_01_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+  SHEET: Statistics_1-006 preview_shape=[25, 15]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'date_time'] values=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)']
+    HEADER TRIAL row=0 columns=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)'] error=None
+
+WORKBOOK: CS2_33_11_10_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+  SHEET: Statistics_1-006 preview_shape=[51, 15]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'date_time'] values=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)']
+    HEADER TRIAL row=0 columns=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)'] error=None
+
+WORKBOOK: CS2_33_11_19_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+  SHEET: Statistics_1-006 preview_shape=[51, 15]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'date_time'] values=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)']
+    HEADER TRIAL row=0 columns=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)'] error=None
+
+WORKBOOK: CS2_33_11_24_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+  SHEET: Statistics_1-006 preview_shape=[31, 15]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'date_time'] values=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)']
+    HEADER TRIAL row=0 columns=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)'] error=None
+
+WORKBOOK: CS2_33_12_08_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+  SHEET: Statistics_1-006 preview_shape=[51, 15]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'date_time'] values=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)']
+    HEADER TRIAL row=0 columns=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)'] error=None
+
+WORKBOOK: CS2_33_12_16_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+  SHEET: Statistics_1-006 preview_shape=[51, 15]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'date_time'] values=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)']
+    HEADER TRIAL row=0 columns=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)'] error=None
+
+WORKBOOK: CS2_33_12_23_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+  SHEET: Statistics_1-006 preview_shape=[46, 15]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'date_time'] values=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)']
+    HEADER TRIAL row=0 columns=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)'] error=None
+
+WORKBOOK: CS2_33_1_10_11.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+  SHEET: Statistics_1-006 preview_shape=[51, 15]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'date_time'] values=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)']
+    HEADER TRIAL row=0 columns=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)'] error=None
+
+WORKBOOK: CS2_33_1_18_11.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+  SHEET: Statistics_1-006 preview_shape=[51, 15]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'date_time'] values=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)']
+    HEADER TRIAL row=0 columns=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)'] error=None
+
+WORKBOOK: CS2_33_1_24_11.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+  SHEET: Statistics_1-006 preview_shape=[51, 15]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'date_time'] values=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)']
+    HEADER TRIAL row=0 columns=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)'] error=None
+
+WORKBOOK: CS2_33_1_28_11.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+  SHEET: Statistics_1-006 preview_shape=[51, 15]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'date_time'] values=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)']
+    HEADER TRIAL row=0 columns=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)'] error=None
+
+WORKBOOK: CS2_33_2_2_11.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+  SHEET: Statistics_1-006 preview_shape=[51, 15]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'date_time'] values=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)']
+    HEADER TRIAL row=0 columns=['Cycle_Index', 'Test_Time(s)', 'Date_Time', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'Internal_Resistance(Ohm)', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)', 'Charge_Time(s)', 'DisCharge_Time(s)', 'Vmax_On_Cycle(V)'] error=None
+
+WORKBOOK: CS2_33_8_17_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+
+WORKBOOK: CS2_33_8_18_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+
+WORKBOOK: CS2_33_8_19_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+
+WORKBOOK: CS2_33_8_30_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+
+WORKBOOK: CS2_33_9_17_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+
+WORKBOOK: CS2_33_9_27_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
+
+WORKBOOK: CS2_33_9_7_10.xlsx
+  SHEET: Info preview_shape=[5, 23]
+    CANDIDATE HEADER row=1 keywords=['cycle'] values=['50-100cycles', 'C:\\ArbinSoftware\\MITS_PRO\\Data\\50-100cycles.res']
+    HEADER TRIAL row=1 columns=['Unnamed: 0', 'Unnamed: 1', 'Unnamed: 2', '50-100cycles', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7', 'Unnamed: 8', 'Unnamed: 9', 'Unnamed: 10', 'C:\\ArbinSoftware\\MITS_PRO\\Data\\50-100cycles.res', 'Unnamed: 12', 'Unnamed: 13', 'Unnamed: 14', 'Unnamed: 15', 'Unnamed: 16', 'Unnamed: 17', 'Unnamed: 18', 'Unnamed: 19', 'Unnamed: 20', 'Unnamed: 21', 'Unnamed: 22'] error=None
+  SHEET: Channel_1-006 preview_shape=[80, 17]
+    CANDIDATE HEADER row=0 keywords=['cycle', 'cycle_index', 'test_time', 'time', 'voltage', 'current', 'capacity', 'discharge_capacity', 'charge_capacity', 'step_index', 'data_point', 'date_time'] values=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)']
+    HEADER TRIAL row=0 columns=['Data_Point', 'Test_Time(s)', 'Date_Time', 'Step_Time(s)', 'Step_Index', 'Cycle_Index', 'Current(A)', 'Voltage(V)', 'Charge_Capacity(Ah)', 'Discharge_Capacity(Ah)', 'Charge_Energy(Wh)', 'Discharge_Energy(Wh)', 'dV/dt(V/s)', 'Internal_Resistance(Ohm)', 'Is_FC_Data', 'AC_Impedance(Ohm)', 'ACI_Phase_Angle(Deg)'] error=None
