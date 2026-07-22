@@ -1,0 +1,99 @@
+{
+  "artifact_id": "BATTERY_TEST_1_CALCE_CS2_SCHEMA_LOCKED_RETURN_v1",
+  "status": "COMPLETE",
+  "claim_boundary": "Cycle-resolved CALCE CS2 run-to-failure test using schema-observed Arbin fields and cell-disjoint evaluation. Predicts observed 80% retained-capacity EOL crossing within 20 cycles.",
+  "schema_lock": {
+    "sheet_prefix": "Channel_",
+    "header_row": 0,
+    "cycle_field": "Cycle_Index",
+    "time_field": "Test_Time(s)",
+    "current_field": "Current(A)",
+    "voltage_field": "Voltage(V)",
+    "capacity_field": "Discharge_Capacity(Ah)",
+    "resistance_field": "Internal_Resistance(Ohm)"
+  },
+  "coverage": {
+    "cycles_per_cell": {
+      "CS2_33": 868,
+      "CS2_34": 781,
+      "CS2_35": 886,
+      "CS2_36": 976,
+      "CS2_37": 1043,
+      "CS2_38": 1032
+    },
+    "development_cycles": 1605,
+    "evaluation_cycles": 1653,
+    "evaluation_event_prevalence": 0.036297640653357534,
+    "development_cells": [
+      "CS2_33",
+      "CS2_35",
+      "CS2_37"
+    ],
+    "evaluation_cells": [
+      "CS2_34",
+      "CS2_36",
+      "CS2_38"
+    ],
+    "eol_cycle": {
+      "CS2_33": 442,
+      "CS2_34": 518,
+      "CS2_35": 575,
+      "CS2_36": 532,
+      "CS2_37": 600,
+      "CS2_38": 615
+    }
+  },
+  "thresholds": {
+    "B_q75": 0.751548946716233,
+    "P_q75": 0.6416769929781082,
+    "epsilon_d": 0.3497521685254028
+  },
+  "hard_MQ": {
+    "TN": 1591,
+    "FP": 2,
+    "FN": 60,
+    "TP": 0,
+    "sensitivity": 0.0,
+    "specificity": 0.9987445072190835,
+    "precision": 0.0,
+    "balanced_accuracy": 0.49937225360954174,
+    "mcc": -0.006754748732493467
+  },
+  "continuous_H_star": {
+    "AUROC": 0.7711550533584431,
+    "AUPRC": 0.15245787233655012,
+    "Brier": 0.5044368845893096
+  },
+  "axis_logistic": {
+    "AUROC": 0.9394433982004604,
+    "AUPRC": 0.3852069369871668,
+    "Brier": 0.11795449297428337
+  },
+  "raw_logistic": {
+    "AUROC": 0.7849550115086837,
+    "AUPRC": 0.08777629703304124,
+    "Brier": 0.2790846510625134
+  },
+  "raw_plus_MQ": {
+    "AUROC": 0.7832182464950826,
+    "AUPRC": 0.08653184307617875,
+    "Brier": 0.28085894749982115
+  },
+  "raw_plus_H_star": {
+    "AUROC": 0.7769930947897049,
+    "AUPRC": 0.08207963447257177,
+    "Brier": 0.28683435830322873
+  },
+  "components_AUROC": {
+    "B": 0.9704174513496547,
+    "P": 0.23725674827369742,
+    "one_minus_E": 0.6833281021134128,
+    "one_minus_I": 0.40945804561623766,
+    "one_minus_V": 0.10724523958987235,
+    "one_minus_W": 0.674278091650973
+  },
+  "augmentation": {
+    "MQ_AUROC_delta": -0.0017367650136010937,
+    "H_star_AUROC_delta": -0.007961916718978834
+  }
+}

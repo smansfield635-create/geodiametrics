@@ -1,0 +1,38 @@
+[
+  {
+    "cell": "CS2_33",
+    "url": "https://web.calce.umd.edu/batteries/data/CS2_33.zip",
+    "bytes": 45345047,
+    "sha256": "ce375e3826e840ff0986ceade0d324ba6515f0446697c947353aca097f232505"
+  },
+  {
+    "cell": "CS2_34",
+    "url": "https://web.calce.umd.edu/batteries/data/CS2_34.zip",
+    "bytes": 43836986,
+    "sha256": "229dcdc836f140f746c26316569c357b346994fddd3be1223b1e457805c484b4"
+  },
+  {
+    "cell": "CS2_35",
+    "url": "https://web.calce.umd.edu/batteries/data/CS2_35.zip",
+    "bytes": 37056519,
+    "sha256": "84d88cb98a43c02049f16c78806a78ec19084776ea5df8a4b7c2f8f7ba4589e5"
+  },
+  {
+    "cell": "CS2_36",
+    "url": "https://web.calce.umd.edu/batteries/data/CS2_36.zip",
+    "bytes": 37881685,
+    "sha256": "2e674f58bb6dc005c73bef10e87edbbd97afd041dde77a1d461a3c4ecac1b027"
+  },
+  {
+    "cell": "CS2_37",
+    "url": "https://web.calce.umd.edu/batteries/data/CS2_37.zip",
+    "bytes": 41513048,
+    "sha256": "8ed8aecbcbea2bcb17f455923a974be01ea21d7389210e1912d177de5b6af4a5"
+  },
+  {
+    "cell": "CS2_38",
+    "url": "https://web.calce.umd.edu/batteries/data/CS2_38.zip",
+    "bytes": 42811100,
+    "sha256": "98787427c10478425efd4f54d823805724daff1d2fcbd822b3a2d7006a1051d8"
+  }
+]
