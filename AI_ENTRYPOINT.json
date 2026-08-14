@@ -1,0 +1,29 @@
+{
+  "schema": "GEODIAMETRICS_REPOSITORY_BOOTSTRAP_REDIRECT_v1",
+  "repository": "smansfield635-create/geodiametrics",
+  "repositoryRole": "NONAUTHORITATIVE_PUBLIC_NAME_COLLISION_REDIRECT",
+  "canonicalPrivateRepository": "smansfield635-create/geodiametrics1",
+  "publicWebsiteRepository": "smansfield635-create/smansfield635-create.github.io",
+  "projectAliases": [
+    "Geodiametrics",
+    "Diamond Gate Bridge",
+    "H-Earth",
+    "Laws",
+    "OW01"
+  ],
+  "coldRoomRule": "RESOLVE_CANONICAL_PRIVATE_REPOSITORY_BEFORE_OPERATION_STATE",
+  "requiredPrivateEntrypoints": [
+    "AI_ENTRYPOINT.json",
+    "AGENTS.md"
+  ],
+  "prohibitedInferences": [
+    "DO_NOT_INVENT_OWNER_OR_REPOSITORY_FROM_PROJECT_NAME",
+    "DO_NOT_TREAT_THIS_PUBLIC_REPOSITORY_AS_PRIVATE_AUTHORITY",
+    "DO_NOT_ASK_USER_FOR_ALREADY_DISCOVERABLE_REPOSITORY_IDENTITY_BEFORE_CONNECTED_GITHUB_SEARCH"
+  ],
+  "authorityEffect": "NONE",
+  "mutationAuthority": false,
+  "continuationAuthority": false,
+  "mergeAuthority": false,
+  "deploymentAuthority": false
+}
