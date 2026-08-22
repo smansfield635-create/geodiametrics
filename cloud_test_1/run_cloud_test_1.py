@@ -10,11 +10,10 @@ try:
     import openpyxl
 except Exception:
     subprocess.run([sys.executable,'-m','pip','install','openpyxl'],check=True)
-book=pd.ExcelFile(p,engine='openpyxl')
-summary={'url':URL,'bytes':p.stat().st_size,'sheets':book.sheet_names,'samples':{}}
-for sh in book.sheet_names:
-    raw=pd.read_excel(p,sheet_name=sh,header=None,nrows=30,engine='openpyxl')
-    vals=raw.fillna('').astype(str).values.tolist()
-    summary['samples'][sh]=vals[:15]
-(OUT/'treasury_workbook_schema.json').write_text(json.dumps(summary,indent=2))
-print(json.dumps(summary,indent=2)[:50000])
+raw=pd.read_excel(p,sheet_name='CPP',header=None,nrows=35,engine='openpyxl')
+block=raw.iloc[12:30].fillna('').astype(str)
+summary={'url':URL,'shape_first35':list(raw.shape),'cpp_rows_13_30':[]}
+for idx,row in block.iterrows():
+    summary['cpp_rows_13_30'].append({'excel_row':int(idx+1),'cells':[{'col':int(j+1),'value':v} for j,v in enumerate(row.tolist()) if v!='']})
+(OUT/'cpp_column_schema.json').write_text(json.dumps(summary,indent=2))
+print(json.dumps(summary,indent=2))
