@@ -81,11 +81,13 @@ def pdf_text(path:Path)->str:
         return txt.read_text(errors='ignore')
     subprocess.run([sys.executable,'-m','pip','install','pypdf'],check=True)
     from pypdf import PdfReader
-    t='\n'.join((p.extract_text() or '') for p in PdfReader(str(path)))
+    reader=PdfReader(str(path))
+    t='\n'.join((page.extract_text() or '') for page in reader.pages)
     txt.write_text(t); return t
 
 def main():
-    mp=pd.read_csv(pd.io.common.StringIO(MAP))
+    from io import StringIO
+    mp=pd.read_csv(StringIO(MAP))
     r=requests.get(PDF,timeout=180); r.raise_for_status(); p=RAW/'tarp2021.pdf'; p.write_bytes(r.content)
     text=pdf_text(p); lines=text.splitlines()
     rows=[]
@@ -94,7 +96,7 @@ def main():
         for j,i in enumerate(hits):
             rows.append({'UST':x.UST,'CERT':x.CERT,'NAME':x.NAME,'occurrence':j+1,'line_no':i,'line':re.sub(r'\s+',' ',lines[i]).strip(),'prev2':re.sub(r'\s+',' ',lines[i-2]).strip() if i>=2 else '', 'prev1':re.sub(r'\s+',' ',lines[i-1]).strip() if i>=1 else '', 'next1':re.sub(r'\s+',' ',lines[i+1]).strip() if i+1<len(lines) else '', 'next2':re.sub(r'\s+',' ',lines[i+2]).strip() if i+2<len(lines) else ''})
     df=pd.DataFrame(rows); df.to_csv(OUT/'ust_exit_source_context.csv',index=False)
-    summary={'status':'SOURCE_STRUCTURE_ONLY','matched_population':len(mp),'ust_with_hits':int(df.UST.nunique()),'total_occurrences':len(df),'pdf_bytes':len(r.content)}
+    summary={'status':'SOURCE_STRUCTURE_ONLY','matched_population':len(mp),'ust_with_hits':int(df.UST.nunique()) if len(df) else 0,'total_occurrences':len(df),'pdf_bytes':len(r.content)}
     (OUT/'metrics.json').write_text(json.dumps(summary,indent=2))
     print(json.dumps(summary,indent=2))
     print(df.head(20).to_json(orient='records',indent=2))
