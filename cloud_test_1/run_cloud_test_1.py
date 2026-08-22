@@ -2,46 +2,34 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import re
-import tarfile
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import requests
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.impute import SimpleImputer
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import (
-    average_precision_score,
-    balanced_accuracy_score,
-    brier_score_loss,
-    confusion_matrix,
-    f1_score,
-    matthews_corrcoef,
-    precision_score,
-    recall_score,
-    roc_auc_score,
-)
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
+from scipy.stats import spearmanr
+from sklearn.metrics import roc_auc_score
 
-SEED = 256
 ROOT = Path(__file__).resolve().parent
 RAW = ROOT / "raw"
 OUT = ROOT / "outputs"
 RAW.mkdir(parents=True, exist_ok=True)
 OUT.mkdir(parents=True, exist_ok=True)
-README = "https://raw.githubusercontent.com/alibaba/clusterdata/master/cluster-trace-gpu-v2020/README.md"
-EXPECTED = {
-    "pai_job_table.tar.gz": "5aad7f7caac501136d14ed6a48e40546f825d7b0617a3a4f337e2348fe0a6cb0",
-    "pai_task_table.tar.gz": "cd1d6dc3215d2a8607ccf6b6dd952b5db776df86926c73259fea7c1499ac40e5",
-}
-JOB_COLUMNS = ["job_name", "inst_id", "user", "status", "start_time", "end_time"]
-TASK_COLUMNS = [
-    "job_name", "task_name", "inst_num", "status", "start_time", "end_time",
-    "plan_cpu", "plan_mem", "plan_gpu", "gpu_type",
-]
+
+FDIC_BASE = "https://api.fdic.gov/banks"
+TARP_PDF = "https://home.treasury.gov/system/files/256/Investment-Transactions-Report-as-of-02-16-21.pdf"
+START = pd.Timestamp("2007-01-01")
+END = pd.Timestamp("2013-12-31")
+EPS = 0.05
+FIN_FIELDS = ["CERT","REPDTE","NAME","CITY","STALP","ASSET","EQ","RBC1RWAJ","NCLNLSR","ROA","LNLSNET","DEP"]
+FAIL_FIELDS = ["CERT","NAME","FAILDATE"]
+INST_FIELDS = ["CERT","NAME","CITY","STALP"]
+CORP_SUFFIX = {"HOLDING","HOLDINGS","BANCSHARES","BANCORP","CORPORATION","CORP","INC","GROUP","COMPANY","CO"}
 
 
 def sha256(path: Path) -> str:
@@ -52,199 +40,265 @@ def sha256(path: Path) -> str:
     return h.hexdigest()
 
 
-def resolve_links() -> dict[str, str]:
-    r = requests.get(README, timeout=60)
-    r.raise_for_status()
-    text = r.text
-    links = re.findall(r"\[[^\]]+\]\((https?://[^)]+)\)", text)
-    links += re.findall(r'https?://[^\s<>"\)]+', text)
-    out: dict[str, str] = {}
-    for url in links:
-        clean = url.rstrip(".,)")
-        for fn in EXPECTED:
-            if fn in clean:
-                out.setdefault(fn, clean)
-    missing = sorted(set(EXPECTED) - set(out))
-    if missing:
-        raise RuntimeError(f"Official README links not resolved: {missing}")
-    return out
+def extract_rows(payload):
+    return [x.get("data", x) if isinstance(x, dict) else x for x in payload.get("data", [])]
 
 
-def download(url: str, path: Path) -> None:
-    with requests.get(url, stream=True, timeout=180) as r:
+def get_pages(endpoint, params, limit=10000):
+    rows, receipts, offset = [], [], 0
+    while True:
+        p = dict(params); p.update({"limit": limit, "offset": offset, "format": "json"})
+        r = requests.get(f"{FDIC_BASE}/{endpoint}", params=p, timeout=120)
+        receipts.append({"source":"FDIC","endpoint":endpoint,"offset":offset,"status":r.status_code,"url":r.url})
         r.raise_for_status()
-        with path.open("wb") as f:
-            for chunk in r.iter_content(8 * 1024 * 1024):
-                if chunk:
-                    f.write(chunk)
+        chunk = extract_rows(r.json())
+        rows.extend(chunk)
+        if len(chunk) < limit: break
+        offset += limit
+        if offset > 2000000: raise RuntimeError("FDIC pagination guard")
+    return pd.DataFrame(rows), receipts
 
 
-def ecdf(train: pd.Series, values: pd.Series) -> pd.Series:
-    tr = np.sort(pd.Series(train).dropna().to_numpy(float))
-    if len(tr) == 0:
-        return pd.Series(np.nan, index=values.index)
-    return values.map(lambda x: np.nan if pd.isna(x) else np.searchsorted(tr, x, side="right") / len(tr))
+def norm(s: str) -> str:
+    s = str(s or "").upper().replace("&", " AND ")
+    s = re.sub(r"[^A-Z0-9 ]+", " ", s)
+    s = re.sub(r"\bNATIONAL ASSOCIATION\b", " NA ", s)
+    s = re.sub(r"\bN A\b", " NA ", s)
+    s = re.sub(r"\bFEDERAL SAVINGS BANK\b", " FSB ", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
 
 
-def score_binary(y: np.ndarray, pred: np.ndarray) -> dict:
-    tn, fp, fn, tp = confusion_matrix(y, pred, labels=[0, 1]).ravel()
-    return {
-        "TN": int(tn), "FP": int(fp), "FN": int(fn), "TP": int(tp),
-        "sensitivity": float(recall_score(y, pred, zero_division=0)),
-        "specificity": float(tn / (tn + fp)) if tn + fp else None,
-        "precision": float(precision_score(y, pred, zero_division=0)),
-        "npv": float(tn / (tn + fn)) if tn + fn else None,
-        "balanced_accuracy": float(balanced_accuracy_score(y, pred)),
-        "f1": float(f1_score(y, pred, zero_division=0)),
-        "mcc": float(matthews_corrcoef(y, pred)),
-    }
+def token_jaccard(a: str, b: str) -> float:
+    A, B = set(norm(a).split()), set(norm(b).split())
+    return len(A & B) / len(A | B) if A | B else 0.0
 
 
-def score_prob(y: np.ndarray, p: np.ndarray) -> dict:
-    return {
-        "AUROC": float(roc_auc_score(y, p)),
-        "AUPRC": float(average_precision_score(y, p)),
-        "Brier": float(brier_score_loss(y, np.clip(p, 0, 1))),
-    }
+def pdf_to_text(pdf_path: Path, txt_path: Path) -> str:
+    if shutil.which("pdftotext"):
+        subprocess.run(["pdftotext", "-layout", str(pdf_path), str(txt_path)], check=True)
+        return txt_path.read_text(errors="ignore")
+    try:
+        from pypdf import PdfReader
+    except Exception:
+        subprocess.run([sys.executable, "-m", "pip", "install", "pypdf"], check=True)
+        from pypdf import PdfReader
+    reader = PdfReader(str(pdf_path))
+    text = "\n".join((p.extract_text() or "") for p in reader.pages)
+    txt_path.write_text(text)
+    return text
 
 
-def main() -> None:
-    links = resolve_links()
-    registry = []
-    for fn, expected in EXPECTED.items():
-        p = RAW / fn
-        download(links[fn], p)
-        actual = sha256(p)
-        registry.append({"file": fn, "url": links[fn], "bytes": p.stat().st_size,
-                         "sha256": actual, "expected_sha256": expected,
-                         "checksum_pass": actual == expected})
-        if actual != expected:
-            raise RuntimeError(f"Checksum failed for {fn}")
-        with tarfile.open(p, "r:gz") as tar:
-            tar.extractall(RAW)
-    (OUT / "source_registry.json").write_text(json.dumps(registry, indent=2))
+def download_tarp():
+    p = RAW / "tarp_investment_transactions_2021.pdf"
+    r = requests.get(TARP_PDF, timeout=180)
+    r.raise_for_status(); p.write_bytes(r.content)
+    text = pdf_to_text(p, RAW / "tarp.txt")
+    return p, text, {"source":"US_TREASURY","url":TARP_PDF,"status":r.status_code,"bytes":p.stat().st_size,"sha256":sha256(p)}
 
-    jobs = pd.read_csv(RAW / "pai_job_table.csv", header=None, names=JOB_COLUMNS)
-    tasks = pd.read_csv(RAW / "pai_task_table.csv", header=None, names=TASK_COLUMNS)
-    jobs = jobs[jobs["status"].isin(["Failed", "Terminated"])].copy()
-    jobs["outcome"] = (jobs["status"] == "Failed").astype(int)
-    jobs["split"] = jobs["user"].astype(str).map(
-        lambda u: "development" if int(hashlib.sha256(f"{SEED}:{u}".encode()).hexdigest()[:8], 16) / 0xFFFFFFFF < 0.75 else "evaluation"
-    )
 
-    t = tasks.copy()
-    required = ["job_name", "task_name", "inst_num", "start_time", "plan_cpu", "plan_mem", "plan_gpu", "gpu_type"]
-    t["field_complete"] = t[required].notna().mean(axis=1)
-    agg = t.groupby("job_name").agg(
-        task_count=("task_name", "size"), inst_count=("inst_num", "sum"),
-        total_cpu=("plan_cpu", "sum"), total_mem=("plan_mem", "sum"), total_gpu=("plan_gpu", "sum"),
-        peak_cpu=("plan_cpu", "max"), peak_mem=("plan_mem", "max"), peak_gpu=("plan_gpu", "max"),
-        first_task_start=("start_time", "min"),
-        task_launch_coverage=("start_time", lambda x: x.notna().mean()),
-        field_complete=("field_complete", "mean"),
-        gpu_type_mode=("gpu_type", lambda x: x.dropna().astype(str).mode().iloc[0] if len(x.dropna()) else "MISSING"),
-    ).reset_index()
+def rank01(s, higher=True):
+    x = pd.to_numeric(s, errors="coerce")
+    r = x.rank(method="average"); n = x.notna().sum()
+    if n <= 1: out = pd.Series(np.nan, index=x.index)
+    else: out = (r - 1) / (n - 1)
+    return out if higher else 1 - out
 
-    d = jobs.merge(agg, on="job_name", how="left")
-    d["wait_time"] = d["first_task_start"] - d["start_time"]
-    d["ordering_consistent"] = ((d["wait_time"] >= 0) | d["wait_time"].isna()).astype(float)
-    d = d.sort_values("start_time").reset_index(drop=True)
-    times = d["start_time"].to_numpy(float)
-    left = np.searchsorted(times, times - 300, side="left")
-    d["cluster_launch_density_5m"] = np.arange(len(d)) - left
-    d["user_launch_density_5m"] = 0
-    for _, idx in d.groupby("user").groups.items():
-        idx = np.array(sorted(idx))
-        ut = d.loc[idx, "start_time"].to_numpy(float)
-        ul = np.searchsorted(ut, ut - 300, side="left")
-        d.loc[idx, "user_launch_density_5m"] = np.arange(len(idx)) - ul
 
-    dev = d[d["split"] == "development"].copy()
-    freq = dev["gpu_type_mode"].value_counts(normalize=True)
-    d["gpu_scarcity"] = 1 - d["gpu_type_mode"].map(freq).fillna(0)
-    B_cols = ["total_cpu", "total_mem", "total_gpu", "task_count", "inst_count"]
-    P_cols = ["wait_time", "cluster_launch_density_5m", "user_launch_density_5m", "gpu_scarcity"]
-    E_cols = ["peak_cpu", "peak_mem", "peak_gpu"]
-    ranked = {c: ecdf(dev[c], d[c]) for c in B_cols + P_cols + E_cols}
-    r = pd.DataFrame(ranked, index=d.index)
-    d["B"] = r[B_cols].mean(axis=1, skipna=False)
-    d["P"] = r[P_cols].mean(axis=1, skipna=False)
-    d["E"] = 1 - r[E_cols].mean(axis=1, skipna=False)
-    d["I"] = d[["field_complete", "ordering_consistent"]].mean(axis=1, skipna=False)
-    wait90 = dev["wait_time"].quantile(0.90)
-    d["V"] = d["task_launch_coverage"] * (d["wait_time"] <= wait90).astype(float)
-    d["W"] = d[["E", "I", "V"]].min(axis=1, skipna=False)
-    d["coverage"] = d[["B", "P", "E", "I", "V"]].notna().mean(axis=1)
+def parse_purchase_lines(text: str, inst: pd.DataFrame) -> pd.DataFrame:
+    lines = [re.sub(r"\s+", " ", x).strip() for x in text.splitlines()]
+    # Only CPP section before Citigroup common-stock disposition / CDCI.
+    try: start = next(i for i,x in enumerate(lines) if "CAPITAL PURCHASE PROGRAM" in x.upper())
+    except StopIteration: start = 0
+    stop_candidates = [i for i,x in enumerate(lines[start+1:], start+1) if "CAPITAL PURCHASE PROGRAM - CITIGROUP" in x.upper() or "COMMUNITY DEVELOPMENT CAPITAL INITIATIVE" in x.upper()]
+    stop = min(stop_candidates) if stop_candidates else len(lines)
+    lines = lines[start:stop]
+    inst = inst.copy()
+    for c in INST_FIELDS:
+        if c not in inst.columns: inst[c] = ""
+    inst["CERT"] = pd.to_numeric(inst["CERT"], errors="coerce").astype("Int64")
+    inst["KEY"] = inst.apply(lambda r: norm(f"{r['NAME']} {r['CITY']} {r['STALP']}"), axis=1)
+    inst["NAME_N"] = inst["NAME"].map(norm)
+    out = []
+    for line_no, line in enumerate(lines):
+        if not re.search(r"\d{1,2}/\d{1,2}/20(?:08|09)", line):
+            continue
+        if not re.search(r"Preferred Stock|Subordinated|Senior Securities|Common Stock", line, re.I):
+            continue
+        ln = norm(line)
+        dates = re.findall(r"\d{1,2}/\d{1,2}/20(?:08|09)", line)
+        if not dates: continue
+        purchase_date = pd.to_datetime(dates[0], errors="coerce")
+        amts = re.findall(r"\$\s*([0-9][0-9,]*(?:\.\d+)?)", line)
+        amount = float(amts[0].replace(",", "")) if amts else np.nan
+        exact = inst[inst["KEY"].map(lambda k: bool(k) and k in ln)].copy()
+        method = "EXACT_NAME_CITY_STATE"
+        score = 1.0
+        if len(exact) != 1:
+            # Frozen secondary rule: state/city must agree and unique token similarity >= .85.
+            state_matches = []
+            for r in inst.itertuples():
+                st = norm(getattr(r,"STALP","")); city = norm(getattr(r,"CITY","")); nm = norm(getattr(r,"NAME",""))
+                if not st or not city or f" {st} " not in f" {ln} " or city not in ln: continue
+                # infer seller prefix portion before city occurrence
+                prefix = ln.split(city,1)[0]
+                prefix = re.sub(r"^UST\d+\s+(?:\d+[A-Z]?(?:\s+\d+[A-Z]?)*\s+)?", "", prefix).strip()
+                sc = token_jaccard(prefix, nm)
+                # reject obvious holding-company continuation after a bank-name prefix
+                if nm in prefix:
+                    tail = prefix.split(nm,1)[1].strip().split()
+                    if tail and tail[0] in CORP_SUFFIX: sc = 0.0
+                if sc >= 0.85: state_matches.append((r, sc))
+            state_matches.sort(key=lambda z:z[1], reverse=True)
+            if len(state_matches) == 1 or (len(state_matches)>1 and state_matches[0][1] > state_matches[1][1]):
+                r, score = state_matches[0]
+                exact = pd.DataFrame([r._asdict()]); method = "SECONDARY_UNIQUE_JACCARD"
+            else:
+                out.append({"line_no":line_no,"line":line,"purchase_date":purchase_date,"amount":amount,"match_status":"UNMATCHED_OR_AMBIGUOUS","match_method":"NONE","score":np.nan})
+                continue
+        r = exact.iloc[0]
+        # extra holding-company safety: if matched bank name is followed by corp suffix before city, reject.
+        name_n, city_n = norm(r["NAME"]), norm(r["CITY"])
+        pre_city = ln.split(city_n,1)[0] if city_n and city_n in ln else ln
+        if name_n in pre_city:
+            tail = pre_city.split(name_n,1)[1].strip().split()
+            if tail and tail[0] in CORP_SUFFIX:
+                out.append({"line_no":line_no,"line":line,"purchase_date":purchase_date,"amount":amount,"match_status":"EXCLUDED_HOLDING_COMPANY","match_method":method,"score":score})
+                continue
+        out.append({"line_no":line_no,"line":line,"purchase_date":purchase_date,"amount":amount,"match_status":"MATCHED","match_method":method,"score":score,"CERT":int(r["CERT"]),"NAME":r["NAME"],"CITY":r["CITY"],"STALP":r["STALP"]})
+    return pd.DataFrame(out)
 
-    dev2 = d[(d["split"] == "development") & (d["coverage"] == 1)]
-    bq, pq, eps = dev2["B"].quantile(.75), dev2["P"].quantile(.75), dev2["W"].quantile(.25)
-    d["B_norm"] = d["B"] / bq
-    d["P_norm"] = d["P"] / pq
-    d["Pi"] = d["B_norm"] * d["P_norm"]
-    d["K"] = (d["E"] * d["I"] * d["V"] * d["coverage"]).clip(lower=.05)
-    d["PCR"] = d["Pi"] / d["K"]
-    d["H_star"] = d["PCR"] / (1 + d["PCR"])
-    d["MQ"] = ((d["B_norm"] >= 1) & (d["P_norm"] >= 1) & (d["W"] <= eps)).astype(int)
 
-    evaluable = d[d["coverage"] == 1].copy()
-    train = evaluable[evaluable["split"] == "development"]
-    test = evaluable[evaluable["split"] == "evaluation"]
-    y = test["outcome"].to_numpy()
-    features = ["B", "P", "E", "I", "V"]
+def nearest_row(g: pd.DataFrame, target: pd.Timestamp, max_q=1):
+    if g.empty: return None
+    gg = g.copy(); gg["dist"] = (gg["REPDTE"] - target).abs().dt.days
+    gg = gg[gg["dist"] <= 100*max_q]
+    if gg.empty: return None
+    return gg.sort_values(["dist","REPDTE"]).iloc[0]
 
-    logit = Pipeline([("imp", SimpleImputer(strategy="median")), ("scale", StandardScaler()),
-                      ("model", LogisticRegression(max_iter=2000, random_state=SEED, class_weight="balanced"))])
-    logit.fit(train[features], train["outcome"])
-    p_logit = logit.predict_proba(test[features])[:, 1]
-    gb = Pipeline([("imp", SimpleImputer(strategy="median")),
-                   ("model", HistGradientBoostingClassifier(random_state=SEED, max_iter=200))])
-    gb.fit(train[features], train["outcome"])
-    p_gb = gb.predict_proba(test[features])[:, 1]
 
-    gates = {
-        "B_only": (test["B_norm"] >= 1).astype(int),
-        "P_only": (test["P_norm"] >= 1).astype(int),
-        "W_only": (test["W"] <= eps).astype(int),
-        "B_P": ((test["B_norm"] >= 1) & (test["P_norm"] >= 1)).astype(int),
-        "B_W": ((test["B_norm"] >= 1) & (test["W"] <= eps)).astype(int),
-        "P_W": ((test["P_norm"] >= 1) & (test["W"] <= eps)).astype(int),
-        "full_MQ": test["MQ"].astype(int),
-    }
-    ablations = {k: score_binary(y, v.to_numpy()) for k, v in gates.items()}
-    results = {
-        "artifact_id": "CLOUD_TEST_1_ALIBABA_GPU_2020_EMPIRICAL_RETURN_v1",
-        "status": "COMPLETE",
-        "thresholds": {"B_q75": float(bq), "P_q75": float(pq), "epsilon_d": float(eps)},
-        "coverage": {"raw_jobs": int(len(jobs)), "evaluable_jobs": int(len(evaluable)),
-                     "development_jobs": int(len(train)), "evaluation_jobs": int(len(test)),
-                     "evaluation_failure_prevalence": float(test["outcome"].mean())},
-        "hard_MQ": score_binary(y, test["MQ"].to_numpy()),
-        "continuous_H_star": score_prob(y, test["H_star"].to_numpy()),
-        "logistic": score_prob(y, p_logit),
-        "gradient_boosting": score_prob(y, p_gb),
-        "components_AUROC": {
-            "B": float(roc_auc_score(y, test["B"])), "P": float(roc_auc_score(y, test["P"])),
-            "one_minus_E": float(roc_auc_score(y, 1 - test["E"])),
-            "one_minus_I": float(roc_auc_score(y, 1 - test["I"])),
-            "one_minus_V": float(roc_auc_score(y, 1 - test["V"])),
-            "one_minus_W": float(roc_auc_score(y, 1 - test["W"])),
-            "one_minus_mean_EIV": float(roc_auc_score(y, 1 - test[["E", "I", "V"]].mean(axis=1))),
-        },
-        "ablations": ablations,
-        "claim_boundary": "Launch-time held-out association/discrimination only; not a universal or full telemetry validation.",
-    }
+def bootstrap_median_diff(a, b, seed=256, n=2000):
+    a=np.asarray(pd.Series(a).dropna(),float); b=np.asarray(pd.Series(b).dropna(),float)
+    if len(a)<5 or len(b)<5: return [None,None,None]
+    rng=np.random.default_rng(seed); vals=[]
+    for _ in range(n): vals.append(np.median(rng.choice(a,len(a),replace=True))-np.median(rng.choice(b,len(b),replace=True)))
+    return [float(np.median(a)-np.median(b)), float(np.quantile(vals,.025)), float(np.quantile(vals,.975))]
 
-    d.to_csv(OUT / "panel.csv", index=False)
-    (OUT / "metrics.json").write_text(json.dumps(results, indent=2))
-    pd.DataFrame([results["hard_MQ"]]).to_csv(OUT / "confusion_matrix.csv", index=False)
-    pd.DataFrame(ablations).T.to_csv(OUT / "ablations.csv")
-    pd.DataFrame({"exclusion": ["incomplete_predictor_set"], "count": [int((d["coverage"] < 1).sum())]}).to_csv(OUT / "exclusions.csv", index=False)
-    receipt = {"seed": SEED, "source_registry_sha256": sha256(OUT / "source_registry.json"),
-               "panel_sha256": sha256(OUT / "panel.csv"), "metrics_sha256": sha256(OUT / "metrics.json")}
-    (OUT / "run_receipt.json").write_text(json.dumps(receipt, indent=2))
-    (OUT / "run_log.txt").write_text("Completed frozen Cloud Test 1 launch-time run.\n")
-    print(json.dumps(results, indent=2))
 
+def main():
+    receipts=[]
+    inst, rec = get_pages("institutions", {"fields":",".join(INST_FIELDS),"sort_by":"CERT","sort_order":"ASC"}); receipts += rec
+    fin, rec = get_pages("financials", {"filters":"REPDTE:[2007-01-01 TO 2013-12-31]","fields":",".join(FIN_FIELDS),"sort_by":"REPDTE","sort_order":"ASC"}); receipts += rec
+    failures, rec = get_pages("failures", {"fields":",".join(FAIL_FIELDS),"sort_by":"FAILDATE","sort_order":"ASC"}); receipts += rec
+    pdf_path, text, trec = download_tarp(); receipts.append(trec)
+    pd.DataFrame(receipts).to_csv(OUT/"source_receipts.csv", index=False)
+
+    for df in [inst, fin, failures]: df.columns=[str(c).upper() for c in df.columns]
+    # Treasury-to-FDIC linkage frozen before outcome inspection.
+    ledger = parse_purchase_lines(text, inst)
+    ledger.to_csv(OUT/"tarp_match_ledger.csv", index=False)
+    matched = ledger[ledger.get("match_status",pd.Series(dtype=str))=="MATCHED"].dropna(subset=["CERT","purchase_date"]).copy()
+    if matched.empty: raise RuntimeError("No deterministic CPP-to-FDIC matches")
+    matched = matched.sort_values("purchase_date").drop_duplicates("CERT", keep="first")
+
+    fin["CERT"]=pd.to_numeric(fin["CERT"],errors="coerce").astype("Int64")
+    fin["REPDTE"]=pd.to_datetime(fin["REPDTE"].astype(str),errors="coerce")
+    for c in ["ASSET","EQ","RBC1RWAJ","NCLNLSR","ROA","LNLSNET","DEP"]: fin[c]=pd.to_numeric(fin[c],errors="coerce")
+    fin=fin[(fin.REPDTE>=START)&(fin.REPDTE<=END)&fin.CERT.notna()].drop_duplicates().copy()
+    if fin.duplicated(["CERT","REPDTE"]).any(): raise RuntimeError("Conflicting duplicate FDIC bank-quarter keys")
+    fin["EQ_ASSET"]=np.where(fin.ASSET>0,fin.EQ/fin.ASSET,np.nan)
+    fin["LTD"]=np.where(fin.DEP>0,fin.LNLSNET/fin.DEP,np.nan)
+    fin["LOAN_OUTPUT"]=np.where(fin.ASSET>0,fin.LNLSNET/fin.ASSET,np.nan)
+    parts=[]
+    for dt,g in fin.groupby("REPDTE"):
+        g=g.copy(); g["A_EQ"]=rank01(g.EQ_ASSET,True); g["A_RBC"]=rank01(g.RBC1RWAJ,True)
+        g["CAPITAL"]=g[["A_EQ","A_RBC"]].min(axis=1,skipna=False)
+        g["ASSET_QUALITY"]=rank01(g.NCLNLSR,False); g["EARNINGS"]=rank01(g.ROA,True); g["LIQUIDITY"]=rank01(g.LTD,False)
+        parts.append(g)
+    panel=pd.concat(parts,ignore_index=True).sort_values(["CERT","REPDTE"])
+    domains=["CAPITAL","ASSET_QUALITY","EARNINGS","LIQUIDITY"]
+    panel["IMI"]=panel[domains].prod(axis=1,min_count=4); panel["WMI"]=panel[domains].min(axis=1,skipna=False); panel["ADD"]=panel[domains].mean(axis=1,skipna=False)
+    panel.to_csv(OUT/"bank_quarter_panel.csv", index=False)
+
+    failures["CERT"]=pd.to_numeric(failures.get("CERT"),errors="coerce").astype("Int64")
+    failures["FAILDATE"]=pd.to_datetime(failures.get("FAILDATE").astype(str),errors="coerce")
+    fmap=failures.dropna(subset=["CERT","FAILDATE"]).groupby("CERT")["FAILDATE"].min().to_dict()
+
+    outcomes=[]
+    for s in matched.itertuples():
+        cert=int(s.CERT); pdte=pd.Timestamp(s.purchase_date); g=panel[panel.CERT==cert].copy()
+        base=g[g.REPDTE<pdte].dropna(subset=["IMI"]).sort_values("REPDTE").tail(1)
+        if base.empty: continue
+        b=base.iloc[0]; p4=nearest_row(g.dropna(subset=["IMI"]), b.REPDTE+pd.offsets.QuarterEnd(4),1); p8=nearest_row(g.dropna(subset=["IMI"]), b.REPDTE+pd.offsets.QuarterEnd(8),1)
+        fail=fmap.get(cert,pd.NaT)
+        row={"CERT":cert,"NAME":getattr(s,"NAME",None),"STALP":getattr(s,"STALP",None),"purchase_date":pdte,"support_amount":s.amount,"baseline_date":b.REPDTE,"baseline_asset":b.ASSET,"baseline_IMI":b.IMI,"baseline_WMI":b.WMI,"baseline_ADD":b.ADD,"baseline_output":b.LOAN_OUTPUT}
+        row["support_intensity"] = s.amount/(b.ASSET*1000.0) if pd.notna(s.amount) and pd.notna(b.ASSET) and b.ASSET>0 else np.nan
+        for label,x in [("post4",p4),("post8",p8)]:
+            if x is not None:
+                row[f"{label}_date"]=x.REPDTE; row[f"{label}_IMI"]=x.IMI; row[f"{label}_WMI"]=x.WMI; row[f"{label}_ADD"]=x.ADD; row[f"{label}_output"]=x.LOAN_OUTPUT
+                row[f"delta{label[-1]}_IMI"]=x.IMI-b.IMI; row[f"delta{label[-1]}_WMI"]=x.WMI-b.WMI; row[f"delta{label[-1]}_ADD"]=x.ADD-b.ADD
+                survived = pd.isna(fail) or fail > x.REPDTE
+                row[f"output_maintained_{label[-1]}q"] = int(survived and pd.notna(x.LOAN_OUTPUT) and pd.notna(b.LOAN_OUTPUT) and x.LOAN_OUTPUT >= .90*b.LOAN_OUTPUT)
+            else:
+                row[f"output_maintained_{label[-1]}q"] = np.nan
+        d4=row.get("delta4_IMI",np.nan); d8=row.get("delta8_IMI",np.nan)
+        row["restoration_candidate_4q"] = int(pd.notna(d4) and d4>=EPS)
+        row["restoration_persistent_8q"] = int(pd.notna(d4) and pd.notna(d8) and d4>=EPS and d8>=EPS)
+        row["supported_continuity_candidate_4q"] = int(row.get("output_maintained_4q")==1 and pd.notna(d4) and d4<EPS)
+        row["supported_continuity_persistent_8q"] = int(row.get("output_maintained_8q")==1 and pd.notna(d8) and d8<EPS)
+        row["digression_4q"] = int(pd.notna(d4) and d4<=-EPS)
+        row["stable_intrinsic_4q"] = int(pd.notna(d4) and abs(d4)<EPS)
+        row["failed_by_8q"] = int(pd.notna(fail) and p8 is not None and fail<=p8.REPDTE)
+        outcomes.append(row)
+    supp=pd.DataFrame(outcomes); supp.to_csv(OUT/"supported_bank_outcomes.csv",index=False)
+    if len(supp)<20: raise RuntimeError(f"Insufficient supported bank outcome rows: {len(supp)}")
+
+    # Deterministic exact-match comparison cohort by baseline quarter, size decile, IMI decile, state if available; relax state only if needed.
+    support_certs=set(supp.CERT.astype(int)); controls=[]
+    base_pool=[]
+    for r in supp.itertuples():
+        q=pd.Timestamp(r.baseline_date); gp=panel[(panel.REPDTE==q)&(~panel.CERT.astype(int).isin(support_certs))].dropna(subset=["IMI","ASSET"]).copy()
+        if gp.empty: continue
+        gp["size_decile"]=pd.qcut(gp.ASSET.rank(method="first"),10,labels=False,duplicates="drop"); gp["imi_decile"]=pd.qcut(gp.IMI.rank(method="first"),10,labels=False,duplicates="drop")
+        target_size=int(pd.qcut(panel[panel.REPDTE==q].ASSET.rank(method="first"),10,labels=False,duplicates="drop").loc[panel[(panel.REPDTE==q)&(panel.CERT==r.CERT)].index[0]]) if len(panel[(panel.REPDTE==q)&(panel.CERT==r.CERT)]) else None
+        target_imi=int(pd.qcut(panel[panel.REPDTE==q].IMI.rank(method="first"),10,labels=False,duplicates="drop").loc[panel[(panel.REPDTE==q)&(panel.CERT==r.CERT)].index[0]]) if len(panel[(panel.REPDTE==q)&(panel.CERT==r.CERT)]) else None
+        cand=gp[(gp.size_decile==target_size)&(gp.imi_decile==target_imi)]
+        same=cand[cand.STALP.astype(str)==str(r.STALP)] if "STALP" in cand.columns else pd.DataFrame()
+        if len(same): cand=same
+        if len(cand)==0: continue
+        c=cand.assign(dist=(np.log1p(cand.ASSET)-math.log1p(r.baseline_asset))**2+(cand.IMI-r.baseline_IMI)**2).sort_values(["dist","CERT"]).iloc[0]
+        cg=panel[panel.CERT==c.CERT].copy(); c4=nearest_row(cg.dropna(subset=["IMI"]), q+pd.offsets.QuarterEnd(4),1); c8=nearest_row(cg.dropna(subset=["IMI"]), q+pd.offsets.QuarterEnd(8),1)
+        controls.append({"supported_CERT":r.CERT,"control_CERT":int(c.CERT),"baseline_date":q,"control_baseline_IMI":c.IMI,"control_delta4_IMI":(c4.IMI-c.IMI if c4 is not None else np.nan),"control_delta8_IMI":(c8.IMI-c.IMI if c8 is not None else np.nan)})
+    ctrl=pd.DataFrame(controls); ctrl.to_csv(OUT/"control_pairs.csv",index=False)
+
+    metrics={"status":"VALID_EXECUTION","protocol":"IMI_v3_TARP_CPP_SUPPORT_RESTORATION_PROTOCOL_v1","treasury_candidate_lines":int(len(ledger)),"treasury_matched_unique_banks":int(len(matched)),"supported_evaluable_banks":int(len(supp)),"control_pairs":int(len(ctrl))}
+    for h in [4,8]:
+        d=supp.get(f"delta{h}_IMI",pd.Series(dtype=float)).dropna(); metrics[f"delta{h}_IMI_n"]=int(len(d)); metrics[f"delta{h}_IMI_median"]=float(d.median()) if len(d) else None
+    metrics["disposition_4q"]={k:int(supp[k].sum()) for k in ["restoration_candidate_4q","supported_continuity_candidate_4q","digression_4q","stable_intrinsic_4q"]}
+    metrics["disposition_8q"]={k:int(supp[k].sum()) for k in ["restoration_persistent_8q","supported_continuity_persistent_8q","failed_by_8q"]}
+    for h in [4,8]:
+        sub=supp.dropna(subset=["support_intensity",f"delta{h}_IMI"])
+        if len(sub)>=10:
+            rho,p=spearmanr(sub.support_intensity,sub[f"delta{h}_IMI"]); metrics[f"support_intensity_rho_delta{h}"]={"n":int(len(sub)),"rho":float(rho),"p":float(p),"material":bool(abs(rho)>=.20 and p<.05)}
+    maintained=supp[(supp.output_maintained_8q==1)&supp.delta8_IMI.notna()].copy()
+    if len(maintained)>=10 and maintained.restoration_persistent_8q.nunique()==2:
+        y=maintained.restoration_persistent_8q.to_numpy()
+        for m in ["baseline_IMI","baseline_WMI","baseline_ADD"]:
+            if y.sum()>=1 and (len(y)-y.sum())>=1: metrics[f"{m}_auroc_restoration8"] = float(roc_auc_score(y, maintained[m]))
+    if len(ctrl):
+        j=supp.merge(ctrl,left_on="CERT",right_on="supported_CERT")
+        for h in [4,8]:
+            svals=j[f"delta{h}_IMI"]; cvals=j[f"control_delta{h}_IMI"]
+            ok=svals.notna()&cvals.notna(); diff=(svals[ok]-cvals[ok])
+            metrics[f"paired_delta{h}_difference"]={"n":int(ok.sum()),"median_supported_minus_control":float(diff.median()) if ok.sum() else None}
+            if ok.sum()>=20:
+                metrics[f"unpaired_bootstrap_delta{h}"]={"difference_ci":bootstrap_median_diff(svals[ok],cvals[ok])}
+    metrics["materiality"]={"both_4q_classes_ge20":bool(metrics["disposition_4q"]["restoration_candidate_4q"]>=20 and metrics["disposition_4q"]["supported_continuity_candidate_4q"]>=20),"both_8q_classes_ge20":bool(metrics["disposition_8q"]["restoration_persistent_8q"]>=20 and metrics["disposition_8q"]["supported_continuity_persistent_8q"]>=20)}
+    metrics["claim_boundary"]="Retrospective support-separated disposition study. CPP receipt is independently observed; no causal TARP effect claim. Post-exit intrinsic restoration is not authorized unless official exit dates are independently recovered."
+    (OUT/"metrics.json").write_text(json.dumps(metrics,indent=2,default=str))
+    (OUT/"run_receipt.json").write_text(json.dumps({"protocol":metrics["protocol"],"tarp_pdf_sha256":sha256(pdf_path),"match_ledger_sha256":sha256(OUT/"tarp_match_ledger.csv"),"supported_outcomes_sha256":sha256(OUT/"supported_bank_outcomes.csv"),"metrics_sha256":sha256(OUT/"metrics.json")},indent=2))
+    (OUT/"run_log.txt").write_text("Completed frozen IMI v3 TARP CPP support/restoration study.\n")
+    print(json.dumps(metrics,indent=2,default=str))
 
 if __name__ == "__main__":
     main()
