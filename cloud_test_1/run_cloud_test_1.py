@@ -2,247 +2,234 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
-import tarfile
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import requests
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.impute import SimpleImputer
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import (
-    average_precision_score,
-    balanced_accuracy_score,
-    brier_score_loss,
-    confusion_matrix,
-    f1_score,
-    matthews_corrcoef,
-    precision_score,
-    recall_score,
-    roc_auc_score,
-)
+from sklearn.linear_model import LogisticRegression, LinearRegression
+from sklearn.metrics import average_precision_score, brier_score_loss, roc_auc_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 SEED = 256
 ROOT = Path(__file__).resolve().parent
-RAW = ROOT / "raw"
 OUT = ROOT / "outputs"
-RAW.mkdir(parents=True, exist_ok=True)
 OUT.mkdir(parents=True, exist_ok=True)
-README = "https://raw.githubusercontent.com/alibaba/clusterdata/master/cluster-trace-gpu-v2020/README.md"
-EXPECTED = {
-    "pai_job_table.tar.gz": "5aad7f7caac501136d14ed6a48e40546f825d7b0617a3a4f337e2348fe0a6cb0",
-    "pai_task_table.tar.gz": "cd1d6dc3215d2a8607ccf6b6dd952b5db776df86926c73259fea7c1499ac40e5",
+BASE = "https://api.worldbank.org/v2"
+YEARS = [2017, 2018, 2019, 2020, 2021]
+IND = {
+    "unemp": "SL.UEM.TOTL.ZS",
+    "infl": "FP.CPI.TOTL.ZG",
+    "debt": "GC.DOD.TOTL.GD.ZS",
+    "tourism": "ST.INT.RCPT.XP.ZS",
+    "trade": "NE.TRD.GNFS.ZS",
+    "reserves": "FI.RES.TOTL.MO",
+    "savings": "NY.GNS.ICTR.ZS",
+    "capital": "NE.GDI.TOTL.ZS",
+    "spi": "IQ.SPI.OVRL",
+    "sci": "IQ.SCI.OVRL",
+    "gdp_growth": "NY.GDP.MKTP.KD.ZG",
+    "employment": "SL.EMP.TOTL.SP.ZS",
 }
-JOB_COLUMNS = ["job_name", "inst_id", "user", "status", "start_time", "end_time"]
-TASK_COLUMNS = [
-    "job_name", "task_name", "inst_num", "status", "start_time", "end_time",
-    "plan_cpu", "plan_mem", "plan_gpu", "gpu_type",
-]
 
 
-def sha256(path: Path) -> str:
-    h = hashlib.sha256()
-    with path.open("rb") as f:
-        for chunk in iter(lambda: f.read(8 * 1024 * 1024), b""):
-            h.update(chunk)
-    return h.hexdigest()
-
-
-def resolve_links() -> dict[str, str]:
-    r = requests.get(README, timeout=60)
+def get_json(url: str):
+    r = requests.get(url, timeout=90)
     r.raise_for_status()
-    text = r.text
-    links = re.findall(r"\[[^\]]+\]\((https?://[^)]+)\)", text)
-    links += re.findall(r'https?://[^\s<>"\)]+', text)
-    out: dict[str, str] = {}
-    for url in links:
-        clean = url.rstrip(".,)")
-        for fn in EXPECTED:
-            if fn in clean:
-                out.setdefault(fn, clean)
-    missing = sorted(set(EXPECTED) - set(out))
-    if missing:
-        raise RuntimeError(f"Official README links not resolved: {missing}")
-    return out
+    return r.json()
 
 
-def download(url: str, path: Path) -> None:
-    with requests.get(url, stream=True, timeout=180) as r:
-        r.raise_for_status()
-        with path.open("wb") as f:
-            for chunk in r.iter_content(8 * 1024 * 1024):
-                if chunk:
-                    f.write(chunk)
+def country_set() -> set[str]:
+    data = get_json(f"{BASE}/country?format=json&per_page=400")
+    rows = data[1]
+    return {r["id"] for r in rows if r.get("region", {}).get("id")}
 
 
-def ecdf(train: pd.Series, values: pd.Series) -> pd.Series:
-    tr = np.sort(pd.Series(train).dropna().to_numpy(float))
-    if len(tr) == 0:
-        return pd.Series(np.nan, index=values.index)
-    return values.map(lambda x: np.nan if pd.isna(x) else np.searchsorted(tr, x, side="right") / len(tr))
+def fetch_indicator(code: str) -> pd.DataFrame:
+    url = f"{BASE}/country/all/indicator/{code}?date=2017:2021&format=json&per_page=20000"
+    data = get_json(url)
+    rows = data[1] or []
+    out = []
+    for r in rows:
+        if r.get("value") is None:
+            continue
+        out.append({"country": r["countryiso3code"], "year": int(r["date"]), "value": float(r["value"])})
+    df = pd.DataFrame(out)
+    df["indicator"] = code
+    return df
 
 
-def score_binary(y: np.ndarray, pred: np.ndarray) -> dict:
-    tn, fp, fn, tp = confusion_matrix(y, pred, labels=[0, 1]).ravel()
+def pct_rank(s: pd.Series, higher=True) -> pd.Series:
+    r = s.rank(method="average", pct=True)
+    return r if higher else 1 - r
+
+
+def hash_split(country: str) -> str:
+    x = int(hashlib.sha256(f"{SEED}:{country}".encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
+    return "development" if x < 0.75 else "evaluation"
+
+
+def safe_auc(y, p):
+    return float(roc_auc_score(y, p)) if len(np.unique(y)) == 2 else None
+
+
+def score(y, p):
+    p = np.clip(np.asarray(p, float), 1e-9, 1 - 1e-9)
+    y = np.asarray(y, int)
     return {
-        "TN": int(tn), "FP": int(fp), "FN": int(fn), "TP": int(tp),
-        "sensitivity": float(recall_score(y, pred, zero_division=0)),
-        "specificity": float(tn / (tn + fp)) if tn + fp else None,
-        "precision": float(precision_score(y, pred, zero_division=0)),
-        "npv": float(tn / (tn + fn)) if tn + fn else None,
-        "balanced_accuracy": float(balanced_accuracy_score(y, pred)),
-        "f1": float(f1_score(y, pred, zero_division=0)),
-        "mcc": float(matthews_corrcoef(y, pred)),
+        "n": int(len(y)),
+        "events": int(y.sum()),
+        "prevalence": float(y.mean()),
+        "brier": float(brier_score_loss(y, p)),
+        "auroc": safe_auc(y, p),
+        "average_precision": float(average_precision_score(y, p)),
     }
 
 
-def score_prob(y: np.ndarray, p: np.ndarray) -> dict:
-    return {
-        "AUROC": float(roc_auc_score(y, p)),
-        "AUPRC": float(average_precision_score(y, p)),
-        "Brier": float(brier_score_loss(y, np.clip(p, 0, 1))),
-    }
+def fit_logit(train, test, features, outcome):
+    pipe = Pipeline([
+        ("scale", StandardScaler()),
+        ("model", LogisticRegression(max_iter=3000, random_state=SEED, class_weight="balanced")),
+    ])
+    pipe.fit(train[features], train[outcome])
+    return pipe.predict_proba(test[features])[:, 1]
 
 
-def main() -> None:
-    links = resolve_links()
-    registry = []
-    for fn, expected in EXPECTED.items():
-        p = RAW / fn
-        download(links[fn], p)
-        actual = sha256(p)
-        registry.append({"file": fn, "url": links[fn], "bytes": p.stat().st_size,
-                         "sha256": actual, "expected_sha256": expected,
-                         "checksum_pass": actual == expected})
-        if actual != expected:
-            raise RuntimeError(f"Checksum failed for {fn}")
-        with tarfile.open(p, "r:gz") as tar:
-            tar.extractall(RAW)
+def main():
+    countries = country_set()
+    frames, registry = [], []
+    for name, code in IND.items():
+        df = fetch_indicator(code)
+        df = df[df["country"].isin(countries)].copy()
+        frames.append(df.assign(name=name))
+        registry.append({"name": name, "indicator": code, "rows": int(len(df)), "countries": int(df.country.nunique())})
+    raw = pd.concat(frames, ignore_index=True)
+    raw.to_csv(OUT / "wdi_raw_long.csv", index=False)
     (OUT / "source_registry.json").write_text(json.dumps(registry, indent=2))
 
-    jobs = pd.read_csv(RAW / "pai_job_table.csv", header=None, names=JOB_COLUMNS)
-    tasks = pd.read_csv(RAW / "pai_task_table.csv", header=None, names=TASK_COLUMNS)
-    jobs = jobs[jobs["status"].isin(["Failed", "Terminated"])].copy()
-    jobs["outcome"] = (jobs["status"] == "Failed").astype(int)
-    jobs["split"] = jobs["user"].astype(str).map(
-        lambda u: "development" if int(hashlib.sha256(f"{SEED}:{u}".encode()).hexdigest()[:8], 16) / 0xFFFFFFFF < 0.75 else "evaluation"
-    )
+    pivot = raw.pivot_table(index=["country", "year"], columns="name", values="value", aggfunc="first").reset_index()
+    # Coverage-only prespecified I fallback.
+    spi_cov = pivot[pivot.year.isin([2017, 2018, 2019])].groupby("country")["spi"].apply(lambda s: s.notna().all()).sum() if "spi" in pivot else 0
+    i_name = "spi" if spi_cov >= 40 else "sci"
 
-    t = tasks.copy()
-    required = ["job_name", "task_name", "inst_num", "start_time", "plan_cpu", "plan_mem", "plan_gpu", "gpu_type"]
-    t["field_complete"] = t[required].notna().mean(axis=1)
-    agg = t.groupby("job_name").agg(
-        task_count=("task_name", "size"), inst_count=("inst_num", "sum"),
-        total_cpu=("plan_cpu", "sum"), total_mem=("plan_mem", "sum"), total_gpu=("plan_gpu", "sum"),
-        peak_cpu=("plan_cpu", "max"), peak_mem=("plan_mem", "max"), peak_gpu=("plan_gpu", "max"),
-        first_task_start=("start_time", "min"),
-        task_launch_coverage=("start_time", lambda x: x.notna().mean()),
-        field_complete=("field_complete", "mean"),
-        gpu_type_mode=("gpu_type", lambda x: x.dropna().astype(str).mode().iloc[0] if len(x.dropna()) else "MISSING"),
-    ).reset_index()
+    pre = pivot[pivot.year.isin([2017, 2018, 2019])].groupby("country").mean(numeric_only=True).reset_index()
+    shock = pivot[pivot.year == 2020].set_index("country")
+    rec = pivot[pivot.year == 2021].set_index("country")
+    required = ["unemp", "infl", "debt", "tourism", "trade", "reserves", "savings", "capital", i_name, "gdp_growth", "employment"]
+    eligible = pre.dropna(subset=required).copy()
+    eligible = eligible[eligible.country.isin(shock.index) & eligible.country.isin(rec.index)].copy()
+    eligible = eligible[shock.loc[eligible.country, "gdp_growth"].notna().to_numpy() & rec.loc[eligible.country, "gdp_growth"].notna().to_numpy()].copy()
 
-    d = jobs.merge(agg, on="job_name", how="left")
-    d["wait_time"] = d["first_task_start"] - d["start_time"]
-    d["ordering_consistent"] = ((d["wait_time"] >= 0) | d["wait_time"].isna()).astype(float)
-    d = d.sort_values("start_time").reset_index(drop=True)
-    times = d["start_time"].to_numpy(float)
-    left = np.searchsorted(times, times - 300, side="left")
-    d["cluster_launch_density_5m"] = np.arange(len(d)) - left
-    d["user_launch_density_5m"] = 0
-    for _, idx in d.groupby("user").groups.items():
-        idx = np.array(sorted(idx))
-        ut = d.loc[idx, "start_time"].to_numpy(float)
-        ul = np.searchsorted(ut, ut - 300, side="left")
-        d.loc[idx, "user_launch_density_5m"] = np.arange(len(idx)) - ul
+    # Domain scores are percentile availabilities after complete-route filter.
+    eligible["B"] = pd.concat([
+        pct_rank(eligible["unemp"], higher=False),
+        pct_rank(eligible["infl"].abs(), higher=False),
+        pct_rank(eligible["debt"], higher=False),
+    ], axis=1).mean(axis=1)
+    eligible["P"] = pd.concat([
+        pct_rank(eligible["tourism"], higher=False),
+        pct_rank(eligible["trade"], higher=False),
+    ], axis=1).mean(axis=1)
+    eligible["E"] = pd.concat([
+        pct_rank(eligible["reserves"], higher=True),
+        pct_rank(eligible["savings"], higher=True),
+        pct_rank(eligible["capital"], higher=True),
+    ], axis=1).mean(axis=1)
+    eligible["I"] = pct_rank(eligible[i_name], higher=True)
+    eligible["V"] = pd.concat([
+        pct_rank(eligible["gdp_growth"], higher=True),
+        pct_rank(eligible["employment"], higher=True),
+    ], axis=1).mean(axis=1)
+    eligible["IMI"] = eligible["E"] * eligible["I"] * eligible["V"]
+    eligible["WMI"] = eligible[["E", "I", "V"]].min(axis=1)
+    eligible["ADD"] = eligible[["E", "I", "V"]].mean(axis=1)
+    eligible["CS"] = 1 - eligible["IMI"]
+    eligible["split"] = eligible.country.map(hash_split)
+    eligible["gdp_2020"] = shock.loc[eligible.country, "gdp_growth"].to_numpy()
+    eligible["gdp_2021"] = rec.loc[eligible.country, "gdp_growth"].to_numpy()
+    eligible["contraction"] = (eligible.gdp_2020 < 0).astype(int)
+    eligible["severe"] = (eligible.gdp_2020 <= -5).astype(int)
+    eligible["recovered"] = ((eligible.gdp_2020 < 0) & (eligible.gdp_2021 > 0)).astype(int)
+    eligible["recovery_magnitude"] = eligible.gdp_2021 - eligible.gdp_2020
+    eligible["IMI_decile"] = pd.qcut(eligible.IMI.rank(method="first"), 10, labels=False) + 1
+    eligible["WMI_decile"] = pd.qcut(eligible.WMI.rank(method="first"), 10, labels=False) + 1
+    eligible.to_csv(OUT / "macro_panel.csv", index=False)
 
-    dev = d[d["split"] == "development"].copy()
-    freq = dev["gpu_type_mode"].value_counts(normalize=True)
-    d["gpu_scarcity"] = 1 - d["gpu_type_mode"].map(freq).fillna(0)
-    B_cols = ["total_cpu", "total_mem", "total_gpu", "task_count", "inst_count"]
-    P_cols = ["wait_time", "cluster_launch_density_5m", "user_launch_density_5m", "gpu_scarcity"]
-    E_cols = ["peak_cpu", "peak_mem", "peak_gpu"]
-    ranked = {c: ecdf(dev[c], d[c]) for c in B_cols + P_cols + E_cols}
-    r = pd.DataFrame(ranked, index=d.index)
-    d["B"] = r[B_cols].mean(axis=1, skipna=False)
-    d["P"] = r[P_cols].mean(axis=1, skipna=False)
-    d["E"] = 1 - r[E_cols].mean(axis=1, skipna=False)
-    d["I"] = d[["field_complete", "ordering_consistent"]].mean(axis=1, skipna=False)
-    wait90 = dev["wait_time"].quantile(0.90)
-    d["V"] = d["task_launch_coverage"] * (d["wait_time"] <= wait90).astype(float)
-    d["W"] = d[["E", "I", "V"]].min(axis=1, skipna=False)
-    d["coverage"] = d[["B", "P", "E", "I", "V"]].notna().mean(axis=1)
+    structural = []
+    for outcome in ["contraction", "severe"]:
+        for metric in ["IMI", "WMI"]:
+            dec = eligible[f"{metric}_decile"]
+            low = eligible[dec == 1]
+            rest = eligible[dec != 1]
+            rr = (low[outcome].mean() / rest[outcome].mean()) if rest[outcome].mean() > 0 else None
+            structural.append({
+                "outcome": outcome, "metric": metric,
+                "low_decile_n": int(len(low)), "low_decile_events": int(low[outcome].sum()),
+                "low_decile_rate": float(low[outcome].mean()),
+                "rest_n": int(len(rest)), "rest_events": int(rest[outcome].sum()),
+                "rest_rate": float(rest[outcome].mean()),
+                "risk_ratio": None if rr is None else float(rr),
+            })
+    pd.DataFrame(structural).to_csv(OUT / "structural_concentration.csv", index=False)
 
-    dev2 = d[(d["split"] == "development") & (d["coverage"] == 1)]
-    bq, pq, eps = dev2["B"].quantile(.75), dev2["P"].quantile(.75), dev2["W"].quantile(.25)
-    d["B_norm"] = d["B"] / bq
-    d["P_norm"] = d["P"] / pq
-    d["Pi"] = d["B_norm"] * d["P_norm"]
-    d["K"] = (d["E"] * d["I"] * d["V"] * d["coverage"]).clip(lower=.05)
-    d["PCR"] = d["Pi"] / d["K"]
-    d["H_star"] = d["PCR"] / (1 + d["PCR"])
-    d["MQ"] = ((d["B_norm"] >= 1) & (d["P_norm"] >= 1) & (d["W"] <= eps)).astype(int)
+    train = eligible[eligible.split == "development"].copy()
+    test = eligible[eligible.split == "evaluation"].copy()
+    model_results = {}
+    for outcome in ["contraction", "severe"]:
+        model_results[outcome] = {}
+        # Single operator discrimination: adverse score = 1 - availability.
+        for m in ["IMI", "WMI", "ADD", "B", "P"]:
+            p = 1 - test[m].to_numpy() if m in ["IMI", "WMI", "ADD", "B", "P"] else test[m].to_numpy()
+            # B/P are already availability (low burden/exposure=high), so 1-x is adverse.
+            model_results[outcome][m] = score(test[outcome], p)
+        comparisons = {
+            "BP": ["B", "P"],
+            "RAW": ["B", "P", "E", "I", "V"],
+            "BP_IMI": ["B", "P", "IMI"],
+            "BP_WMI": ["B", "P", "WMI"],
+        }
+        for name, feats in comparisons.items():
+            p = fit_logit(train, test, feats, outcome)
+            model_results[outcome][name] = score(test[outcome], p)
 
-    evaluable = d[d["coverage"] == 1].copy()
-    train = evaluable[evaluable["split"] == "development"]
-    test = evaluable[evaluable["split"] == "evaluation"]
-    y = test["outcome"].to_numpy()
-    features = ["B", "P", "E", "I", "V"]
+    # Recovery among countries that contracted in 2020.
+    rc = eligible[eligible.contraction == 1].copy()
+    rtrain = rc[rc.split == "development"]
+    rtest = rc[rc.split == "evaluation"]
+    recovery = {"n": int(len(rc)), "events": int(rc.recovered.sum()), "holdout_n": int(len(rtest))}
+    if len(rtest) >= 5 and rtrain.recovered.nunique() == 2 and rtest.recovered.nunique() == 2:
+        for m in ["IMI", "WMI", "ADD"]:
+            recovery[m] = score(rtest.recovered, rtest[m])
+        for name, feats in {"BP": ["B", "P"], "BP_IMI": ["B", "P", "IMI"], "BP_WMI": ["B", "P", "WMI"]}.items():
+            recovery[name] = score(rtest.recovered, fit_logit(rtrain, rtest, feats, "recovered"))
+    # Magnitude association across all contracted countries.
+    recovery["corr_IMI_magnitude"] = float(rc.IMI.corr(rc.recovery_magnitude, method="spearman")) if len(rc) else None
+    recovery["corr_WMI_magnitude"] = float(rc.WMI.corr(rc.recovery_magnitude, method="spearman")) if len(rc) else None
 
-    logit = Pipeline([("imp", SimpleImputer(strategy="median")), ("scale", StandardScaler()),
-                      ("model", LogisticRegression(max_iter=2000, random_state=SEED, class_weight="balanced"))])
-    logit.fit(train[features], train["outcome"])
-    p_logit = logit.predict_proba(test[features])[:, 1]
-    gb = Pipeline([("imp", SimpleImputer(strategy="median")),
-                   ("model", HistGradientBoostingClassifier(random_state=SEED, max_iter=200))])
-    gb.fit(train[features], train["outcome"])
-    p_gb = gb.predict_proba(test[features])[:, 1]
-
-    gates = {
-        "B_only": (test["B_norm"] >= 1).astype(int),
-        "P_only": (test["P_norm"] >= 1).astype(int),
-        "W_only": (test["W"] <= eps).astype(int),
-        "B_P": ((test["B_norm"] >= 1) & (test["P_norm"] >= 1)).astype(int),
-        "B_W": ((test["B_norm"] >= 1) & (test["W"] <= eps)).astype(int),
-        "P_W": ((test["P_norm"] >= 1) & (test["W"] <= eps)).astype(int),
-        "full_MQ": test["MQ"].astype(int),
-    }
-    ablations = {k: score_binary(y, v.to_numpy()) for k, v in gates.items()}
     results = {
-        "artifact_id": "CLOUD_TEST_1_ALIBABA_GPU_2020_EMPIRICAL_RETURN_v1",
-        "status": "COMPLETE",
-        "thresholds": {"B_q75": float(bq), "P_q75": float(pq), "epsilon_d": float(eps)},
-        "coverage": {"raw_jobs": int(len(jobs)), "evaluable_jobs": int(len(evaluable)),
-                     "development_jobs": int(len(train)), "evaluation_jobs": int(len(test)),
-                     "evaluation_failure_prevalence": float(test["outcome"].mean())},
-        "hard_MQ": score_binary(y, test["MQ"].to_numpy()),
-        "continuous_H_star": score_prob(y, test["H_star"].to_numpy()),
-        "logistic": score_prob(y, p_logit),
-        "gradient_boosting": score_prob(y, p_gb),
-        "components_AUROC": {
-            "B": float(roc_auc_score(y, test["B"])), "P": float(roc_auc_score(y, test["P"])),
-            "one_minus_E": float(roc_auc_score(y, 1 - test["E"])),
-            "one_minus_I": float(roc_auc_score(y, 1 - test["I"])),
-            "one_minus_V": float(roc_auc_score(y, 1 - test["V"])),
-            "one_minus_W": float(roc_auc_score(y, 1 - test["W"])),
-            "one_minus_mean_EIV": float(roc_auc_score(y, 1 - test[["E", "I", "V"]].mean(axis=1))),
-        },
-        "ablations": ablations,
-        "claim_boundary": "Launch-time held-out association/discrimination only; not a universal or full telemetry validation.",
+        "status": "VALID_EXECUTION",
+        "i_indicator_used": IND[i_name],
+        "spi_complete_pre_shock_country_count": int(spi_cov),
+        "eligible_countries": int(len(eligible)),
+        "development_countries": int(len(train)),
+        "evaluation_countries": int(len(test)),
+        "contraction_events": int(eligible.contraction.sum()),
+        "severe_events": int(eligible.severe.sum()),
+        "recovery_events": int(eligible.recovered.sum()),
+        "structural_concentration": structural,
+        "holdout_models": model_results,
+        "recovery": recovery,
+        "claim_boundary": "Retrospective country-level common-shock realization; association/discrimination only; no causal or supported-continuity claim.",
     }
-
-    d.to_csv(OUT / "panel.csv", index=False)
     (OUT / "metrics.json").write_text(json.dumps(results, indent=2))
-    pd.DataFrame([results["hard_MQ"]]).to_csv(OUT / "confusion_matrix.csv", index=False)
-    pd.DataFrame(ablations).T.to_csv(OUT / "ablations.csv")
-    pd.DataFrame({"exclusion": ["incomplete_predictor_set"], "count": [int((d["coverage"] < 1).sum())]}).to_csv(OUT / "exclusions.csv", index=False)
-    receipt = {"seed": SEED, "source_registry_sha256": sha256(OUT / "source_registry.json"),
-               "panel_sha256": sha256(OUT / "panel.csv"), "metrics_sha256": sha256(OUT / "metrics.json")}
-    (OUT / "run_receipt.json").write_text(json.dumps(receipt, indent=2))
-    (OUT / "run_log.txt").write_text("Completed frozen Cloud Test 1 launch-time run.\n")
+    (OUT / "run_receipt.json").write_text(json.dumps({
+        "seed": SEED,
+        "protocol": "IMI_v3_GLOBAL_MACRO_COMMON_SHOCK_REALIZATION_PROTOCOL_v1",
+        "panel_sha256": hashlib.sha256((OUT / "macro_panel.csv").read_bytes()).hexdigest(),
+        "metrics_sha256": hashlib.sha256((OUT / "metrics.json").read_bytes()).hexdigest(),
+    }, indent=2))
+    (OUT / "run_log.txt").write_text("Completed frozen IMI v3 global macro common-shock realization.\n")
     print(json.dumps(results, indent=2))
 
 
