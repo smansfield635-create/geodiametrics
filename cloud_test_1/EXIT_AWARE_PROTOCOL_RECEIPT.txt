@@ -1,0 +1,4 @@
+IMI_v3_CPP_EXIT_AWARE_RESTORATION_PROTOCOL_v1
+Frozen in Google Drive before exit-aware outcome inspection.
+Primary persistent-restoration rule: DELTA_EXIT_IMI >= +0.05 at both 4Q and 8Q post-exit.
+Capital-support exit is Treasury zero-capital repayment/final capital disposition; warrant-only disposition does not extend support.
