@@ -1,250 +1,219 @@
 from __future__ import annotations
 
-import hashlib
 import json
-import re
-import tarfile
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import requests
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import (
-    average_precision_score,
-    balanced_accuracy_score,
-    brier_score_loss,
-    confusion_matrix,
-    f1_score,
-    matthews_corrcoef,
-    precision_score,
-    recall_score,
-    roc_auc_score,
-)
+from sklearn.metrics import average_precision_score, brier_score_loss, roc_auc_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-SEED = 256
 ROOT = Path(__file__).resolve().parent
-RAW = ROOT / "raw"
-OUT = ROOT / "outputs"
-RAW.mkdir(parents=True, exist_ok=True)
+OUT = ROOT / 'outputs'
 OUT.mkdir(parents=True, exist_ok=True)
-README = "https://raw.githubusercontent.com/alibaba/clusterdata/master/cluster-trace-gpu-v2020/README.md"
-EXPECTED = {
-    "pai_job_table.tar.gz": "5aad7f7caac501136d14ed6a48e40546f825d7b0617a3a4f337e2348fe0a6cb0",
-    "pai_task_table.tar.gz": "cd1d6dc3215d2a8607ccf6b6dd952b5db776df86926c73259fea7c1499ac40e5",
-}
-JOB_COLUMNS = ["job_name", "inst_id", "user", "status", "start_time", "end_time"]
-TASK_COLUMNS = [
-    "job_name", "task_name", "inst_num", "status", "start_time", "end_time",
-    "plan_cpu", "plan_mem", "plan_gpu", "gpu_type",
-]
+BASE = 'https://api.fdic.gov/banks'
+START = pd.Timestamp('2004-01-01')
+END = pd.Timestamp('2020-12-31')
+FIN_FIELDS = ['CERT','REPDTE','ASSET','EQ','RBC1RWAJ','NCLNLSR','ROA','LNLSNET','DEP']
+FAIL_FIELDS = ['CERT','NAME','FAILDATE','RESTYPE','RESTYPE1','FIN']
 
 
-def sha256(path: Path) -> str:
-    h = hashlib.sha256()
-    with path.open("rb") as f:
-        for chunk in iter(lambda: f.read(8 * 1024 * 1024), b""):
-            h.update(chunk)
-    return h.hexdigest()
+def extract_rows(payload):
+    rows = []
+    for x in payload.get('data', []):
+        rows.append(x.get('data', x) if isinstance(x, dict) else x)
+    return rows
 
 
-def resolve_links() -> dict[str, str]:
-    r = requests.get(README, timeout=60)
-    r.raise_for_status()
-    text = r.text
-    links = re.findall(r"\[[^\]]+\]\((https?://[^)]+)\)", text)
-    links += re.findall(r'https?://[^\s<>"\)]+', text)
-    out: dict[str, str] = {}
-    for url in links:
-        clean = url.rstrip(".,)")
-        for fn in EXPECTED:
-            if fn in clean:
-                out.setdefault(fn, clean)
-    missing = sorted(set(EXPECTED) - set(out))
-    if missing:
-        raise RuntimeError(f"Official README links not resolved: {missing}")
+def get_pages(endpoint, params, limit=10000):
+    rows=[]; offset=0; receipts=[]
+    while True:
+        p=dict(params); p['limit']=limit; p['offset']=offset; p['format']='json'
+        r=requests.get(f'{BASE}/{endpoint}', params=p, timeout=120)
+        receipts.append({'endpoint':endpoint,'offset':offset,'status':r.status_code,'url':r.url})
+        r.raise_for_status()
+        chunk=extract_rows(r.json())
+        rows.extend(chunk)
+        if len(chunk)<limit: break
+        offset += limit
+        if offset > 2000000: raise RuntimeError('pagination guard')
+    return pd.DataFrame(rows), receipts
+
+
+def rank01(s, higher=True):
+    x=pd.to_numeric(s, errors='coerce')
+    r=x.rank(method='average')
+    n=x.notna().sum()
+    if n <= 1:
+        out=pd.Series(np.nan,index=x.index)
+    else:
+        out=(r-1)/(n-1)
+    return out if higher else 1-out
+
+
+def safe_metric(y,p):
+    out={'n':int(len(y)),'events':int(np.sum(y)),'prevalence':float(np.mean(y)) if len(y) else np.nan}
+    out['brier']=float(brier_score_loss(y,p))
+    out['auroc']=float(roc_auc_score(y,p)) if len(np.unique(y))==2 else np.nan
+    out['ap']=float(average_precision_score(y,p)) if np.sum(y)>0 else np.nan
     return out
 
 
-def download(url: str, path: Path) -> None:
-    with requests.get(url, stream=True, timeout=180) as r:
-        r.raise_for_status()
-        with path.open("wb") as f:
-            for chunk in r.iter_content(8 * 1024 * 1024):
-                if chunk:
-                    f.write(chunk)
+def model_pipeline():
+    return Pipeline([
+        ('scale', StandardScaler()),
+        ('logit', LogisticRegression(C=1.0, penalty='l2', solver='lbfgs', max_iter=2000, random_state=256))
+    ])
 
 
-def ecdf(train: pd.Series, values: pd.Series) -> pd.Series:
-    tr = np.sort(pd.Series(train).dropna().to_numpy(float))
-    if len(tr) == 0:
-        return pd.Series(np.nan, index=values.index)
-    return values.map(lambda x: np.nan if pd.isna(x) else np.searchsorted(tr, x, side="right") / len(tr))
+def main():
+    fin_filter='REPDTE:[2004-01-01 TO 2020-12-31]'
+    fin, rec1=get_pages('financials', {'filters':fin_filter,'fields':','.join(FIN_FIELDS),'sort_by':'REPDTE','sort_order':'ASC'})
+    failures, rec2=get_pages('failures', {'fields':','.join(FAIL_FIELDS),'sort_by':'FAILDATE','sort_order':'ASC'})
+    pd.DataFrame(rec1+rec2).to_csv(OUT/'source_receipts.csv',index=False)
+    fin.to_csv(OUT/'financials_raw.csv',index=False)
+    failures.to_csv(OUT/'failures_raw.csv',index=False)
+    if fin.empty: raise RuntimeError('No financial rows returned')
 
+    # Normalize and source-QC.
+    fin.columns=[str(c).upper() for c in fin.columns]
+    for c in FIN_FIELDS:
+        if c not in fin.columns: fin[c]=np.nan
+    fin['CERT']=pd.to_numeric(fin['CERT'],errors='coerce').astype('Int64')
+    fin['REPDTE']=pd.to_datetime(fin['REPDTE'].astype(str), errors='coerce')
+    for c in ['ASSET','EQ','RBC1RWAJ','NCLNLSR','ROA','LNLSNET','DEP']:
+        fin[c]=pd.to_numeric(fin[c],errors='coerce')
+    fin=fin[(fin['REPDTE']>=START)&(fin['REPDTE']<=END)&fin['CERT'].notna()].copy()
+    dup=fin.duplicated(['CERT','REPDTE'],keep=False)
+    dup_summary=fin.loc[dup].groupby(['CERT','REPDTE']).size().reset_index(name='n') if dup.any() else pd.DataFrame(columns=['CERT','REPDTE','n'])
+    dup_summary.to_csv(OUT/'duplicate_key_qc.csv',index=False)
+    # Exact duplicate rows are safely collapsed; conflicting duplicate keys fail closed.
+    exact_before=len(fin)
+    fin=fin.drop_duplicates().copy()
+    conflicts=fin.duplicated(['CERT','REPDTE'],keep=False)
+    if conflicts.any():
+        fin.loc[conflicts].to_csv(OUT/'conflicting_duplicate_keys.csv',index=False)
+        raise RuntimeError('Conflicting duplicate CERT-quarter rows')
 
-def score_binary(y: np.ndarray, pred: np.ndarray) -> dict:
-    tn, fp, fn, tp = confusion_matrix(y, pred, labels=[0, 1]).ravel()
-    return {
-        "TN": int(tn), "FP": int(fp), "FN": int(fn), "TP": int(tp),
-        "sensitivity": float(recall_score(y, pred, zero_division=0)),
-        "specificity": float(tn / (tn + fp)) if tn + fp else None,
-        "precision": float(precision_score(y, pred, zero_division=0)),
-        "npv": float(tn / (tn + fn)) if tn + fn else None,
-        "balanced_accuracy": float(balanced_accuracy_score(y, pred)),
-        "f1": float(f1_score(y, pred, zero_division=0)),
-        "mcc": float(matthews_corrcoef(y, pred)),
-    }
+    # Domain raw measures.
+    fin['EQ_ASSET']=np.where(fin['ASSET']>0,fin['EQ']/fin['ASSET'],np.nan)
+    fin['LTD']=np.where(fin['DEP']>0,fin['LNLSNET']/fin['DEP'],np.nan)
+    # Availability ranks are contemporaneous only.
+    grouped=[]
+    for dt,g in fin.groupby('REPDTE',sort=True):
+        g=g.copy()
+        g['A_EQ']=rank01(g['EQ_ASSET'],True)
+        g['A_RBC']=rank01(g['RBC1RWAJ'],True)
+        g['CAPITAL']=g[['A_EQ','A_RBC']].min(axis=1,skipna=False)
+        g['ASSET_QUALITY']=rank01(g['NCLNLSR'],False)
+        g['EARNINGS']=rank01(g['ROA'],True)
+        g['LIQUIDITY']=rank01(g['LTD'],False)
+        grouped.append(g)
+    panel=pd.concat(grouped,ignore_index=True)
+    domains=['CAPITAL','ASSET_QUALITY','EARNINGS','LIQUIDITY']
+    panel['ROUTE_COMPLETE']=panel[domains].notna().all(axis=1)
+    panel['IMI']=panel[domains].prod(axis=1,min_count=len(domains))
+    panel['WMI']=panel[domains].min(axis=1,skipna=False)
+    panel['ADD']=panel[domains].mean(axis=1,skipna=False)
+    panel['LOG_ASSET']=np.log1p(panel['ASSET'].where(panel['ASSET']>=0))
+    panel=panel.sort_values(['CERT','REPDTE'])
+    prev=panel[['CERT','REPDTE','IMI']].copy()
+    prev['REPDTE']=prev['REPDTE']+pd.offsets.QuarterEnd(1)
+    prev=prev.rename(columns={'IMI':'IMI_PREV'})
+    panel=panel.merge(prev,on=['CERT','REPDTE'],how='left')
+    panel['DELTA_IMI']=panel['IMI']-panel['IMI_PREV']
 
+    # Failure labels from independently adjudicated FDIC failures.
+    failures.columns=[str(c).upper() for c in failures.columns]
+    if 'CERT' not in failures.columns or 'FAILDATE' not in failures.columns:
+        raise RuntimeError('Failure schema missing CERT/FAILDATE')
+    failures['CERT']=pd.to_numeric(failures['CERT'],errors='coerce').astype('Int64')
+    failures['FAILDATE']=pd.to_datetime(failures['FAILDATE'].astype(str),errors='coerce')
+    failure_map=failures.dropna(subset=['CERT','FAILDATE']).groupby('CERT')['FAILDATE'].apply(list).to_dict()
+    def label(row,days):
+        dates=failure_map.get(row.CERT,[])
+        return int(any((d>row.REPDTE) and (d<=row.REPDTE+pd.Timedelta(days=days)) for d in dates))
+    panel['FAILURE_4Q']=[label(r,365) for r in panel.itertuples()]
+    panel['FAILURE_8Q']=[label(r,730) for r in panel.itertuples()]
+    panel['YEAR']=panel['REPDTE'].dt.year
+    panel.to_csv(OUT/'bank_quarter_panel.csv',index=False)
 
-def score_prob(y: np.ndarray, p: np.ndarray) -> dict:
-    return {
-        "AUROC": float(roc_auc_score(y, p)),
-        "AUPRC": float(average_precision_score(y, p)),
-        "Brier": float(brier_score_loss(y, np.clip(p, 0, 1))),
-    }
-
-
-def main() -> None:
-    links = resolve_links()
-    registry = []
-    for fn, expected in EXPECTED.items():
-        p = RAW / fn
-        download(links[fn], p)
-        actual = sha256(p)
-        registry.append({"file": fn, "url": links[fn], "bytes": p.stat().st_size,
-                         "sha256": actual, "expected_sha256": expected,
-                         "checksum_pass": actual == expected})
-        if actual != expected:
-            raise RuntimeError(f"Checksum failed for {fn}")
-        with tarfile.open(p, "r:gz") as tar:
-            tar.extractall(RAW)
-    (OUT / "source_registry.json").write_text(json.dumps(registry, indent=2))
-
-    jobs = pd.read_csv(RAW / "pai_job_table.csv", header=None, names=JOB_COLUMNS)
-    tasks = pd.read_csv(RAW / "pai_task_table.csv", header=None, names=TASK_COLUMNS)
-    jobs = jobs[jobs["status"].isin(["Failed", "Terminated"])].copy()
-    jobs["outcome"] = (jobs["status"] == "Failed").astype(int)
-    jobs["split"] = jobs["user"].astype(str).map(
-        lambda u: "development" if int(hashlib.sha256(f"{SEED}:{u}".encode()).hexdigest()[:8], 16) / 0xFFFFFFFF < 0.75 else "evaluation"
-    )
-
-    t = tasks.copy()
-    required = ["job_name", "task_name", "inst_num", "start_time", "plan_cpu", "plan_mem", "plan_gpu", "gpu_type"]
-    t["field_complete"] = t[required].notna().mean(axis=1)
-    agg = t.groupby("job_name").agg(
-        task_count=("task_name", "size"), inst_count=("inst_num", "sum"),
-        total_cpu=("plan_cpu", "sum"), total_mem=("plan_mem", "sum"), total_gpu=("plan_gpu", "sum"),
-        peak_cpu=("plan_cpu", "max"), peak_mem=("plan_mem", "max"), peak_gpu=("plan_gpu", "max"),
-        first_task_start=("start_time", "min"),
-        task_launch_coverage=("start_time", lambda x: x.notna().mean()),
-        field_complete=("field_complete", "mean"),
-        gpu_type_mode=("gpu_type", lambda x: x.dropna().astype(str).mode().iloc[0] if len(x.dropna()) else "MISSING"),
+    coverage=panel.groupby('YEAR').agg(
+        rows=('CERT','size'), route_complete=('ROUTE_COMPLETE','sum'), delta_complete=('DELTA_IMI','count'),
+        failures_4q=('FAILURE_4Q','sum'), failures_8q=('FAILURE_8Q','sum'),
+        rbc_nonmissing=('RBC1RWAJ','count'), aq_nonmissing=('NCLNLSR','count'), roa_nonmissing=('ROA','count')
     ).reset_index()
+    coverage.to_csv(OUT/'year_coverage.csv',index=False)
 
-    d = jobs.merge(agg, on="job_name", how="left")
-    d["wait_time"] = d["first_task_start"] - d["start_time"]
-    d["ordering_consistent"] = ((d["wait_time"] >= 0) | d["wait_time"].isna()).astype(float)
-    d = d.sort_values("start_time").reset_index(drop=True)
-    times = d["start_time"].to_numpy(float)
-    left = np.searchsorted(times, times - 300, side="left")
-    d["cluster_launch_density_5m"] = np.arange(len(d)) - left
-    d["user_launch_density_5m"] = 0
-    for _, idx in d.groupby("user").groups.items():
-        idx = np.array(sorted(idx))
-        ut = d.loc[idx, "start_time"].to_numpy(float)
-        ul = np.searchsorted(ut, ut - 300, side="left")
-        d.loc[idx, "user_launch_density_5m"] = np.arange(len(idx)) - ul
-
-    dev = d[d["split"] == "development"].copy()
-    freq = dev["gpu_type_mode"].value_counts(normalize=True)
-    d["gpu_scarcity"] = 1 - d["gpu_type_mode"].map(freq).fillna(0)
-    B_cols = ["total_cpu", "total_mem", "total_gpu", "task_count", "inst_count"]
-    P_cols = ["wait_time", "cluster_launch_density_5m", "user_launch_density_5m", "gpu_scarcity"]
-    E_cols = ["peak_cpu", "peak_mem", "peak_gpu"]
-    ranked = {c: ecdf(dev[c], d[c]) for c in B_cols + P_cols + E_cols}
-    r = pd.DataFrame(ranked, index=d.index)
-    d["B"] = r[B_cols].mean(axis=1, skipna=False)
-    d["P"] = r[P_cols].mean(axis=1, skipna=False)
-    d["E"] = 1 - r[E_cols].mean(axis=1, skipna=False)
-    d["I"] = d[["field_complete", "ordering_consistent"]].mean(axis=1, skipna=False)
-    wait90 = dev["wait_time"].quantile(0.90)
-    d["V"] = d["task_launch_coverage"] * (d["wait_time"] <= wait90).astype(float)
-    d["W"] = d[["E", "I", "V"]].min(axis=1, skipna=False)
-    d["coverage"] = d[["B", "P", "E", "I", "V"]].notna().mean(axis=1)
-
-    dev2 = d[(d["split"] == "development") & (d["coverage"] == 1)]
-    bq, pq, eps = dev2["B"].quantile(.75), dev2["P"].quantile(.75), dev2["W"].quantile(.25)
-    d["B_norm"] = d["B"] / bq
-    d["P_norm"] = d["P"] / pq
-    d["Pi"] = d["B_norm"] * d["P_norm"]
-    d["K"] = (d["E"] * d["I"] * d["V"] * d["coverage"]).clip(lower=.05)
-    d["PCR"] = d["Pi"] / d["K"]
-    d["H_star"] = d["PCR"] / (1 + d["PCR"])
-    d["MQ"] = ((d["B_norm"] >= 1) & (d["P_norm"] >= 1) & (d["W"] <= eps)).astype(int)
-
-    evaluable = d[d["coverage"] == 1].copy()
-    train = evaluable[evaluable["split"] == "development"]
-    test = evaluable[evaluable["split"] == "evaluation"]
-    y = test["outcome"].to_numpy()
-    features = ["B", "P", "E", "I", "V"]
-
-    logit = Pipeline([("imp", SimpleImputer(strategy="median")), ("scale", StandardScaler()),
-                      ("model", LogisticRegression(max_iter=2000, random_state=SEED, class_weight="balanced"))])
-    logit.fit(train[features], train["outcome"])
-    p_logit = logit.predict_proba(test[features])[:, 1]
-    gb = Pipeline([("imp", SimpleImputer(strategy="median")),
-                   ("model", HistGradientBoostingClassifier(random_state=SEED, max_iter=200))])
-    gb.fit(train[features], train["outcome"])
-    p_gb = gb.predict_proba(test[features])[:, 1]
-
-    gates = {
-        "B_only": (test["B_norm"] >= 1).astype(int),
-        "P_only": (test["P_norm"] >= 1).astype(int),
-        "W_only": (test["W"] <= eps).astype(int),
-        "B_P": ((test["B_norm"] >= 1) & (test["P_norm"] >= 1)).astype(int),
-        "B_W": ((test["B_norm"] >= 1) & (test["W"] <= eps)).astype(int),
-        "P_W": ((test["P_norm"] >= 1) & (test["W"] <= eps)).astype(int),
-        "full_MQ": test["MQ"].astype(int),
+    model_features={
+        'BASE_RAW':['CAPITAL','ASSET_QUALITY','EARNINGS','LIQUIDITY','LOG_ASSET'],
+        'ADD_STATE':['CAPITAL','ASSET_QUALITY','EARNINGS','LIQUIDITY','LOG_ASSET','ADD'],
+        'IMI_STATE':['CAPITAL','ASSET_QUALITY','EARNINGS','LIQUIDITY','LOG_ASSET','IMI'],
+        'WMI_STATE':['CAPITAL','ASSET_QUALITY','EARNINGS','LIQUIDITY','LOG_ASSET','WMI'],
+        'TRAJ':['CAPITAL','ASSET_QUALITY','EARNINGS','LIQUIDITY','LOG_ASSET','IMI','DELTA_IMI']
     }
-    ablations = {k: score_binary(y, v.to_numpy()) for k, v in gates.items()}
-    results = {
-        "artifact_id": "CLOUD_TEST_1_ALIBABA_GPU_2020_EMPIRICAL_RETURN_v1",
-        "status": "COMPLETE",
-        "thresholds": {"B_q75": float(bq), "P_q75": float(pq), "epsilon_d": float(eps)},
-        "coverage": {"raw_jobs": int(len(jobs)), "evaluable_jobs": int(len(evaluable)),
-                     "development_jobs": int(len(train)), "evaluation_jobs": int(len(test)),
-                     "evaluation_failure_prevalence": float(test["outcome"].mean())},
-        "hard_MQ": score_binary(y, test["MQ"].to_numpy()),
-        "continuous_H_star": score_prob(y, test["H_star"].to_numpy()),
-        "logistic": score_prob(y, p_logit),
-        "gradient_boosting": score_prob(y, p_gb),
-        "components_AUROC": {
-            "B": float(roc_auc_score(y, test["B"])), "P": float(roc_auc_score(y, test["P"])),
-            "one_minus_E": float(roc_auc_score(y, 1 - test["E"])),
-            "one_minus_I": float(roc_auc_score(y, 1 - test["I"])),
-            "one_minus_V": float(roc_auc_score(y, 1 - test["V"])),
-            "one_minus_W": float(roc_auc_score(y, 1 - test["W"])),
-            "one_minus_mean_EIV": float(roc_auc_score(y, 1 - test[["E", "I", "V"]].mean(axis=1))),
-        },
-        "ablations": ablations,
-        "claim_boundary": "Launch-time held-out association/discrimination only; not a universal or full telemetry validation.",
-    }
+    all_metrics=[]; all_preds=[]
+    for outcome in ['FAILURE_4Q','FAILURE_8Q']:
+        # Primary comparisons use the identical TRAJ-complete population.
+        matched=panel.dropna(subset=model_features['TRAJ']+[outcome]).copy()
+        for yr in sorted(matched['YEAR'].unique()):
+            train=matched[matched['YEAR']<yr]
+            test=matched[matched['YEAR']==yr]
+            if train['YEAR'].nunique()<4 or train[outcome].nunique()<2 or test[outcome].nunique()<2:
+                continue
+            for name,features in model_features.items():
+                m=model_pipeline(); m.fit(train[features],train[outcome].astype(int))
+                p=m.predict_proba(test[features])[:,1]
+                met=safe_metric(test[outcome].astype(int).to_numpy(),p)
+                met.update({'outcome':outcome,'year':int(yr),'model':name})
+                all_metrics.append(met)
+                tmp=pd.DataFrame({'CERT':test['CERT'].astype(str).to_numpy(),'REPDTE':test['REPDTE'].astype(str).to_numpy(),'YEAR':yr,'outcome':outcome,'model':name,'y':test[outcome].astype(int).to_numpy(),'p':p,'IMI':test['IMI'].to_numpy(),'WMI':test['WMI'].to_numpy(),'DELTA_IMI':test['DELTA_IMI'].to_numpy()})
+                all_preds.append(tmp)
+    metrics=pd.DataFrame(all_metrics); preds=pd.concat(all_preds,ignore_index=True) if all_preds else pd.DataFrame()
+    metrics.to_csv(OUT/'holdout_metrics.csv',index=False); preds.to_csv(OUT/'holdout_predictions.csv',index=False)
 
-    d.to_csv(OUT / "panel.csv", index=False)
-    (OUT / "metrics.json").write_text(json.dumps(results, indent=2))
-    pd.DataFrame([results["hard_MQ"]]).to_csv(OUT / "confusion_matrix.csv", index=False)
-    pd.DataFrame(ablations).T.to_csv(OUT / "ablations.csv")
-    pd.DataFrame({"exclusion": ["incomplete_predictor_set"], "count": [int((d["coverage"] < 1).sum())]}).to_csv(OUT / "exclusions.csv", index=False)
-    receipt = {"seed": SEED, "source_registry_sha256": sha256(OUT / "source_registry.json"),
-               "panel_sha256": sha256(OUT / "panel.csv"), "metrics_sha256": sha256(OUT / "metrics.json")}
-    (OUT / "run_receipt.json").write_text(json.dumps(receipt, indent=2))
-    (OUT / "run_log.txt").write_text("Completed frozen Cloud Test 1 launch-time run.\n")
-    print(json.dumps(results, indent=2))
+    pooled=[]
+    if len(preds):
+        for (outcome,model),g in preds.groupby(['outcome','model']):
+            met=safe_metric(g['y'].to_numpy(),g['p'].to_numpy()); met.update({'outcome':outcome,'model':model}); pooled.append(met)
+    pooled=pd.DataFrame(pooled); pooled.to_csv(OUT/'pooled_metrics.csv',index=False)
 
+    # Structural enrichment on exact-delta complete route, independent of model fit.
+    structural=[]
+    s=panel.dropna(subset=['IMI','WMI','DELTA_IMI']).copy()
+    for outcome in ['FAILURE_4Q','FAILURE_8Q']:
+        for metric in ['IMI','WMI']:
+            s['decile']=s.groupby('REPDTE')[metric].transform(lambda x: pd.qcut(x.rank(method='first'),10,labels=False,duplicates='drop'))
+            low=s[s['decile']==0]; rest=s[s['decile']>0]
+            lr=float(low[outcome].mean()) if len(low) else np.nan; rr=float(rest[outcome].mean()) if len(rest) else np.nan
+            structural.append({'outcome':outcome,'metric':metric,'low_decile_n':len(low),'low_decile_events':int(low[outcome].sum()),'low_decile_rate':lr,'rest_n':len(rest),'rest_events':int(rest[outcome].sum()),'rest_rate':rr,'risk_ratio':float(lr/rr) if rr>0 else np.nan})
+    structural=pd.DataFrame(structural); structural.to_csv(OUT/'structural_enrichment.csv',index=False)
 
-if __name__ == "__main__":
+    findings={'status':'VALID_EXECUTION','raw_financial_rows':int(exact_before),'deduplicated_rows':int(len(fin)),'failures_rows':int(len(failures)),'route_complete_rows':int(panel['ROUTE_COMPLETE'].sum()),'delta_complete_rows':int(panel['DELTA_IMI'].notna().sum()),'outcomes':{}}
+    for outcome in ['FAILURE_4Q','FAILURE_8Q']:
+        pp=pooled[pooled['outcome']==outcome] if len(pooled) else pd.DataFrame()
+        mm=metrics[metrics['outcome']==outcome] if len(metrics) else pd.DataFrame()
+        if len(pp):
+            pmap=pp.set_index('model').to_dict('index')
+            non=[m for m in ['BASE_RAW','ADD_STATE','IMI_STATE','WMI_STATE'] if m in pmap]
+            best=min(non,key=lambda m:pmap[m]['brier']) if non else None
+            traj=pmap.get('TRAJ')
+            improvement=(pmap[best]['brier']-traj['brier'])/pmap[best]['brier'] if best and traj else np.nan
+            wins=0; eligible=0
+            if best and len(mm):
+                for yr,g in mm.groupby('year'):
+                    d=g.set_index('model')['brier'].to_dict()
+                    if best in d and 'TRAJ' in d:
+                        eligible+=1; wins+=int(d['TRAJ']<d[best])
+            win_rate=wins/eligible if eligible else np.nan
+            material=bool(best and traj and improvement>=0.10 and win_rate>=0.70 and traj['ap']>=pmap[best]['ap'])
+            findings['outcomes'][outcome]={'best_nontrajectory':best,'pooled':pmap,'traj_brier_relative_improvement':float(improvement),'eligible_years':eligible,'traj_year_wins':wins,'traj_win_rate':float(win_rate) if eligible else None,'material_predictive_superiority':material}
+    findings['structural_enrichment']=structural.to_dict('records')
+    (OUT/'findings.json').write_text(json.dumps(findings,indent=2,default=str))
+    print(json.dumps(findings,indent=2,default=str))
+
+if __name__=='__main__':
     main()
