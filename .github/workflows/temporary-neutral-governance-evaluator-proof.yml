@@ -5,7 +5,8 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/temporary-neutral-governance-evaluator-proof.yml'
-      - 'temporary-neutral-governance-proof/**'\n      - 'tools/governance-substrate/**'\n      - 'control-plane/external-adapters/fixtures/**'
+      - 'tools/governance-substrate/**'
+      - 'control-plane/external-adapters/fixtures/**'
 
 permissions:
   contents: read
@@ -26,20 +27,18 @@ jobs:
       - name: Verify frozen proof blobs
         run: |
           set -euo pipefail
-          test "$(git hash-object temporary-neutral-governance-proof/neutral-evaluator.v1.mjs)" = "9e981501e904c9797b95798617dc8c108b455bc2"
-          test "$(git hash-object temporary-neutral-governance-proof/neutral-evaluator.self-test.v1.mjs)" = "f73b90c031a7882ccba2147422c431ad43e3629b"
-          test "$(git hash-object temporary-neutral-governance-proof/JIRA_SCRUM_COHERENT_NORMAL_v1.json)" = "f85a510dcbb82078506451700572c6f59e78dee7"
-          test "$(git hash-object temporary-neutral-governance-proof/JIRA_SCRUM_DONE_APPROVED_IDENTITY_MISMATCH_v1.json)" = "a4b64e68208c2a25024ac519bcc8f32e638748de"
+          test "$(git hash-object tools/governance-substrate/neutral-evaluator.v1.mjs)" = "9e981501e904c9797b95798617dc8c108b455bc2"
+          test "$(git hash-object tools/governance-substrate/neutral-evaluator.self-test.v1.mjs)" = "f73b90c031a7882ccba2147422c431ad43e3629b"
+          test "$(git hash-object control-plane/external-adapters/fixtures/JIRA_SCRUM_COHERENT_NORMAL_v1.json)" = "f85a510dcbb82078506451700572c6f59e78dee7"
+          test "$(git hash-object control-plane/external-adapters/fixtures/JIRA_SCRUM_DONE_APPROVED_IDENTITY_MISMATCH_v1.json)" = "a4b64e68208c2a25024ac519bcc8f32e638748de"
 
       - name: Execute exact neutral evaluator controls
-        working-directory: temporary-neutral-governance-proof
         run: |
           set -euo pipefail
-          node neutral-evaluator.self-test.v1.mjs | tee neutral-evaluator-self-test-receipt.json
+          node tools/governance-substrate/neutral-evaluator.self-test.v1.mjs | tee neutral-evaluator-self-test-receipt.json
 
       - name: Emit bounded public-carrier receipt
         if: success()
-        working-directory: temporary-neutral-governance-proof
         run: |
           node - <<'NODE'
           const fs=require('fs');
@@ -68,7 +67,7 @@ jobs:
         with:
           name: neutral-governance-evaluator-proof-receipts
           path: |
-            temporary-neutral-governance-proof/neutral-evaluator-self-test-receipt.json
-            temporary-neutral-governance-proof/public-carrier-receipt.json
+            neutral-evaluator-self-test-receipt.json
+            public-carrier-receipt.json
           if-no-files-found: error
           retention-days: 7
