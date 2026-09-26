@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/temporary-neutral-governance-evaluator-proof.yml'
-      - 'temporary-neutral-governance-proof/**'
+      - 'temporary-neutral-governance-proof/**'\n      - 'tools/governance-substrate/**'\n      - 'control-plane/external-adapters/fixtures/**'
 
 permissions:
   contents: read
