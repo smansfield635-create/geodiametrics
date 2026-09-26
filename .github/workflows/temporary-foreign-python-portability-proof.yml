@@ -1,0 +1,89 @@
+name: Temporary Foreign Python Portability Proof
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/temporary-foreign-python-portability-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Fetch immutable public fixture
+        env:
+          REPO: https://github.com/andreascaglioni/python-project-template.git
+          SHA: a20dd133444a68d08279b6204e5f2b11185addbc
+        run: |
+          set -euo pipefail
+          git init fixture
+          cd fixture
+          git remote add origin "$REPO"
+          git fetch --depth=1 origin "$SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$SHA"
+          test -z "$(git status --porcelain)"
+
+      - name: Verify frozen fixture blobs
+        working-directory: fixture
+        run: |
+          set -euo pipefail
+          test "$(git hash-object pyproject.toml)" = "c74e9c4f1d0a5bf60902baa37557a3078ea1b663"
+          test "$(git hash-object src/python_project_template_AS/calculator.py)" = "59dc8f86de01428f59df17ecc324dad940d54757"
+          test "$(git hash-object tests/test_calculator.py)" = "a23d2f87af2546d35349072d4cc9e42ef3c78a78"
+          test "$(git hash-object tests/test_operations.py)" = "d2ec0e8b5c449b8a20a65c4948c08c109a9ed113"
+          test "$(git hash-object tests/test_registry.py)" = "90d4cf4629e415dc1e084a4cd0c521a8d1c82686"
+
+      - name: Install frozen project dev dependencies
+        working-directory: fixture
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check -e '.[dev]'
+
+      - name: Execute pytest and coverage gate
+        working-directory: fixture
+        run: |
+          set -euo pipefail
+          python -m pytest -q --cov=python_project_template_AS --cov-report=term
+          test -z "$(git status --porcelain)"
+
+      - name: Emit bounded qualification receipt
+        if: success()
+        working-directory: fixture
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          receipt={
+            "schema":"GOVERNANCE_SUBSTRATE_FOREIGN_PYTHON_EXECUTABLE_PORTABILITY_RECEIPT_v1",
+            "result":"PASS_CLOSED",
+            "fixtureRepository":"andreascaglioni/python-project-template",
+            "exactHead":subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip(),
+            "python":"3.11",
+            "pytestCoverageGatePercent":85,
+            "repositoryMutationPerformed":False,
+            "privateSubstratePublished":False,
+            "authorityEffect":"NONE",
+            "claimCeiling":"ONE_FOREIGN_PYTHON_EXECUTABLE_FIXTURE_QUALIFIED"
+          }
+          open("../foreign-python-portability-receipt.json","w").write(json.dumps(receipt,indent=2)+"\n")
+          print(json.dumps(receipt,indent=2))
+          PY
+
+      - name: Upload receipt
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: foreign-python-portability-receipt
+          path: foreign-python-portability-receipt.json
+          if-no-files-found: error
+          retention-days: 7
