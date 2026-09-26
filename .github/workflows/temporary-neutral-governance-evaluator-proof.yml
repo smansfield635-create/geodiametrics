@@ -1,0 +1,74 @@
+name: Temporary Neutral Governance Evaluator Proof
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/temporary-neutral-governance-evaluator-proof.yml'
+      - 'temporary-neutral-governance-proof/**'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout proof branch
+        uses: actions/checkout@v4
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify frozen proof blobs
+        run: |
+          set -euo pipefail
+          test "$(git hash-object temporary-neutral-governance-proof/neutral-evaluator.v1.mjs)" = "9e981501e904c9797b95798617dc8c108b455bc2"
+          test "$(git hash-object temporary-neutral-governance-proof/neutral-evaluator.self-test.v1.mjs)" = "f73b90c031a7882ccba2147422c431ad43e3629b"
+          test "$(git hash-object temporary-neutral-governance-proof/JIRA_SCRUM_COHERENT_NORMAL_v1.json)" = "f85a510dcbb82078506451700572c6f59e78dee7"
+          test "$(git hash-object temporary-neutral-governance-proof/JIRA_SCRUM_DONE_APPROVED_IDENTITY_MISMATCH_v1.json)" = "a4b64e68208c2a25024ac519bcc8f32e638748de"
+
+      - name: Execute exact neutral evaluator controls
+        working-directory: temporary-neutral-governance-proof
+        run: |
+          set -euo pipefail
+          node neutral-evaluator.self-test.v1.mjs | tee neutral-evaluator-self-test-receipt.json
+
+      - name: Emit bounded public-carrier receipt
+        if: success()
+        working-directory: temporary-neutral-governance-proof
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const control=JSON.parse(fs.readFileSync('neutral-evaluator-self-test-receipt.json','utf8'));
+          if(control.result!=='PASS') process.exit(1);
+          const receipt={
+            schema:'GOVERNANCE_SUBSTRATE_NEUTRAL_EVALUATOR_PUBLIC_CARRIER_RECEIPT_v1',
+            result:'PASS_CLOSED',
+            evaluatorBlob:'9e981501e904c9797b95798617dc8c108b455bc2',
+            selfTestBlob:'f73b90c031a7882ccba2147422c431ad43e3629b',
+            normalFixtureBlob:'f85a510dcbb82078506451700572c6f59e78dee7',
+            adversarialFixtureBlob:'a4b64e68208c2a25024ac519bcc8f32e638748de',
+            controlReceipt:control,
+            privateSubstratePublished:false,
+            repositoryMutationPerformedByEvaluator:false,
+            authorityEffect:'NONE',
+            claimCeiling:'TWO_SYNTHETIC_JIRA_SCRUM_CONTROLS_MECHANICALLY_EVALUATED'
+          };
+          fs.writeFileSync('public-carrier-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          NODE
+
+      - name: Upload bounded receipts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: neutral-governance-evaluator-proof-receipts
+          path: |
+            temporary-neutral-governance-proof/neutral-evaluator-self-test-receipt.json
+            temporary-neutral-governance-proof/public-carrier-receipt.json
+          if-no-files-found: error
+          retention-days: 7
