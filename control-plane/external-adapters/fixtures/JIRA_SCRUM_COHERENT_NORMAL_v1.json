@@ -1,0 +1,15 @@
+{
+  "$schema":"JIRA_SCRUM_EVIDENCE_PROFILE_v1",
+  "fixtureId":"JIRA_SCRUM_COHERENT_NORMAL_V1",
+  "expectedNeutralDisposition":"CLOSURE_ELIGIBLE",
+  "workItem":{"key":"APP-101","scrumArtifact":"Product Backlog Item","status":"Done","subjectIdentity":"commit:abc101"},
+  "workflow":{"transition":"In Review -> Done","decision":"ALLOWED","evidenceId":"JEV-WF-101"},
+  "approval":{"decision":"APPROVED","approverIdentity":"user:release-approver-1","scope":"APP-101 release","evidenceId":"JEV-APR-101"},
+  "authorityContext":{"role":"release-approver","scope":"APP-101 release","evidenceId":"JEV-PERM-101"},
+  "implementation":{"commitIdentity":"commit:abc101","evidenceId":"JEV-COMMIT-101"},
+  "build":{"inputIdentity":"commit:abc101","artifactIdentity":"artifact:abc101","testResult":"PASS","buildStatus":"SUCCESS","evidenceId":"JEV-BUILD-101"},
+  "review":{"subjectIdentity":"commit:abc101","pullRequestState":"MERGED","reviewState":"APPROVED","evidenceId":"JEV-PR-101"},
+  "deployment":{"artifactIdentity":"artifact:abc101","environment":"production","status":"SUCCESS","deploymentId":"deploy:101","evidenceId":"JEV-DEPLOY-101"},
+  "audit":{"references":["JEV-WF-101","JEV-APR-101","JEV-PERM-101","JEV-COMMIT-101","JEV-BUILD-101","JEV-PR-101","JEV-DEPLOY-101"]},
+  "closureRequest":{"requested":true,"subjectIdentity":"artifact:abc101","required":["approval","build","review","deployment","identityCorrespondence"]}
+}
