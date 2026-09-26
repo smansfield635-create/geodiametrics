@@ -1,0 +1,91 @@
+name: Temporary Foreign Node Portability Proof
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/temporary-foreign-node-portability-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Fetch immutable public fixture
+        env:
+          REPO: https://github.com/sindresorhus/yocto-queue.git
+          SHA: 72a8fa96a9d389765cdf2bb9c6daba8302fc375d
+        run: |
+          set -euo pipefail
+          git init fixture
+          cd fixture
+          git remote add origin "$REPO"
+          git fetch --depth=1 origin "$SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$SHA"
+          test -z "$(git status --porcelain)"
+
+      - name: Verify frozen fixture blobs
+        working-directory: fixture
+        run: |
+          set -euo pipefail
+          test "$(git hash-object package.json)" = "e9963ac06226563b55c958f9b925c996502771a9"
+          test "$(git hash-object index.js)" = "627ed535f3163b37f2e3b208a23788fd0a715eba"
+          test "$(git hash-object test.js)" = "1ed25bfc91dc47f148a57838fd814bf790f3e007"
+          test "$(git hash-object index.test-d.ts)" = "7f413f89fc5f1710b2715df9f57bcf65974fe28d"
+
+      - name: Install fixture dependencies
+        working-directory: fixture
+        run: |
+          set -euo pipefail
+          npm install --ignore-scripts --no-audit --no-fund
+
+      - name: Execute declared Node test suite
+        working-directory: fixture
+        run: |
+          set -euo pipefail
+          npm test
+          git checkout -- package-lock.json 2>/dev/null || true
+          rm -rf node_modules
+          test -z "$(git status --porcelain)"
+
+      - name: Emit bounded qualification receipt
+        if: success()
+        working-directory: fixture
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          import {execFileSync} from 'node:child_process';
+          const receipt={
+            schema:'GOVERNANCE_SUBSTRATE_FOREIGN_NODE_EXECUTABLE_PORTABILITY_RECEIPT_v1',
+            result:'PASS_CLOSED',
+            fixtureRepository:'sindresorhus/yocto-queue',
+            exactHead:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
+            node:process.version,
+            declaredTestCommand:'npm test',
+            repositoryMutationPerformed:false,
+            privateSubstratePublished:false,
+            authorityEffect:'NONE',
+            claimCeiling:'ONE_FOREIGN_NODE_EXECUTABLE_FIXTURE_QUALIFIED'
+          };
+          fs.writeFileSync('../foreign-node-portability-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          JS
+
+      - name: Upload receipt
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: foreign-node-portability-receipt
+          path: foreign-node-portability-receipt.json
+          if-no-files-found: error
+          retention-days: 7
