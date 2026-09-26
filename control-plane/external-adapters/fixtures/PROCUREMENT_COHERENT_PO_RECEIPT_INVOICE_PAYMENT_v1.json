@@ -1,0 +1,11 @@
+{
+  "$schema":"PROCUREMENT_EVIDENCE_PROFILE_v1",
+  "fixtureId":"PROCUREMENT_COHERENT_PO_RECEIPT_INVOICE_PAYMENT_V1",
+  "expectedNeutralDisposition":"EVIDENCE_ELIGIBLE_FOR_CLOSURE_EVALUATION",
+  "purchaseOrder":{"poId":"PO-1001","approvedAmount":12500,"currency":"USD","orderedSubjectIdentity":"lot:ACME-VALVE-77","status":"APPROVED","evidenceId":"PEV-PO-1001"},
+  "approval":{"decision":"APPROVED","approverIdentity":"buyer-authority-1","scope":"PO-1001","evidenceId":"PEV-APR-1001"},
+  "receiving":{"receiptId":"GR-1001","receivedSubjectIdentity":"lot:ACME-VALVE-77","quantityAccepted":100,"inspectionResult":"PASS","evidenceId":"PEV-GR-1001"},
+  "invoice":{"invoiceId":"INV-1001","billedSubjectIdentity":"lot:ACME-VALVE-77","amount":12500,"currency":"USD","status":"VALID","evidenceId":"PEV-INV-1001"},
+  "paymentRequest":{"requestId":"PAY-1001","subjectIdentity":"lot:ACME-VALVE-77","amount":12500,"currency":"USD","requested":true},
+  "audit":{"references":["PEV-PO-1001","PEV-APR-1001","PEV-GR-1001","PEV-INV-1001"]}
+}
