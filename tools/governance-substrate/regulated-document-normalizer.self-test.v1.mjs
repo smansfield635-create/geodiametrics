@@ -1,0 +1,7 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import {evaluateNeutralEvidence} from './neutral-evaluator.v1.mjs';import {normalizeRegulatedDocumentProfile} from './regulated-document-normalizer.v1.mjs';
+const read=p=>JSON.parse(fs.readFileSync(new URL(p,import.meta.url),'utf8'));
+const a=evaluateNeutralEvidence(normalizeRegulatedDocumentProfile(read('../../control-plane/external-adapters/fixtures/REGULATED_DOCUMENT_ACTIVE_AUTHORITY_ISSUANCE_v1.json')));
+const b=evaluateNeutralEvidence(normalizeRegulatedDocumentProfile(read('../../control-plane/external-adapters/fixtures/REGULATED_DOCUMENT_AUTHORITY_SUPERSEDED_BEFORE_ISSUANCE_v1.json')));
+assert.equal(a.result,'EVIDENCE_ELIGIBLE_FOR_CLOSURE_EVALUATION');assert.equal(a.primaryFailureClass,null);
+assert.equal(b.result,'FAIL_CLOSED');assert.equal(b.primaryFailureClass,'authority_lost');assert.deepEqual(b.consequentFailureClasses,['closure_held']);assert.equal(b.createsAuthority,false);
+process.stdout.write(JSON.stringify({schema:'GOVERNANCE_SUBSTRATE_REGULATED_DOCUMENT_AUTHORITY_SELF_TEST_RECEIPT_v1',result:'PASS',controls:[{fixture:'REGULATED_DOCUMENT_ACTIVE_AUTHORITY_ISSUANCE_V1',result:a.result,primaryFailureClass:a.primaryFailureClass},{fixture:'REGULATED_DOCUMENT_AUTHORITY_SUPERSEDED_BEFORE_ISSUANCE_V1',result:b.result,primaryFailureClass:b.primaryFailureClass,consequences:b.consequentFailureClasses}]},null,2)+'\n');

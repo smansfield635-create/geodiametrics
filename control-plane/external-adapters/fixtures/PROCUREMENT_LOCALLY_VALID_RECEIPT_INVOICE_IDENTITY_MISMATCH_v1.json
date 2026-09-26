@@ -1,0 +1,11 @@
+{
+  "$schema":"PROCUREMENT_EVIDENCE_PROFILE_v1",
+  "fixtureId":"PROCUREMENT_LOCALLY_VALID_RECEIPT_INVOICE_IDENTITY_MISMATCH_V1",
+  "expectedNeutralDisposition":"FAIL_CLOSED_IDENTITY_CONFLICT",
+  "purchaseOrder":{"poId":"PO-2002","approvedAmount":12500,"currency":"USD","orderedSubjectIdentity":"lot:ACME-VALVE-88","status":"APPROVED","evidenceId":"PEV-PO-2002"},
+  "approval":{"decision":"APPROVED","approverIdentity":"buyer-authority-2","scope":"PO-2002","evidenceId":"PEV-APR-2002"},
+  "receiving":{"receiptId":"GR-2002","receivedSubjectIdentity":"lot:ACME-VALVE-88","quantityAccepted":100,"inspectionResult":"PASS","evidenceId":"PEV-GR-2002"},
+  "invoice":{"invoiceId":"INV-2002","billedSubjectIdentity":"lot:ACME-VALVE-89","amount":12500,"currency":"USD","status":"VALID","evidenceId":"PEV-INV-2002"},
+  "paymentRequest":{"requestId":"PAY-2002","subjectIdentity":"lot:ACME-VALVE-89","amount":12500,"currency":"USD","requested":true},
+  "audit":{"references":["PEV-PO-2002","PEV-APR-2002","PEV-GR-2002","PEV-INV-2002"]}
+}

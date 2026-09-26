@@ -1,0 +1,909 @@
+{
+  "schema": "GENERAL_GOVERNANCE_ADVERSARIAL_PUBLIC_PACKET_v1",
+  "protocol": {
+    "commit": "3a05cb9fc56f8c2979a69f38af664886ccf0d810",
+    "blob": "15deddf0af3c8a217e5a113044bf0add5df3270d"
+  },
+  "evaluatorBlob": "9e981501e904c9797b95798617dc8c108b455bc2",
+  "cases": [
+    {
+      "evaluationId": "GGAQ-001",
+      "domain": "software",
+      "subject": {
+        "candidateIdentity": "svc:A:v1",
+        "closureSubjectIdentity": "svc:A:v1"
+      },
+      "admission": {
+        "admitted": true,
+        "evidenceRefs": [
+          "a1"
+        ]
+      },
+      "authority": {
+        "established": true,
+        "evidenceRefs": [
+          "u1"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "svc:A:v1",
+        "passed": true,
+        "evidenceRefs": [
+          "q1"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "svc:A:v1",
+        "outputIdentity": "svc:A:v1",
+        "evidenceRefs": [
+          "x1"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "svc:A:v1",
+        "evidenceRefs": [
+          "m1"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "svc:A:v1",
+        "toIdentity": "svc:A:v1",
+        "established": true,
+        "evidenceRefs": [
+          "c1"
+        ]
+      },
+      "continuity": {
+        "established": true,
+        "evidenceRefs": [
+          "n1"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "svc:A:v1",
+        "requiredEvidencePresent": true
+      }
+    },
+    {
+      "evaluationId": "GGAQ-002",
+      "domain": "procurement",
+      "subject": {
+        "candidateIdentity": "vendorLot:77",
+        "closureSubjectIdentity": "receiptAlias:R77"
+      },
+      "admission": {
+        "admitted": true,
+        "evidenceRefs": [
+          "a2"
+        ]
+      },
+      "authority": {
+        "established": true,
+        "evidenceRefs": [
+          "u2"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "vendorLot:77",
+        "passed": true,
+        "evidenceRefs": [
+          "q2"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "vendorLot:77",
+        "outputIdentity": "receiptAlias:R77",
+        "evidenceRefs": [
+          "x2"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "receiptAlias:R77",
+        "evidenceRefs": [
+          "m2"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "vendorLot:77",
+        "toIdentity": "receiptAlias:R77",
+        "established": true,
+        "evidenceRefs": [
+          "c2-explicit-alias-proof"
+        ]
+      },
+      "continuity": {
+        "established": true,
+        "evidenceRefs": [
+          "n2"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "receiptAlias:R77",
+        "requiredEvidencePresent": true
+      }
+    },
+    {
+      "evaluationId": "GGAQ-003",
+      "domain": "manufacturing",
+      "subject": {
+        "candidateIdentity": "lot:M33",
+        "closureSubjectIdentity": "lot:M33"
+      },
+      "admission": {
+        "admitted": true,
+        "evidenceRefs": [
+          "a3"
+        ]
+      },
+      "authority": {
+        "established": true,
+        "evidenceRefs": [
+          "u3"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "lot:M33",
+        "passed": true,
+        "evidenceRefs": [
+          "q3"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "lot:M33",
+        "outputIdentity": "lot:M33",
+        "evidenceRefs": [
+          "x3"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "lot:M33",
+        "evidenceRefs": [
+          "m3"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "lot:M33",
+        "toIdentity": "lot:M33",
+        "established": false,
+        "evidenceRefs": []
+      },
+      "continuity": {
+        "established": false,
+        "evidenceRefs": []
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "lot:M33",
+        "requiredEvidencePresent": true
+      }
+    },
+    {
+      "evaluationId": "GGAQ-004",
+      "domain": "regulated_document",
+      "subject": {
+        "candidateIdentity": "doc:4",
+        "closureSubjectIdentity": "doc:4"
+      },
+      "admission": {
+        "admitted": true,
+        "evidenceRefs": [
+          "a4"
+        ]
+      },
+      "authority": {
+        "established": false,
+        "evidenceRefs": [
+          "approval-original",
+          "authority-supersession"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "doc:4",
+        "passed": true,
+        "evidenceRefs": [
+          "q4"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "doc:4",
+        "outputIdentity": "doc:4",
+        "evidenceRefs": [
+          "x4"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "doc:4",
+        "evidenceRefs": [
+          "m4"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "doc:4",
+        "toIdentity": "doc:4",
+        "established": true,
+        "evidenceRefs": [
+          "c4"
+        ]
+      },
+      "continuity": {
+        "established": true,
+        "evidenceRefs": [
+          "n4"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "doc:4",
+        "requiredEvidencePresent": true
+      }
+    },
+    {
+      "evaluationId": "GGAQ-005",
+      "domain": "financial_settlement",
+      "subject": {
+        "candidateIdentity": "txn:5",
+        "closureSubjectIdentity": "txn:5"
+      },
+      "admission": {
+        "admitted": false,
+        "evidenceRefs": [
+          "missing-required-approval"
+        ]
+      },
+      "authority": {
+        "established": true,
+        "evidenceRefs": [
+          "u5"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "txn:5",
+        "passed": true,
+        "evidenceRefs": [
+          "q5"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "txn:5",
+        "outputIdentity": "txn:5",
+        "evidenceRefs": [
+          "x5"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "txn:5",
+        "evidenceRefs": [
+          "m5"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "txn:5",
+        "toIdentity": "txn:5",
+        "established": true,
+        "evidenceRefs": [
+          "c5"
+        ]
+      },
+      "continuity": {
+        "established": true,
+        "evidenceRefs": [
+          "n5"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "txn:5",
+        "requiredEvidencePresent": true
+      }
+    },
+    {
+      "evaluationId": "GGAQ-006",
+      "domain": "ai_agent",
+      "subject": {
+        "candidateIdentity": "agentOut:6",
+        "closureSubjectIdentity": "agentOut:6"
+      },
+      "admission": {
+        "admitted": true,
+        "evidenceRefs": [
+          "a6"
+        ]
+      },
+      "authority": {
+        "established": true,
+        "evidenceRefs": [
+          "u6"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "agentOut:6",
+        "passed": false,
+        "evidenceRefs": [
+          "substantive-failure-evidence"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "agentOut:6",
+        "outputIdentity": "agentOut:6",
+        "evidenceRefs": [
+          "x6"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "agentOut:6",
+        "evidenceRefs": [
+          "m6"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "agentOut:6",
+        "toIdentity": "agentOut:6",
+        "established": true,
+        "evidenceRefs": [
+          "c6"
+        ]
+      },
+      "continuity": {
+        "established": true,
+        "evidenceRefs": [
+          "n6"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "agentOut:6",
+        "requiredEvidencePresent": true
+      }
+    },
+    {
+      "evaluationId": "GGAQ-007",
+      "domain": "software",
+      "subject": {
+        "candidateIdentity": "svc:7",
+        "closureSubjectIdentity": "svc:7"
+      },
+      "admission": {
+        "admitted": true,
+        "evidenceRefs": [
+          "a7"
+        ]
+      },
+      "authority": {
+        "established": true,
+        "evidenceRefs": [
+          "u7"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "svc:7",
+        "passed": true,
+        "evidenceRefs": [
+          "prior-q7"
+        ]
+      },
+      "execution": {
+        "status": "SURFACE_UNAVAILABLE",
+        "inputIdentity": "svc:7",
+        "outputIdentity": "svc:7",
+        "evidenceRefs": [
+          "surface-down"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "svc:7",
+        "evidenceRefs": [
+          "prior-m7"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "svc:7",
+        "toIdentity": "svc:7",
+        "established": true,
+        "evidenceRefs": [
+          "c7"
+        ]
+      },
+      "continuity": {
+        "established": true,
+        "evidenceRefs": [
+          "n7"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "svc:7",
+        "requiredEvidencePresent": true
+      }
+    },
+    {
+      "evaluationId": "GGAQ-008",
+      "domain": "manufacturing",
+      "subject": {
+        "candidateIdentity": "batch:8",
+        "closureSubjectIdentity": "batch:8"
+      },
+      "admission": {
+        "admitted": true,
+        "evidenceRefs": [
+          "a8"
+        ]
+      },
+      "authority": {
+        "established": true,
+        "evidenceRefs": [
+          "u8"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "batch:8",
+        "passed": true,
+        "evidenceRefs": [
+          "q8"
+        ]
+      },
+      "execution": {
+        "status": "INTERRUPTED",
+        "inputIdentity": "batch:8",
+        "outputIdentity": "batch:8",
+        "evidenceRefs": [
+          "interrupt"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "batch:8",
+        "evidenceRefs": [
+          "m8"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "batch:8",
+        "toIdentity": "batch:8",
+        "established": true,
+        "evidenceRefs": [
+          "c8"
+        ]
+      },
+      "continuity": {
+        "established": true,
+        "evidenceRefs": [
+          "n8"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "batch:8",
+        "requiredEvidencePresent": true
+      }
+    },
+    {
+      "evaluationId": "GGAQ-009",
+      "domain": "procurement",
+      "subject": {
+        "candidateIdentity": "lot:9A",
+        "closureSubjectIdentity": "lot:9B"
+      },
+      "admission": {
+        "admitted": true,
+        "evidenceRefs": [
+          "a9"
+        ]
+      },
+      "authority": {
+        "established": true,
+        "evidenceRefs": [
+          "u9"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "lot:9A",
+        "passed": true,
+        "evidenceRefs": [
+          "q9"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "lot:9A",
+        "outputIdentity": "lot:9B",
+        "evidenceRefs": [
+          "x9"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "lot:9B",
+        "evidenceRefs": [
+          "m9"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "lot:9A",
+        "toIdentity": "lot:9B",
+        "established": false,
+        "evidenceRefs": []
+      },
+      "continuity": {
+        "established": false,
+        "evidenceRefs": []
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "lot:9B",
+        "requiredEvidencePresent": true
+      }
+    },
+    {
+      "evaluationId": "GGAQ-010",
+      "domain": "financial_settlement",
+      "subject": {
+        "candidateIdentity": "txn:10",
+        "closureSubjectIdentity": "txn:10"
+      },
+      "admission": {
+        "admitted": true,
+        "evidenceRefs": [
+          "a10"
+        ]
+      },
+      "authority": {
+        "established": true,
+        "evidenceRefs": [
+          "u10"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "txn:10",
+        "passed": true,
+        "evidenceRefs": [
+          "q10"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "txn:10",
+        "outputIdentity": "txn:10",
+        "evidenceRefs": [
+          "x10"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "txn:10",
+        "evidenceRefs": [
+          "m10"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "txn:10",
+        "toIdentity": "txn:10",
+        "established": true,
+        "evidenceRefs": [
+          "c10"
+        ]
+      },
+      "continuity": {
+        "established": true,
+        "evidenceRefs": [
+          "n10"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "txn:10",
+        "requiredEvidencePresent": false
+      }
+    },
+    {
+      "evaluationId": "GGAQ-011",
+      "domain": "ai_agent",
+      "subject": {
+        "candidateIdentity": "agent:logical11",
+        "closureSubjectIdentity": "agent:runtime11"
+      },
+      "admission": {
+        "admitted": true,
+        "evidenceRefs": [
+          "a11"
+        ]
+      },
+      "authority": {
+        "established": true,
+        "evidenceRefs": [
+          "u11"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "agent:logical11",
+        "passed": true,
+        "evidenceRefs": [
+          "q11"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "agent:logical11",
+        "outputIdentity": "agent:runtime11",
+        "evidenceRefs": [
+          "x11"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "agent:runtime11",
+        "evidenceRefs": [
+          "m11"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "agent:logical11",
+        "toIdentity": "agent:runtime11",
+        "established": true,
+        "evidenceRefs": [
+          "signed-correspondence11"
+        ]
+      },
+      "continuity": {
+        "established": true,
+        "evidenceRefs": [
+          "n11"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "agent:runtime11",
+        "requiredEvidencePresent": true
+      }
+    },
+    {
+      "evaluationId": "GGAQ-012",
+      "domain": "regulated_document",
+      "subject": {
+        "candidateIdentity": "doc:12",
+        "closureSubjectIdentity": "doc:12"
+      },
+      "admission": {
+        "admitted": true,
+        "evidenceRefs": [
+          "a12"
+        ]
+      },
+      "authority": {
+        "established": true,
+        "evidenceRefs": [
+          "governing-authority-active",
+          "metadata-owner-changed"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "doc:12",
+        "passed": true,
+        "evidenceRefs": [
+          "q12"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "doc:12",
+        "outputIdentity": "doc:12",
+        "evidenceRefs": [
+          "x12"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "doc:12",
+        "evidenceRefs": [
+          "m12"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "doc:12",
+        "toIdentity": "doc:12",
+        "established": true,
+        "evidenceRefs": [
+          "c12"
+        ]
+      },
+      "continuity": {
+        "established": true,
+        "evidenceRefs": [
+          "n12"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "doc:12",
+        "requiredEvidencePresent": true
+      }
+    },
+    {
+      "evaluationId": "GGAQ-013",
+      "domain": "federated",
+      "subject": {
+        "candidateIdentity": "case:13",
+        "closureSubjectIdentity": "case:13"
+      },
+      "admission": {
+        "admitted": true,
+        "evidenceRefs": [
+          "a13"
+        ]
+      },
+      "authority": {
+        "established": false,
+        "evidenceRefs": [
+          "authority-source-A-active",
+          "authority-source-B-revoked",
+          "conflict-unresolved"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "case:13",
+        "passed": true,
+        "evidenceRefs": [
+          "q13"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "case:13",
+        "outputIdentity": "case:13",
+        "evidenceRefs": [
+          "x13"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "case:13",
+        "evidenceRefs": [
+          "m13"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "case:13",
+        "toIdentity": "case:13",
+        "established": true,
+        "evidenceRefs": [
+          "c13"
+        ]
+      },
+      "continuity": {
+        "established": true,
+        "evidenceRefs": [
+          "n13"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "case:13",
+        "requiredEvidencePresent": true
+      }
+    },
+    {
+      "evaluationId": "GGAQ-014",
+      "domain": "procurement",
+      "subject": {
+        "candidateIdentity": "lot:14",
+        "closureSubjectIdentity": "lot:14"
+      },
+      "admission": {
+        "admitted": true,
+        "evidenceRefs": [
+          "a14"
+        ]
+      },
+      "authority": {
+        "established": true,
+        "evidenceRefs": [
+          "u14"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "lot:14",
+        "passed": true,
+        "evidenceRefs": [
+          "independent-q14",
+          "surface-warning-nongoverning"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "lot:14",
+        "outputIdentity": "lot:14",
+        "evidenceRefs": [
+          "x14"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "lot:14",
+        "evidenceRefs": [
+          "m14"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "lot:14",
+        "toIdentity": "lot:14",
+        "established": true,
+        "evidenceRefs": [
+          "c14"
+        ]
+      },
+      "continuity": {
+        "established": true,
+        "evidenceRefs": [
+          "n14"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "lot:14",
+        "requiredEvidencePresent": true
+      }
+    },
+    {
+      "evaluationId": "GGAQ-015",
+      "domain": "federated",
+      "subject": {
+        "candidateIdentity": "federated:15",
+        "closureSubjectIdentity": "federated:15"
+      },
+      "admission": {
+        "admitted": true,
+        "evidenceRefs": [
+          "crm-admit",
+          "procurement-admit"
+        ]
+      },
+      "authority": {
+        "established": false,
+        "evidenceRefs": [
+          "initial-authority",
+          "terminal-revocation"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "federated:15",
+        "passed": true,
+        "evidenceRefs": [
+          "q15"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "federated:15",
+        "outputIdentity": "federated:15",
+        "evidenceRefs": [
+          "x15"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "federated:15",
+        "evidenceRefs": [
+          "m15"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "federated:15",
+        "toIdentity": "federated:15",
+        "established": true,
+        "evidenceRefs": [
+          "c15"
+        ]
+      },
+      "continuity": {
+        "established": true,
+        "evidenceRefs": [
+          "n15"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "federated:15",
+        "requiredEvidencePresent": true
+      }
+    }
+  ]
+}

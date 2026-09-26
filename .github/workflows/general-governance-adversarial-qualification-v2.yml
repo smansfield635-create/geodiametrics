@@ -1,0 +1,39 @@
+name: General Governance Adversarial Qualification V2
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/general-governance-adversarial-qualification-v2.yml'
+      - 'tools/governance-substrate/neutral-evaluator.v2.mjs'
+      - 'tools/governance-substrate/ggaq-runner.v2.mjs'
+      - 'control-plane/external-adapters/adversarial/GGAQ_V2_PUBLIC_PACKET.json'
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify frozen V2 inputs and blindness
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/governance-substrate/neutral-evaluator.v2.mjs)" = "b72d2b546963bb206fb6833b59118382e773d425"
+          test "$(git hash-object tools/governance-substrate/ggaq-runner.v2.mjs)" = "ea094c51e563c80f972025aca59dd79fa00add4e"
+          test "$(git hash-object control-plane/external-adapters/adversarial/GGAQ_V2_PUBLIC_PACKET.json)" = "98f8ce2a181952223d9963e4a69be9e1b4eac9de"
+          test ! -e control-plane/external-adapters/adversarial/SEALED/GGAQ_V2_GROUND_TRUTH.json
+      - name: Execute blind V2 packet
+        run: |
+          node tools/governance-substrate/ggaq-runner.v2.mjs control-plane/external-adapters/adversarial/GGAQ_V2_PUBLIC_PACKET.json GGAQ_V2_EXECUTION_OUTPUT.json | tee GGAQ_V2_EXECUTION_SUMMARY.json
+      - name: Upload frozen V2 output
+        uses: actions/upload-artifact@v4
+        with:
+          name: ggaq-v2-blind-output
+          path: |
+            GGAQ_V2_EXECUTION_OUTPUT.json
+            GGAQ_V2_EXECUTION_SUMMARY.json
+          if-no-files-found: error
+          retention-days: 7

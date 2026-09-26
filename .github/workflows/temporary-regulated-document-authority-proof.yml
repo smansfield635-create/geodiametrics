@@ -1,0 +1,36 @@
+name: Temporary Regulated Document Authority Governance Proof
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/temporary-regulated-document-authority-proof.yml'
+      - 'tools/governance-substrate/regulated-document-normalizer*'
+      - 'control-plane/external-adapters/fixtures/REGULATED_DOCUMENT_*'
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify frozen proof blobs
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/governance-substrate/neutral-evaluator.v1.mjs)" = "9e981501e904c9797b95798617dc8c108b455bc2"
+          test "$(git hash-object tools/governance-substrate/regulated-document-normalizer.v1.mjs)" = "13bb2438acb56aa61739dd75201339435ed7e51a"
+          test "$(git hash-object tools/governance-substrate/regulated-document-normalizer.self-test.v1.mjs)" = "a586c4c890245836b0e2ce130ec25882d92e0e6f"
+          test "$(git hash-object control-plane/external-adapters/fixtures/REGULATED_DOCUMENT_ACTIVE_AUTHORITY_ISSUANCE_v1.json)" = "6dfc301ad28cdc145a3d63d956dcafd568971e4e"
+          test "$(git hash-object control-plane/external-adapters/fixtures/REGULATED_DOCUMENT_AUTHORITY_SUPERSEDED_BEFORE_ISSUANCE_v1.json)" = "e3b44d170d2a7b7c271b85797129f2c167212911"
+      - name: Execute authority-loss controls
+        run: node tools/governance-substrate/regulated-document-normalizer.self-test.v1.mjs | tee regulated-document-authority-receipt.json
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: regulated-document-authority-proof-receipt
+          path: regulated-document-authority-receipt.json
+          if-no-files-found: error
+          retention-days: 7

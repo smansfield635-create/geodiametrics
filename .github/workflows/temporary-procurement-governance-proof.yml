@@ -1,0 +1,44 @@
+name: Temporary Non-Software Procurement Governance Proof
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/temporary-procurement-governance-proof.yml'
+      - 'tools/governance-substrate/procurement-normalizer*'
+      - 'control-plane/external-adapters/fixtures/PROCUREMENT_*'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout proof branch
+        uses: actions/checkout@v4
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify frozen proof blobs
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/governance-substrate/neutral-evaluator.v1.mjs)" = "9e981501e904c9797b95798617dc8c108b455bc2"
+          test "$(git hash-object tools/governance-substrate/procurement-normalizer.v1.mjs)" = "be1414d583233567bcdab98fc5475cdca29e5221"
+          test "$(git hash-object tools/governance-substrate/procurement-normalizer.self-test.v1.mjs)" = "71601e4660ced22b5ec076c34a668dc0d68cec54"
+          test "$(git hash-object control-plane/external-adapters/fixtures/PROCUREMENT_COHERENT_PO_RECEIPT_INVOICE_PAYMENT_v1.json)" = "9150fc06c56d3fd5a521834ff2002690cd8fabc3"
+          test "$(git hash-object control-plane/external-adapters/fixtures/PROCUREMENT_LOCALLY_VALID_RECEIPT_INVOICE_IDENTITY_MISMATCH_v1.json)" = "737799bd1dd17deafa6a0d3e3b01744b4b637854"
+      - name: Execute non-software controls
+        run: |
+          set -euo pipefail
+          node tools/governance-substrate/procurement-normalizer.self-test.v1.mjs | tee procurement-self-test-receipt.json
+      - name: Upload receipt
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: procurement-governance-proof-receipt
+          path: procurement-self-test-receipt.json
+          if-no-files-found: error
+          retention-days: 7

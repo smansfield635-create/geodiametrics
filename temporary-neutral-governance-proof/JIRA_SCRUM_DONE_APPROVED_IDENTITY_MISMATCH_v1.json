@@ -1,0 +1,15 @@
+{
+  "$schema":"JIRA_SCRUM_EVIDENCE_PROFILE_v1",
+  "fixtureId":"JIRA_SCRUM_DONE_APPROVED_IDENTITY_MISMATCH_V1",
+  "expectedNeutralDisposition":"CLOSURE_HELD_IDENTITY_OR_CONTINUITY_UNPROVEN",
+  "workItem":{"key":"APP-202","scrumArtifact":"Product Backlog Item","status":"Done","subjectIdentity":"commit:tested-A"},
+  "workflow":{"transition":"In Review -> Done","decision":"ALLOWED","evidenceId":"JEV-WF-202"},
+  "approval":{"decision":"APPROVED","approverIdentity":"user:release-approver-2","scope":"APP-202 release","evidenceId":"JEV-APR-202"},
+  "authorityContext":{"role":"release-approver","scope":"APP-202 release","evidenceId":"JEV-PERM-202"},
+  "implementation":{"commitIdentity":"commit:tested-A","evidenceId":"JEV-COMMIT-202"},
+  "build":{"inputIdentity":"commit:tested-A","artifactIdentity":"artifact:tested-A","testResult":"PASS","buildStatus":"SUCCESS","evidenceId":"JEV-BUILD-202"},
+  "review":{"subjectIdentity":"commit:tested-A","pullRequestState":"MERGED","reviewState":"APPROVED","evidenceId":"JEV-PR-202"},
+  "deployment":{"artifactIdentity":"artifact:released-B","environment":"production","status":"SUCCESS","deploymentId":"deploy:202","evidenceId":"JEV-DEPLOY-202"},
+  "audit":{"references":["JEV-WF-202","JEV-APR-202","JEV-PERM-202","JEV-COMMIT-202","JEV-BUILD-202","JEV-PR-202","JEV-DEPLOY-202"]},
+  "closureRequest":{"requested":true,"subjectIdentity":"artifact:released-B","required":["approval","build","review","deployment","identityCorrespondence"]}
+}
