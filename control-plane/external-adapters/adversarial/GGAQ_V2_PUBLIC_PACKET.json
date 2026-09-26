@@ -1,0 +1,1333 @@
+{
+  "schema": "GGAQ_V2_PUBLIC_PACKET",
+  "protocolBlob": "5e9133a286124c82f4407ca2dbec885736f62ae4",
+  "evaluatorBlob": "b72d2b546963bb206fb6833b59118382e773d425",
+  "cases": [
+    {
+      "evaluationId": "V2-001",
+      "domain": "generic",
+      "subject": {
+        "candidateIdentity": "V2-001:A",
+        "closureSubjectIdentity": "V2-001:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-001:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-001:A",
+        "outputIdentity": "V2-001:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-001:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-001:A",
+        "toIdentity": "V2-001:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-001:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-002",
+      "domain": "procurement",
+      "subject": {
+        "candidateIdentity": "vendor:77",
+        "closureSubjectIdentity": "receipt:R77"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "vendor:77",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual2"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "vendor:77",
+        "outputIdentity": "receipt:R77",
+        "evidenceRefs": [
+          "exec2"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "receipt:R77",
+        "evidenceRefs": [
+          "mat2"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "vendor:77",
+        "toIdentity": "receipt:R77",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "signed-alias"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "receipt:R77",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-003",
+      "domain": "regulated_document",
+      "subject": {
+        "candidateIdentity": "V2-003:A",
+        "closureSubjectIdentity": "V2-003:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "CONFLICTING",
+        "evidenceRefs": [
+          "active-source",
+          "revoked-source"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-003:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-003:A",
+        "outputIdentity": "V2-003:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-003:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-003:A",
+        "toIdentity": "V2-003:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-003:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-004",
+      "domain": "financial",
+      "subject": {
+        "candidateIdentity": "V2-004:A",
+        "closureSubjectIdentity": "V2-004:A"
+      },
+      "admission": {
+        "state": "UNPROVEN",
+        "evidenceRefs": [
+          "incomplete-admission"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-004:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-004:A",
+        "outputIdentity": "V2-004:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-004:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-004:A",
+        "toIdentity": "V2-004:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-004:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-005",
+      "domain": "ai_agent",
+      "subject": {
+        "candidateIdentity": "V2-005:A",
+        "closureSubjectIdentity": "V2-005:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-005:A",
+        "state": "CONFLICTING",
+        "evidenceRefs": [
+          "eval-pass",
+          "eval-fail"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-005:A",
+        "outputIdentity": "V2-005:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-005:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-005:A",
+        "toIdentity": "V2-005:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-005:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-006",
+      "domain": "manufacturing",
+      "subject": {
+        "candidateIdentity": "V2-006:A",
+        "closureSubjectIdentity": "V2-006:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-006:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-006:A",
+        "outputIdentity": "V2-006:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-006:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-006:A",
+        "toIdentity": "V2-006:A",
+        "state": "UNPROVEN",
+        "evidenceRefs": []
+      },
+      "continuity": {
+        "state": "UNPROVEN",
+        "evidenceRefs": []
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-006:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-007",
+      "domain": "logistics",
+      "subject": {
+        "candidateIdentity": "V2-007:A",
+        "closureSubjectIdentity": "V2-007:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-007:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-007:A",
+        "outputIdentity": "V2-007:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-007:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-007:A",
+        "toIdentity": "V2-007:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "CONFLICTING",
+        "evidenceRefs": [
+          "handoff-confirmed",
+          "handoff-denied"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-007:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-008",
+      "domain": "financial",
+      "subject": {
+        "candidateIdentity": "V2-008:A",
+        "closureSubjectIdentity": "V2-008:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-008:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-008:A",
+        "outputIdentity": "V2-008:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-008:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-008:A",
+        "toIdentity": "V2-008:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-008:A",
+        "evidenceCompletenessState": "UNPROVEN"
+      }
+    },
+    {
+      "evaluationId": "V2-009",
+      "domain": "federated",
+      "subject": {
+        "candidateIdentity": "V2-009:A",
+        "closureSubjectIdentity": "V2-009:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "CONFLICTING",
+        "evidenceRefs": [
+          "auth-a",
+          "auth-b"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-009:A",
+        "state": "UNPROVEN",
+        "evidenceRefs": [
+          "partial-q"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-009:A",
+        "outputIdentity": "V2-009:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-009:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-009:A",
+        "toIdentity": "V2-009:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "CONFLICTING",
+        "evidenceRefs": [
+          "cont-a",
+          "cont-b"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-009:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-010",
+      "domain": "financial",
+      "subject": {
+        "candidateIdentity": "V2-010:A",
+        "closureSubjectIdentity": "V2-010:A"
+      },
+      "admission": {
+        "state": "NEGATED",
+        "evidenceRefs": [
+          "explicit-refusal"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-010:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-010:A",
+        "outputIdentity": "V2-010:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-010:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-010:A",
+        "toIdentity": "V2-010:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-010:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-011",
+      "domain": "regulated_document",
+      "subject": {
+        "candidateIdentity": "V2-011:A",
+        "closureSubjectIdentity": "V2-011:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "NEGATED",
+        "evidenceRefs": [
+          "revocation"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-011:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-011:A",
+        "outputIdentity": "V2-011:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-011:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-011:A",
+        "toIdentity": "V2-011:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-011:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-012",
+      "domain": "procurement",
+      "subject": {
+        "candidateIdentity": "lot:12A",
+        "closureSubjectIdentity": "lot:12B"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "lot:12A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "q12"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "lot:12A",
+        "outputIdentity": "lot:12B",
+        "evidenceRefs": [
+          "x12"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "lot:12B",
+        "evidenceRefs": [
+          "m12"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "lot:12A",
+        "toIdentity": "lot:12B",
+        "state": "NEGATED",
+        "evidenceRefs": [
+          "mismatch12"
+        ]
+      },
+      "continuity": {
+        "state": "NEGATED",
+        "evidenceRefs": [
+          "no-cont12"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "lot:12B",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-013",
+      "domain": "manufacturing",
+      "subject": {
+        "candidateIdentity": "V2-013:A",
+        "closureSubjectIdentity": "V2-013:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-013:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual"
+        ]
+      },
+      "execution": {
+        "status": "INTERRUPTED",
+        "inputIdentity": "V2-013:A",
+        "outputIdentity": "V2-013:A",
+        "evidenceRefs": [
+          "interrupt"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-013:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-013:A",
+        "toIdentity": "V2-013:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-013:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-014",
+      "domain": "software",
+      "subject": {
+        "candidateIdentity": "V2-014:A",
+        "closureSubjectIdentity": "V2-014:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-014:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual"
+        ]
+      },
+      "execution": {
+        "status": "SURFACE_UNAVAILABLE",
+        "inputIdentity": "V2-014:A",
+        "outputIdentity": "V2-014:A",
+        "evidenceRefs": [
+          "surface-down"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-014:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-014:A",
+        "toIdentity": "V2-014:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-014:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-015",
+      "domain": "ai_agent",
+      "subject": {
+        "candidateIdentity": "V2-015:A",
+        "closureSubjectIdentity": "V2-015:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-015:A",
+        "state": "NEGATED",
+        "evidenceRefs": [
+          "substantive-failure"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-015:A",
+        "outputIdentity": "V2-015:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-015:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-015:A",
+        "toIdentity": "V2-015:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-015:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-016",
+      "domain": "logistics",
+      "subject": {
+        "candidateIdentity": "V2-016:A",
+        "closureSubjectIdentity": "V2-016:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-016:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-016:A",
+        "outputIdentity": "V2-016:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-016:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-016:A",
+        "toIdentity": "V2-016:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "NEGATED",
+        "evidenceRefs": [
+          "handoff-not-established"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-016:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-017",
+      "domain": "financial",
+      "subject": {
+        "candidateIdentity": "V2-017:A",
+        "closureSubjectIdentity": "V2-017:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-017:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-017:A",
+        "outputIdentity": "V2-017:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-017:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-017:A",
+        "toIdentity": "V2-017:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-017:A",
+        "evidenceCompletenessState": "NEGATED"
+      }
+    },
+    {
+      "evaluationId": "V2-018",
+      "domain": "ai_agent",
+      "subject": {
+        "candidateIdentity": "logical:18",
+        "closureSubjectIdentity": "runtime:18"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "logical:18",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "q18"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "logical:18",
+        "outputIdentity": "runtime:18",
+        "evidenceRefs": [
+          "x18"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "runtime:18",
+        "evidenceRefs": [
+          "m18"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "logical:18",
+        "toIdentity": "runtime:18",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "signed-map18"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "runtime:18",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-019",
+      "domain": "procurement",
+      "subject": {
+        "candidateIdentity": "V2-019:A",
+        "closureSubjectIdentity": "V2-019:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-019:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "valid-q",
+          "stale-nongoverning-warning"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-019:A",
+        "outputIdentity": "V2-019:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-019:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-019:A",
+        "toIdentity": "V2-019:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-019:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-020",
+      "domain": "federated",
+      "subject": {
+        "candidateIdentity": "V2-020:A",
+        "closureSubjectIdentity": "V2-020:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "crm",
+          "erp"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "governing-auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-020:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-020:A",
+        "outputIdentity": "V2-020:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-020:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-020:A",
+        "toIdentity": "V2-020:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "crm-erp",
+          "erp-pay"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-020:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-021",
+      "domain": "manufacturing",
+      "subject": {
+        "candidateIdentity": "V2-021:A",
+        "closureSubjectIdentity": "V2-021:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-021:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "current-inspection",
+          "stale-note-nongoverning"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-021:A",
+        "outputIdentity": "V2-021:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-021:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-021:A",
+        "toIdentity": "V2-021:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "cont"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-021:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    },
+    {
+      "evaluationId": "V2-022",
+      "domain": "logistics",
+      "subject": {
+        "candidateIdentity": "V2-022:A",
+        "closureSubjectIdentity": "V2-022:A"
+      },
+      "admission": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "admit"
+        ]
+      },
+      "authority": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "auth"
+        ]
+      },
+      "qualification": {
+        "subjectIdentity": "V2-022:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "qual"
+        ]
+      },
+      "execution": {
+        "status": "SUCCESS",
+        "inputIdentity": "V2-022:A",
+        "outputIdentity": "V2-022:A",
+        "evidenceRefs": [
+          "exec"
+        ]
+      },
+      "materialization": {
+        "outputIdentity": "V2-022:A",
+        "evidenceRefs": [
+          "mat"
+        ]
+      },
+      "correspondence": {
+        "fromIdentity": "V2-022:A",
+        "toIdentity": "V2-022:A",
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "corr"
+        ]
+      },
+      "continuity": {
+        "state": "ESTABLISHED",
+        "evidenceRefs": [
+          "signed-handoff",
+          "unrelated-carrier-warning"
+        ]
+      },
+      "closure": {
+        "requested": true,
+        "subjectIdentity": "V2-022:A",
+        "evidenceCompletenessState": "ESTABLISHED"
+      }
+    }
+  ]
+}
