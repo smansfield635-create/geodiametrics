@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Bounded public Common Crawl URL Index metadata probe; aggregate only."""
-import json,urllib.request,urllib.parse,xml.etree.ElementTree as ET,io,sys
+import json,urllib.request,urllib.parse,io,sys,re
 PREFIX="cc-index/table/cc-main/warc/crawl=CC-MAIN-2026-39/subset=warc/"
 BASE="https://data.commoncrawl.org/"
 receipt={"schema":"LBS_Q3_COMMON_CRAWL_BOUNDED_METADATA_PROBE_v1","crawl":"CC-MAIN-2026-39","subset":"warc","result":"NOT_EXECUTED","scope":"ONE_PARQUET_FILE_ONLY","actualResumeCount":None,"usResumeCount":None,"uniqueResumeCount":None,"millionCapable":False,"personalDataRetained":False}
 try:
  u=BASE+"?"+urllib.parse.urlencode({"list-type":"2","prefix":PREFIX,"max-keys":2})
  with urllib.request.urlopen(urllib.request.Request(u,headers={"User-Agent":"LBS-aggregate-research/1.0"}),timeout=30) as r: xml=r.read()
- root=ET.fromstring(xml); keys=[e.text for e in root.iter() if e.tag.endswith("Key") and e.text and e.text.endswith(".parquet")]
+ text=xml.decode("utf-8","replace"); keys=re.findall(r"<Key>([^<]+\\.parquet)</Key>",text)
  receipt["indexObjectCountReturned"]=len(keys)
  if not keys: raise RuntimeError("NO_PARQUET_KEYS_RETURNED")
  key=keys[0]
