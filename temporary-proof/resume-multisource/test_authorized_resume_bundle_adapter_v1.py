@@ -22,7 +22,7 @@ SKILLS CDL logistics safety
 BAD="This is a conference agenda and speaker schedule."
 
 def authority(source):
- return {"schema":"LBS_SOURCE_AUTHORITY_ASSERTION_v1","sourceId":source,"authorityState":"EXPLICIT_AUTHORIZED","usMarketState":"VERIFIED_US_MARKET_CHANNEL","authorizationBasis":"fixture authorization"}
+ return {"schema":"LBS_SOURCE_AUTHORITY_ASSERTION_v1","sourceId":source,"authorityState":"EXPLICIT_AUTHORIZED","usMarketState":"VERIFIED_US_MARKET_CHANNEL","documentPopulationState":"VERIFIED_HUMAN_SUBMITTED_RESUMES","authorizationBasis":"fixture authorization","authenticityBasis":"fixture represents human-submitted export"}
 
 class T(unittest.TestCase):
  def test_zip_cross_source_global_dedup(self):
@@ -42,7 +42,7 @@ class T(unittest.TestCase):
    d=pathlib.Path(d);p=d/"r.txt";p.write_text(R1)
    a=authority("HANDSHAKE_EMPLOYER_EXPORT");a["authorityState"]="UNKNOWN"
    with self.assertRaises(PermissionError):process("HANDSHAKE_EMPLOYER_EXPORT",p,a,d/"l.sqlite")
- def test_ledger_has_hashes_not_resume_text(self):
+ def test_rejects_unknown_authenticity(self):\n  with tempfile.TemporaryDirectory() as d:\n   d=pathlib.Path(d);p=d/"r.txt";p.write_text(R1)\n   a=authority("HANDSHAKE_EMPLOYER_EXPORT");a["documentPopulationState"]="UNKNOWN"\n   with self.assertRaises(PermissionError):process("HANDSHAKE_EMPLOYER_EXPORT",p,a,d/"l.sqlite")\n def test_ledger_has_hashes_not_resume_text(self):
   with tempfile.TemporaryDirectory() as d:
    d=pathlib.Path(d);p=d/"r.txt";p.write_text(R1);db=d/"l.sqlite"
    process("HANDSHAKE_EMPLOYER_EXPORT",p,authority("HANDSHAKE_EMPLOYER_EXPORT"),db)
