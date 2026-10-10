@@ -21,3 +21,5 @@ except Exception as e:
  receipt.update(result="FAIL_CLOSED",failureClass=type(e).__name__,failureDetail=str(e)[:200])
 print(json.dumps(receipt,sort_keys=True))
 sys.exit(0 if receipt["result"]=="PARTIAL_METADATA_MEASURED" else 1)
+
+# trigger: corrected-listing-parser-v1
