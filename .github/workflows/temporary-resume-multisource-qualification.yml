@@ -23,12 +23,20 @@ jobs:
           test "$(git hash-object temporary-proof/resume-multisource/authorized_export_adapter_v1.py)" = 'e2d8f3bf9d318e243e9951b2b72ffb77edbb4343'
           test "$(git hash-object temporary-proof/resume-multisource/test_authorized_export_adapter_v1.py)" = '87051e1009330794e0b240ba2029c7271e9c8612'
           test "$(git hash-object temporary-proof/resume-multisource/authorized-source-allowlist.v1.json)" = '4b3269d778d5909f6fc6bc5d23cb1224a1378c2a'
+      - name: Verify source discovery ranking blobs
+        run: |
+          test "$(git hash-object temporary-proof/resume-multisource/source-discovery-ledger.v4.json)" = 'a7a032f2c6e411e0bec4bafe2bab40f20db3753a'
+          test "$(git hash-object temporary-proof/resume-multisource/rank_source_discovery_v1.py)" = '61badb4e2fe3283efe3fed25c93d010118b6abb8'
+          test "$(git hash-object temporary-proof/resume-multisource/test_rank_source_discovery_v1.py)" = 'e63031b6fdf6b53b6d6a6a1de5e5b07f968c0fe3'
       - name: Compile
         run: python -m py_compile temporary-proof/resume-multisource/*.py
       - name: Execute qualification
         run: |
           mkdir -p control-plane/resume-corpus tools/resume-corpus
           cp temporary-proof/resume-multisource/source-registry.v1.json control-plane/resume-corpus/
+          cp temporary-proof/resume-multisource/source-discovery-ledger.v4.json control-plane/resume-corpus/
           cp temporary-proof/resume-multisource/*.py tools/resume-corpus/
           python tools/resume-corpus/test_multisource_orchestrator_v1.py
           python tools/resume-corpus/test_authorized_export_adapter_v1.py
+          python tools/resume-corpus/test_rank_source_discovery_v1.py
+          python tools/resume-corpus/rank_source_discovery_v1.py
