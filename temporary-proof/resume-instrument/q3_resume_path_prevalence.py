@@ -35,3 +35,5 @@ try:
   if os.path.exists(p):os.remove(p)
 except Exception as e:out.update(result="FAIL_CLOSED",failureClass=type(e).__name__,failureDetail=str(e)[:300])
 print(json.dumps(out,sort_keys=True));sys.exit(0 if out["result"]=="PARTIAL_PREVALENCE_MEASURED" else 1)
+
+# execution-trigger: prevalence-v1
