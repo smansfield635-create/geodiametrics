@@ -37,7 +37,7 @@ try:
             if lx and dc:
                 both+=1
                 if di: digs.add(di)
-        out.update(result="PARTIAL_PREVALENCE_MEASURED",partitionRows=n,resumeLexical200=lexical,documentLike200=docs,resumeLexicalDocument200=both,distinctContentDigestsInCandidateSet=len(digs),partitionCount=len(keys),naive900PartitionCandidateExtrapolation=both*len(keys),note="EXTRAPOLATION_ONLY_NOT_POPULATION_PROOF")
+        out.update(result="PARTIAL_PREVALENCE_MEASURED",partitionRows=n,topFetchStatuses=sorted(status_counts.items(),key=lambda x:x[1],reverse=True)[:10],topMimeTypes=sorted(mime_counts.items(),key=lambda x:x[1],reverse=True)[:10],resumeLexical200=lexical,documentLike200=docs,resumeLexicalDocument200=both,distinctContentDigestsInCandidateSet=len(digs),partitionCount=len(keys),naive900PartitionCandidateExtrapolation=both*len(keys),note="EXTRAPOLATION_ONLY_NOT_POPULATION_PROOF")
     finally:
         if os.path.exists(p): os.remove(p)
 except Exception as e:
