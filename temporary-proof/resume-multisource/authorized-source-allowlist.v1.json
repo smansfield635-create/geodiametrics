@@ -1,0 +1,5 @@
+{
+  "schema": "LBS_AUTHORIZED_SOURCE_ALLOWLIST_v1",
+  "sourceIds": [],
+  "note": "Empty until specific source and reuse authority are independently verified; no platforms implicitly enabled."
+}
