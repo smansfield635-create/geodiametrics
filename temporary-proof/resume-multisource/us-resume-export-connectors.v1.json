@@ -1,0 +1,41 @@
+{
+  "schema": "LBS_US_RESUME_EXPORT_CONNECTORS_v1",
+  "connectors": [
+    {
+      "id": "HANDSHAKE_EMPLOYER_EXPORT",
+      "mode": "OFFLINE_AUTHORIZED_EXPORT_IMPORT",
+      "acceptedContainers": [
+        "zip",
+        "pdf"
+      ],
+      "authorityRequirement": "Employer may import only resumes made available to that employer under Handshake candidate visibility/interaction rules; no platform crawling.",
+      "usMarketBasis": "U.S. recruiting channel",
+      "rawPersistence": false
+    },
+    {
+      "id": "HANDSHAKE_CAREER_SERVICES_RESUME_BOOK",
+      "mode": "OFFLINE_AUTHORIZED_EXPORT_IMPORT",
+      "acceptedContainers": [
+        "zip",
+        "pdf"
+      ],
+      "authorityRequirement": "Career-services export must be made by an authorized institutional user; downstream reuse must remain within granted scope.",
+      "usMarketBasis": "U.S. institution recruiting channel",
+      "rawPersistence": false
+    },
+    {
+      "id": "UNIVERSITY_OPT_IN_RESUME_BOOK",
+      "mode": "OFFLINE_AUTHORIZED_EXPORT_IMPORT",
+      "acceptedContainers": [
+        "zip",
+        "pdf",
+        "docx",
+        "txt"
+      ],
+      "authorityRequirement": "Institution/employer must have received the resume book through the institution's opt-in recruiting process or other explicit authorization.",
+      "usMarketBasis": "U.S. institution recruiting channel",
+      "rawPersistence": false
+    }
+  ],
+  "globalRule": "Imports consume already-authorized exports. Connector never automates login, candidate discovery, anti-bot bypass, or private-profile access."
+}
