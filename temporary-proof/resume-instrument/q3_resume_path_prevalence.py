@@ -22,7 +22,7 @@ try:
   pat=re.compile(r'(?i)(^|[/_.-])(resume|résumé|curriculum[-_. ]?vitae|cv)([/_.-]|$)')
   docpat=re.compile(r'(?i)(pdf|msword|officedocument|word)')
   for pa,st,m,d,di in zip(paths_col,status,mime,detected,dig):
-   if st!=200: continue
+   try: ok=int(st)==200\n   except (TypeError,ValueError): ok=False\n   if not ok: continue
    lx=bool(pat.search(pa or ""))
    dc=bool(docpat.search((m or "")+" "+(d or ""))) or bool(re.search(r'(?i)\.(pdf|doc|docx)$',pa or ""))
    if lx: lexical+=1
