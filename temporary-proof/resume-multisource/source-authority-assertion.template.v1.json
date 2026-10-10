@@ -1,0 +1,10 @@
+{
+  "schema": "LBS_SOURCE_AUTHORITY_ASSERTION_v1",
+  "sourceId": "REPLACE_WITH_REGISTERED_SOURCE_ID",
+  "authorityState": "UNKNOWN",
+  "usMarketState": "UNKNOWN",
+  "documentPopulationState": "UNKNOWN",
+  "authorizationBasis": "",
+  "authenticityBasis": "",
+  "scopeNotes": "Set EXPLICIT_AUTHORIZED / VERIFIED_US_MARKET_CHANNEL / VERIFIED_HUMAN_SUBMITTED_RESUMES only from source-specific evidence."
+}

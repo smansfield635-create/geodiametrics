@@ -1,0 +1,150 @@
+{
+  "schema": "LBS_RESUME_SOURCE_DISCOVERY_LEDGER_v4",
+  "date": "2026-10-09",
+  "target": {
+    "uniqueUSMarketActualResumes": 1000000,
+    "contactDataRequired": false,
+    "paidCorpusAllowed": false
+  },
+  "sources": [
+    {
+      "id": "HANDSHAKE_EMPLOYER_PUBLIC_RESUMES",
+      "family": "PERMISSIONED_PLATFORM",
+      "market": "US",
+      "reportedScale": null,
+      "documentType": "ACTUAL_RESUME_PDF_ZIP",
+      "access": "EMPLOYER_INTERACTION_AND_VISIBILITY_GATED",
+      "reuse": "PERMITTED_WITHIN_PLATFORM_RECRUITING_CONTEXT_ONLY_UNLESS_SEPARATELY_AUTHORIZED",
+      "independence": "INDEPENDENT",
+      "priority": 100,
+      "decision": "ADVANCE_ACCESS_PATH",
+      "countableNow": 0
+    },
+    {
+      "id": "HANDSHAKE_INSTITUTION_RESUME_BOOKS",
+      "family": "PERMISSIONED_PLATFORM",
+      "market": "US",
+      "reportedScale": null,
+      "documentType": "ACTUAL_PUBLIC_STUDENT_RESUMES",
+      "access": "CAREER_SERVICES_ONLY_UP_TO_500_PER_DOWNLOAD",
+      "reuse": "INSTITUTION_CONTEXT_GATED",
+      "independence": "INDEPENDENT",
+      "priority": 95,
+      "decision": "ADVANCE_PARTNERSHIP_PATH",
+      "countableNow": 0
+    },
+    {
+      "id": "UNIVERSITY_RESUME_BOOK_NETWORK",
+      "family": "PERMISSIONED_UNIVERSITY",
+      "market": "US",
+      "reportedScale": null,
+      "documentType": "ACTUAL_OPT_IN_RESUMES",
+      "access": "EMPLOYER_OR_PARTNER_REQUEST;SOME_FREE_SOME_PAID",
+      "reuse": "INSTITUTION_SPECIFIC",
+      "independence": "MULTI_INSTITUTION",
+      "priority": 90,
+      "decision": "ADVANCE_MULTI_INSTITUTION",
+      "countableNow": 0
+    },
+    {
+      "id": "JOBHOP_VDAB",
+      "family": "PUBLIC_RESEARCH_CORPUS",
+      "market": "BELGIUM",
+      "reportedScale": 440000,
+      "documentType": "PSEUDONYMIZED_RESUME_DERIVED_TRAJECTORIES",
+      "access": "PUBLIC_DATASET",
+      "reuse": "CC_BY_4_RELEASED_DERIVED_DATA",
+      "independence": "INDEPENDENT",
+      "priority": 10,
+      "decision": "EXCLUDE_US_TARGET_USE_AS_CONTROL",
+      "countableNow": 0
+    },
+    {
+      "id": "WORK_UA",
+      "family": "PUBLIC_RESEARCH_CORPUS",
+      "market": "UKRAINE",
+      "reportedScale": 103895,
+      "documentType": "STRUCTURED_RESUME_ENTRIES",
+      "access": "PUBLIC_DATASET",
+      "reuse": "CC_BY_NC_4",
+      "independence": "INDEPENDENT",
+      "priority": 5,
+      "decision": "EXCLUDE_US_TARGET_USE_AS_CONTROL",
+      "countableNow": 0
+    },
+    {
+      "id": "LIVECAREER_KAGGLE_LINEAGE",
+      "family": "PUBLIC_DATASET",
+      "market": "US_LIKELY_MIXED",
+      "reportedScale": 2484,
+      "documentType": "RESUME_EXAMPLES_PDF_TEXT_HTML",
+      "access": "PUBLIC_MIRRORS",
+      "reuse": "UPSTREAM_RIGHTS_UNRESOLVED",
+      "independence": "ONE_LINEAGE_MANY_MIRRORS",
+      "priority": 20,
+      "decision": "HOLD_RIGHTS",
+      "countableNow": 0
+    },
+    {
+      "id": "RESUME_SCREENING_10K",
+      "family": "PUBLIC_DATASET",
+      "market": "SYNTHETIC_US_STYLE",
+      "reportedScale": 10200,
+      "documentType": "GENERATED_RESUME_JOB_PAIRS",
+      "access": "PUBLIC",
+      "reuse": "MIT_REPO_TAG",
+      "independence": "LIKELY_MANY_MIRRORS",
+      "priority": 0,
+      "decision": "KILL_SYNTHETIC",
+      "countableNow": 0
+    },
+    {
+      "id": "FLOREX_RESUME_CORPUS",
+      "family": "PUBLIC_RESEARCH_CORPUS",
+      "market": "UNKNOWN",
+      "reportedScale": null,
+      "documentType": "TEXT_RESUMES_PLUS_LABELS",
+      "access": "PUBLIC_GITHUB",
+      "reuse": "LICENSE_NOT_CONFIRMED",
+      "independence": "INDEPENDENT_RESEARCH_LINEAGE",
+      "priority": 35,
+      "decision": "ADVANCE_METADATA_AUDIT",
+      "countableNow": 0
+    },
+    {
+      "id": "VRUNDAG_RESUME_CORPUS",
+      "family": "PUBLIC_RESEARCH_CORPUS",
+      "market": "UNKNOWN",
+      "reportedScale": null,
+      "documentType": "ANNOTATED_RESUMES",
+      "access": "PUBLIC_GITHUB",
+      "reuse": "ACADEMIC_RESEARCH_ACCESS",
+      "independence": "INDEPENDENT_UNRESOLVED",
+      "priority": 30,
+      "decision": "ADVANCE_METADATA_AUDIT",
+      "countableNow": 0
+    },
+    {
+      "id": "COMMON_CRAWL",
+      "family": "PUBLIC_WEB_INDEX",
+      "market": "GLOBAL",
+      "reportedScale": null,
+      "documentType": "WEB_INDEX_RECORDS",
+      "access": "PUBLIC_INDEX",
+      "reuse": "SOURCE_SPECIFIC",
+      "independence": "WEB_UNIVERSE",
+      "priority": 50,
+      "decision": "KEEP_AS_ONE_DISCOVERY_CHANNEL",
+      "countableNow": 0
+    }
+  ],
+  "rankingLaw": "PRIORITIZE_US_ACTUAL_RESUME_CHANNELS_BY_INCREMENTAL_UNIQUE_VOLUME_AND_AUTHORIZED_ACCESS; NON_US AND SYNTHETIC COUNT_ZERO",
+  "notes": [
+    "Handshake employer downloads require candidate visibility plus qualifying interaction with employer.",
+    "Handshake institution resume-book export supports up to 500 public resumes per download for career-services users.",
+    "University resume books exist across many institutions; access and fees vary.",
+    "JobHop v2 derives from about 440k Belgian resumes but is not U.S.-market.",
+    "Work_UA contains 103,895 unique Ukrainian resumes and is not U.S.-market.",
+    "Resume-Screening-Dataset examples are generated/sample-style and must not count as actual resumes."
+  ]
+}

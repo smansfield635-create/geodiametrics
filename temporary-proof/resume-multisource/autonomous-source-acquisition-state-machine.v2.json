@@ -1,0 +1,91 @@
+{
+  "schema": "LBS_AUTONOMOUS_SOURCE_ACQUISITION_STATE_MACHINE_v2",
+  "supersedes": [
+    "LBS_SOURCE_ONBOARDING_STATE_MACHINE_v1",
+    "LBS Owner Action Boundary v1"
+  ],
+  "targetUnique": 1000000,
+  "ownerActionRequired": false,
+  "states": [
+    "DISCOVERED",
+    "ACCESS_CHECK",
+    "PERMISSION_MEASURED",
+    "SAMPLE_ACQUIRED",
+    "Q3_SAMPLE_QUALIFIED",
+    "Q4_METRICS_MEASURED",
+    "Q5_PROJECTED",
+    "Q6_RIGHTS_GATE",
+    "Q7_MILLION_CAPABLE",
+    "Q8_SCALE_COLLECT",
+    "EXHAUSTED_OR_KILLED"
+  ],
+  "transitions": [
+    {
+      "from": "DISCOVERED",
+      "to": "ACCESS_CHECK",
+      "actor": "SYSTEM"
+    },
+    {
+      "from": "ACCESS_CHECK",
+      "to": "PERMISSION_MEASURED",
+      "actor": "SYSTEM"
+    },
+    {
+      "from": "PERMISSION_MEASURED",
+      "to": "SAMPLE_ACQUIRED",
+      "actor": "SYSTEM"
+    },
+    {
+      "from": "SAMPLE_ACQUIRED",
+      "to": "Q3_SAMPLE_QUALIFIED",
+      "actor": "SYSTEM"
+    },
+    {
+      "from": "Q3_SAMPLE_QUALIFIED",
+      "to": "Q4_METRICS_MEASURED",
+      "actor": "SYSTEM"
+    },
+    {
+      "from": "Q4_METRICS_MEASURED",
+      "to": "Q5_PROJECTED",
+      "actor": "SYSTEM"
+    },
+    {
+      "from": "Q5_PROJECTED",
+      "to": "Q6_RIGHTS_GATE",
+      "actor": "SYSTEM"
+    },
+    {
+      "from": "Q6_RIGHTS_GATE",
+      "to": "Q7_MILLION_CAPABLE",
+      "actor": "SYSTEM"
+    },
+    {
+      "from": "Q7_MILLION_CAPABLE",
+      "to": "Q8_SCALE_COLLECT",
+      "actor": "SYSTEM"
+    }
+  ],
+  "sourceEligibility": {
+    "paidCorpusPurchase": false,
+    "paidResumeDataLicense": false,
+    "allowed": [
+      "publicly accessible documents where acquisition/retention is permitted",
+      "open datasets with sufficient upstream provenance and permissions",
+      "public web/archive sources with source-specific permissible acquisition",
+      "free APIs or exports available without prohibited access-control bypass",
+      "other zero-cost accessible sources satisfying the frozen contract"
+    ],
+    "forbidden": [
+      "access-control bypass",
+      "credential abuse",
+      "private/exposed storage enumeration",
+      "prohibited scraping",
+      "counting profiles as resumes",
+      "counting synthetic resumes",
+      "setting unknown permission proportion to 1"
+    ]
+  },
+  "metricLaw": "E = I * r * u * d * p",
+  "stopCondition": "conservative lower-bound E >= 1000000 before Q8 scale collection"
+}

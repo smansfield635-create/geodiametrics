@@ -1,0 +1,112 @@
+{
+  "schema": "LBS_ZERO_COST_US_RESUME_BOOK_LEADS_v1",
+  "date": "2026-10-09",
+  "leads": [
+    {
+      "id": "MIT_SLOAN_RESUME_BOOKS",
+      "institution": "MIT Sloan",
+      "cost": "NO_COST",
+      "population": "MBA/MFin/MBAn/EMBA/alumni",
+      "access": "Recruiting partners via Career Central",
+      "reuseState": "PARTNERSHIP_PERMISSION_REQUIRED_FOR_CORPUS_USE",
+      "priority": 100,
+      "url": "https://cdo.mit.edu/search-resumes/"
+    },
+    {
+      "id": "CORNELL_ILR_LATE_SPRING_BOOK",
+      "institution": "Cornell ILR",
+      "cost": "NO_COST",
+      "population": "graduating BSILR and MILR candidates",
+      "access": "Employers may request annual book",
+      "reuseState": "PARTNERSHIP_PERMISSION_REQUIRED_FOR_CORPUS_USE",
+      "priority": 98,
+      "url": "https://www.ilr.cornell.edu/current-students/career-path/hire-ilr-students-01"
+    },
+    {
+      "id": "UVA_DARDEN_RESUME_BOOKS",
+      "institution": "UVA Darden",
+      "cost": "NO_COST",
+      "population": "Darden students",
+      "access": "Employers through Darden Career Link",
+      "reuseState": "PARTNERSHIP_PERMISSION_REQUIRED_FOR_CORPUS_USE",
+      "priority": 96,
+      "url": "https://www.darden.virginia.edu/recruiters-career/recruit-talent"
+    },
+    {
+      "id": "COLUMBIA_MAILMAN_RESUME_BOOKS",
+      "institution": "Columbia Mailman",
+      "cost": "NO_COST",
+      "population": "public-health students/alumni",
+      "access": "Approved employers via CareerLink",
+      "reuseState": "PARTNERSHIP_PERMISSION_REQUIRED_FOR_CORPUS_USE",
+      "priority": 95,
+      "url": "https://www.publichealth.columbia.edu/become-student/career-services/employers/recruit-us"
+    },
+    {
+      "id": "HOUSTON_BAUER_RESUME_BOOKS",
+      "institution": "University of Houston Bauer",
+      "cost": "NO_COST",
+      "population": "BBA/graduate/recent alumni",
+      "access": "Approved employer job posting then custom resume-book request",
+      "reuseState": "PARTNERSHIP_PERMISSION_REQUIRED_FOR_CORPUS_USE",
+      "priority": 94,
+      "url": "https://careercenter.bauer.uh.edu/resume-books/"
+    },
+    {
+      "id": "CMU_TEPPER_RESUME_BOOKS",
+      "institution": "Carnegie Mellon Tepper",
+      "cost": "NO_COST",
+      "population": "Tepper students",
+      "access": "Recruiting portal permits candidate search and resume-book download",
+      "reuseState": "PARTNERSHIP_PERMISSION_REQUIRED_FOR_CORPUS_USE",
+      "priority": 93,
+      "url": "https://www.cmu.edu/tepper/recruiting-and-partnerships/hire-our-talent/"
+    },
+    {
+      "id": "NORTHEASTERN_DMSB_CUSTOM_BOOK",
+      "institution": "Northeastern D'Amore-McKim",
+      "cost": "NO_COST",
+      "population": "MBA/MS students and alumni",
+      "access": "Graduate Career Center custom resume book",
+      "reuseState": "PARTNERSHIP_PERMISSION_REQUIRED_FOR_CORPUS_USE",
+      "priority": 92,
+      "url": "https://damore-mckim.northeastern.edu/corporate-partnerships/hire-our-students/"
+    },
+    {
+      "id": "CHAPMAN_LAW_RESUME_BOOK",
+      "institution": "Chapman Fowler School of Law",
+      "cost": "NO_COST",
+      "population": "law students and alumni seeking employment",
+      "access": "Request current resume book from Career Services",
+      "reuseState": "PARTNERSHIP_PERMISSION_REQUIRED_FOR_CORPUS_USE",
+      "priority": 88,
+      "url": "https://www.chapman.edu/law/careers/employers.aspx"
+    },
+    {
+      "id": "JHU_CAREY_RESUME_BOOKS",
+      "institution": "Johns Hopkins Carey",
+      "cost": "UNSTATED",
+      "population": "Carey business students",
+      "access": "Request from employer relations",
+      "reuseState": "PARTNERSHIP_PERMISSION_REQUIRED_FOR_CORPUS_USE",
+      "priority": 82,
+      "url": "https://carey.jhu.edu/partnerships/engage"
+    },
+    {
+      "id": "HBS_CLUB_RESUME_BOOKS",
+      "institution": "Harvard Business School",
+      "cost": "NO_COST_LIMITED",
+      "population": "MBA club resume books",
+      "access": "Up to 5 complimentary club books in cited recruiting material",
+      "reuseState": "CURRENT_POLICY_REVERIFY_AND_PARTNERSHIP_PERMISSION_REQUIRED",
+      "priority": 70,
+      "url": "https://www.hbs.edu/recruiting/"
+    }
+  ],
+  "laws": [
+    "Employer/recruiter access does not by itself authorize corpus reuse.",
+    "Only explicit zero-cost or complimentary channels satisfy the no-paid-corpus constraint.",
+    "No candidate contact data is required or retained.",
+    "Source enters count only after explicit corpus-processing/reuse authority and human-submitted U.S.-market population evidence."
+  ]
+}

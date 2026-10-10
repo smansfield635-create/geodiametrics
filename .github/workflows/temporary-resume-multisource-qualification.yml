@@ -1,0 +1,69 @@
+name: Temporary Resume Multisource Orchestrator Qualification
+on:
+  pull_request:
+    paths:
+      - 'temporary-proof/resume-multisource/**'
+      - '.github/workflows/temporary-resume-multisource-qualification.yml'
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11.15'}
+      - name: Verify exact staged blobs
+        run: |
+          test "$(git hash-object temporary-proof/resume-multisource/multisource_orchestrator_v1.py)" = 'c0f34ac436e6eed18fd470f071d53ef8a25d1fb4'
+          test "$(git hash-object temporary-proof/resume-multisource/test_multisource_orchestrator_v1.py)" = '6cd7f97222420813667fd0b84e4976ee985efda9'
+          test "$(git hash-object temporary-proof/resume-multisource/source-registry.v1.json)" = 'cda7cbdf6b979c170975028c45c4a45aba2f3e9b'
+      - name: Verify authorized adapter blobs
+        run: |
+          test "$(git hash-object temporary-proof/resume-multisource/authorized_export_adapter_v1.py)" = 'e2d8f3bf9d318e243e9951b2b72ffb77edbb4343'
+          test "$(git hash-object temporary-proof/resume-multisource/test_authorized_export_adapter_v1.py)" = '87051e1009330794e0b240ba2029c7271e9c8612'
+          test "$(git hash-object temporary-proof/resume-multisource/authorized-source-allowlist.v1.json)" = '4b3269d778d5909f6fc6bc5d23cb1224a1378c2a'
+      - name: Verify source discovery ranking blobs
+        run: |
+          test "$(git hash-object temporary-proof/resume-multisource/source-discovery-ledger.v4.json)" = 'a7a032f2c6e411e0bec4bafe2bab40f20db3753a'
+          test "$(git hash-object temporary-proof/resume-multisource/rank_source_discovery_v1.py)" = '61badb4e2fe3283efe3fed25c93d010118b6abb8'
+          test "$(git hash-object temporary-proof/resume-multisource/test_rank_source_discovery_v1.py)" = 'e63031b6fdf6b53b6d6a6a1de5e5b07f968c0fe3'
+      - name: Verify authorized U.S. bundle connector blobs
+        run: |
+          test "$(git hash-object temporary-proof/resume-multisource/authorized_resume_bundle_adapter_v1.py)" = '3183a0eea629bb7166199b418d55881cde1f5e21'
+          test "$(git hash-object temporary-proof/resume-multisource/test_authorized_resume_bundle_adapter_v1.py)" = '51f7a7a2090815cceb6029bcab87c79ecc1e920a'
+          test "$(git hash-object temporary-proof/resume-multisource/requirements-authorized-bundle.txt)" = '020e1f4de23efbc6aea7576bc6d5be028b840e6b'
+          test "$(git hash-object temporary-proof/resume-multisource/us-resume-export-connectors.v1.json)" = '828e70977178f25e4ce21b7434827200a7c7e860'
+          test "$(git hash-object temporary-proof/resume-multisource/resume_detector.py)" = '5f14ddf52ac5c9247ac943a9e041e8af69ea6fdf'
+          test "$(git hash-object temporary-proof/resume-multisource/source-authority-assertion.template.v1.json)" = '08c0ef94482cff46fd5d5c869d49280742ae6d6e'
+      - name: Install bundle extraction dependency
+        run: pip install -r temporary-proof/resume-multisource/requirements-authorized-bundle.txt
+      - name: Verify zero-cost U.S. source queue blobs
+        run: |
+          test "$(git hash-object temporary-proof/resume-multisource/zero-cost-us-resume-book-leads.v1.json)" = '0697430c4e93fc482405546837b0928adad9436b'
+          test "$(git hash-object temporary-proof/resume-multisource/rank_zero_cost_us_sources_v1.py)" = 'ba87d3a020ea7428a98d97a5b19b9e3ffb7dbd70'
+          test "$(git hash-object temporary-proof/resume-multisource/test_rank_zero_cost_us_sources_v1.py)" = '4720baedaaabb83b2b2e1a391a2bff842d260cc1'
+      - name: Verify autonomous acquisition blobs
+        run: |
+          test "$(git hash-object temporary-proof/resume-multisource/autonomous-source-acquisition-state-machine.v2.json)" = '69fbbc2707957d2ccca05b3c752f7e52a5f971a7'
+          test "$(git hash-object temporary-proof/resume-multisource/autonomous_source_coordinator_v2.py)" = '4a4ef1d7864441efe7907ebcb38d1be7c1997095'
+          test "$(git hash-object temporary-proof/resume-multisource/test_autonomous_source_coordinator_v2.py)" = 'd36a9d5608e5a0305abdb500239aaca1aac8c3c2'
+      - name: Compile
+        run: python -m py_compile temporary-proof/resume-multisource/*.py
+      - name: Execute qualification
+        run: |
+          mkdir -p control-plane/resume-corpus tools/resume-corpus
+          cp temporary-proof/resume-multisource/source-registry.v1.json control-plane/resume-corpus/
+          cp temporary-proof/resume-multisource/source-discovery-ledger.v4.json control-plane/resume-corpus/
+          cp temporary-proof/resume-multisource/us-resume-export-connectors.v1.json control-plane/resume-corpus/
+          cp temporary-proof/resume-multisource/zero-cost-us-resume-book-leads.v1.json control-plane/resume-corpus/
+          cp temporary-proof/resume-multisource/autonomous-source-acquisition-state-machine.v2.json control-plane/resume-corpus/
+          cp temporary-proof/resume-multisource/*.py tools/resume-corpus/
+          python tools/resume-corpus/test_multisource_orchestrator_v1.py
+          python tools/resume-corpus/test_authorized_export_adapter_v1.py
+          python tools/resume-corpus/test_rank_source_discovery_v1.py
+          python tools/resume-corpus/rank_source_discovery_v1.py
+          python tools/resume-corpus/test_authorized_resume_bundle_adapter_v1.py
+          python tools/resume-corpus/test_rank_zero_cost_us_sources_v1.py
+          python tools/resume-corpus/rank_zero_cost_us_sources_v1.py
+          python tools/resume-corpus/test_autonomous_source_coordinator_v2.py
