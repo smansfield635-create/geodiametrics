@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Bounded public Common Crawl URL Index metadata probe; aggregate only."""
-import gzip, hashlib, io, json, sys, urllib.request
+import gzip, hashlib, json, os, sys, tempfile, urllib.request
 BASE="https://data.commoncrawl.org/"
 PATHS_URL=BASE+"crawl-data/CC-MAIN-2026-39/cc-index-table.paths.gz"
 receipt={"schema":"LBS_Q3_COMMON_CRAWL_BOUNDED_METADATA_PROBE_v1","crawl":"CC-MAIN-2026-39","subset":"warc","result":"NOT_EXECUTED","scope":"ONE_PARQUET_FILE_ONLY","actualResumeCount":None,"usResumeCount":None,"uniqueResumeCount":None,"millionCapable":False,"personalDataRetained":False}
