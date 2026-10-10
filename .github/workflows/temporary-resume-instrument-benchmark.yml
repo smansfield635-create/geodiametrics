@@ -1,0 +1,33 @@
+name: Temporary Resume Instrument Benchmark
+on:
+  pull_request:
+    paths:
+      - 'temporary-proof/resume-instrument/**'
+      - '.github/workflows/temporary-resume-instrument-benchmark.yml'
+permissions:
+  contents: read
+jobs:
+  benchmark:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.15'
+      - name: Verify frozen proof blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object temporary-proof/resume-instrument/resume_detector.py)" = 'e69a0d783e3462d18c8dd59f33868f6a3a4302b4'
+          test "$(git hash-object temporary-proof/resume-instrument/benchmark_generator_v1.py)" = '5b92ea32889ef83563c2b6686b9c8043c1814913'
+          test "$(git hash-object temporary-proof/resume-instrument/full_benchmark_runner_v1.py)" = 'ed4addda3e83d7ff09f4475d6ea74b7b92f64126'
+      - name: Execute frozen benchmark
+        working-directory: temporary-proof/resume-instrument
+        run: python full_benchmark_runner_v1.py | tee "$RUNNER_TEMP/resume-benchmark-receipt.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: resume-instrument-benchmark-${{ github.run_id }}
+          path: ${{ runner.temp }}/resume-benchmark-receipt.json
+          if-no-files-found: warn
+          retention-days: 90
