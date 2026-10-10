@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: '3.11.15'}
       - run: python -m pip install pyarrow==21.0.0
-      - name: Count aggregate prevalence
+      - name: Compile probe\n        run: python -m py_compile temporary-proof/resume-instrument/q3_resume_path_prevalence.py\n      - name: Count aggregate prevalence
         shell: bash
         run: |
           set -o pipefail
