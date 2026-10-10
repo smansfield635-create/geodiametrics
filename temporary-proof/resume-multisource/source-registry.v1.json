@@ -1,0 +1,106 @@
+{
+  "schema": "LBS_RESUME_SOURCE_REGISTRY_v1",
+  "goalUniqueResumes": 1000000,
+  "countingUnit": "UNIQUE_SUBSTANTIVE_ACTUAL_US_MARKET_RESUME",
+  "sources": [
+    {
+      "id": "CC_WEB_INDEX",
+      "family": "PUBLIC_WEB_INDEX",
+      "name": "Common Crawl",
+      "status": "DISCOVERY_ACTIVE",
+      "accessMode": "PUBLIC_INDEX_AND_ARCHIVE",
+      "acquisitionAuthority": "SOURCE_SPECIFIC",
+      "priority": 60
+    },
+    {
+      "id": "OPEN_DATASETS",
+      "family": "OPEN_DATA",
+      "name": "Open/public resume datasets",
+      "status": "DISCOVERY_ACTIVE",
+      "accessMode": "LICENSE_GATED_PER_DATASET",
+      "acquisitionAuthority": "SOURCE_SPECIFIC",
+      "priority": 70
+    },
+    {
+      "id": "PUBLIC_DOCUMENT_WEB",
+      "family": "PUBLIC_DOCUMENTS",
+      "name": "Public resume/CV documents",
+      "status": "DISCOVERY_ACTIVE",
+      "accessMode": "PUBLIC_WEB_SOURCE_SPECIFIC",
+      "acquisitionAuthority": "SOURCE_SPECIFIC",
+      "priority": 55
+    },
+    {
+      "id": "UNIVERSITY_PORTFOLIO",
+      "family": "PUBLIC_DOCUMENTS",
+      "name": "University and portfolio resume publishing",
+      "status": "DISCOVERY_ACTIVE",
+      "accessMode": "SOURCE_SPECIFIC",
+      "acquisitionAuthority": "SOURCE_SPECIFIC",
+      "priority": 45
+    },
+    {
+      "id": "CRAIGSLIST",
+      "family": "JOB_MARKETPLACE",
+      "name": "Craigslist",
+      "status": "PERMISSION_REVIEW",
+      "accessMode": "PUBLIC_OR_PLATFORM_SURFACE",
+      "acquisitionAuthority": "REQUIRES_TERMS_AND_ACCESS_CHECK",
+      "priority": 40
+    },
+    {
+      "id": "INDEED",
+      "family": "JOB_PLATFORM",
+      "name": "Indeed",
+      "status": "PERMISSION_REVIEW",
+      "accessMode": "PLATFORM",
+      "acquisitionAuthority": "NO_BYPASS_OR_UNAUTHORIZED_AUTOMATION",
+      "priority": 20
+    },
+    {
+      "id": "LINKEDIN",
+      "family": "PROFESSIONAL_NETWORK",
+      "name": "LinkedIn",
+      "status": "PERMISSION_REVIEW",
+      "accessMode": "PLATFORM",
+      "acquisitionAuthority": "NO_BYPASS_OR_UNAUTHORIZED_AUTOMATION",
+      "priority": 20
+    },
+    {
+      "id": "FACEBOOK",
+      "family": "SOCIAL_PLATFORM",
+      "name": "Facebook",
+      "status": "PERMISSION_REVIEW",
+      "accessMode": "PLATFORM",
+      "acquisitionAuthority": "NO_PRIVATE_DATA_OR_ACCESS_CONTROL_BYPASS",
+      "priority": 10
+    },
+    {
+      "id": "PARTNER_FEEDS",
+      "family": "PERMISSIONED_FEED",
+      "name": "Employer/ATS/partner feeds",
+      "status": "DISCOVERY_ACTIVE",
+      "accessMode": "EXPLICIT_PERMISSION",
+      "acquisitionAuthority": "PARTNER_GRANT_REQUIRED",
+      "priority": 80
+    },
+    {
+      "id": "DIRECT_UPLOAD",
+      "family": "OPT_IN",
+      "name": "Candidate direct uploads",
+      "status": "DISCOVERY_ACTIVE",
+      "accessMode": "CONSENT",
+      "acquisitionAuthority": "EXPLICIT_SUBMISSION",
+      "priority": 75
+    },
+    {
+      "id": "WEB_ARCHIVES",
+      "family": "ARCHIVE",
+      "name": "Historical public web archives",
+      "status": "DISCOVERY_ACTIVE",
+      "accessMode": "ARCHIVE_SOURCE_SPECIFIC",
+      "acquisitionAuthority": "SOURCE_SPECIFIC",
+      "priority": 50
+    }
+  ]
+}
