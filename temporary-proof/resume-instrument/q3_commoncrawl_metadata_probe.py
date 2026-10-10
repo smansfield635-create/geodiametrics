@@ -13,14 +13,20 @@ try:
     if not keys: raise RuntimeError("NO_PARQUET_KEYS_RETURNED")
     key=keys[0]
     import pyarrow.parquet as pq
-    with urllib.request.urlopen(urllib.request.Request(BASE+key,headers=headers),timeout=120) as r:
-        data=r.read(120*1024*1024+1)
-    if len(data)>120*1024*1024: raise RuntimeError("OBJECT_EXCEEDS_120MB_BUDGET")
-    pf=pq.ParquetFile(io.BytesIO(data))
-    receipt.update(result="PARTIAL_METADATA_MEASURED",sampleParquetBytes=len(data),sampleParquetRows=pf.metadata.num_rows,sampleRowGroups=pf.metadata.num_row_groups,columns=pf.schema.names,objectKeySha256=hashlib.sha256(key.encode()).hexdigest())
+    fd,tmp_path=tempfile.mkstemp(suffix=".parquet"); os.close(fd)
+    try:
+        req=urllib.request.Request(BASE+key,headers=headers)
+        with urllib.request.urlopen(req,timeout=180) as src, open(tmp_path,"wb") as dst:
+            while True:
+                chunk=src.read(8*1024*1024)
+                if not chunk: break
+                dst.write(chunk)
+        size=os.path.getsize(tmp_path)
+        pf=pq.ParquetFile(tmp_path)
+        receipt.update(result="PARTIAL_METADATA_MEASURED",sampleParquetBytes=size,sampleParquetRows=pf.metadata.num_rows,sampleRowGroups=pf.metadata.num_row_groups,columns=pf.schema.names,objectKeySha256=hashlib.sha256(key.encode()).hexdigest())
+    finally:
+        if os.path.exists(tmp_path): os.remove(tmp_path)
 except Exception as e:
-    receipt.update(result="FAIL_CLOSED",failureClass=type(e).__name__,failureDetail=str(e)[:200])
+    receipt.update(result="FAIL_CLOSED",failureClass=type(e).__name__,failureDetail=str(e)[:300])
 print(json.dumps(receipt,sort_keys=True))
 sys.exit(0 if receipt["result"]=="PARTIAL_METADATA_MEASURED" else 1)
-
-# execution-trigger: manifest-probe-v2
