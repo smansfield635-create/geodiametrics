@@ -43,6 +43,11 @@ jobs:
           test "$(git hash-object temporary-proof/resume-multisource/zero-cost-us-resume-book-leads.v1.json)" = '0697430c4e93fc482405546837b0928adad9436b'
           test "$(git hash-object temporary-proof/resume-multisource/rank_zero_cost_us_sources_v1.py)" = 'ba87d3a020ea7428a98d97a5b19b9e3ffb7dbd70'
           test "$(git hash-object temporary-proof/resume-multisource/test_rank_zero_cost_us_sources_v1.py)" = '4720baedaaabb83b2b2e1a391a2bff842d260cc1'
+      - name: Verify autonomous acquisition blobs
+        run: |
+          test "$(git hash-object temporary-proof/resume-multisource/autonomous-source-acquisition-state-machine.v2.json)" = '69fbbc2707957d2ccca05b3c752f7e52a5f971a7'
+          test "$(git hash-object temporary-proof/resume-multisource/autonomous_source_coordinator_v2.py)" = '4a4ef1d7864441efe7907ebcb38d1be7c1997095'
+          test "$(git hash-object temporary-proof/resume-multisource/test_autonomous_source_coordinator_v2.py)" = 'd36a9d5608e5a0305abdb500239aaca1aac8c3c2'
       - name: Compile
         run: python -m py_compile temporary-proof/resume-multisource/*.py
       - name: Execute qualification
@@ -52,6 +57,7 @@ jobs:
           cp temporary-proof/resume-multisource/source-discovery-ledger.v4.json control-plane/resume-corpus/
           cp temporary-proof/resume-multisource/us-resume-export-connectors.v1.json control-plane/resume-corpus/
           cp temporary-proof/resume-multisource/zero-cost-us-resume-book-leads.v1.json control-plane/resume-corpus/
+          cp temporary-proof/resume-multisource/autonomous-source-acquisition-state-machine.v2.json control-plane/resume-corpus/
           cp temporary-proof/resume-multisource/*.py tools/resume-corpus/
           python tools/resume-corpus/test_multisource_orchestrator_v1.py
           python tools/resume-corpus/test_authorized_export_adapter_v1.py
@@ -60,3 +66,4 @@ jobs:
           python tools/resume-corpus/test_authorized_resume_bundle_adapter_v1.py
           python tools/resume-corpus/test_rank_zero_cost_us_sources_v1.py
           python tools/resume-corpus/rank_zero_cost_us_sources_v1.py
+          python tools/resume-corpus/test_autonomous_source_coordinator_v2.py
