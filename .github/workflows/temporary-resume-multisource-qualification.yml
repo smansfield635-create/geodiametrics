@@ -28,6 +28,15 @@ jobs:
           test "$(git hash-object temporary-proof/resume-multisource/source-discovery-ledger.v4.json)" = 'a7a032f2c6e411e0bec4bafe2bab40f20db3753a'
           test "$(git hash-object temporary-proof/resume-multisource/rank_source_discovery_v1.py)" = '61badb4e2fe3283efe3fed25c93d010118b6abb8'
           test "$(git hash-object temporary-proof/resume-multisource/test_rank_source_discovery_v1.py)" = 'e63031b6fdf6b53b6d6a6a1de5e5b07f968c0fe3'
+      - name: Verify authorized U.S. bundle connector blobs
+        run: |
+          test "$(git hash-object temporary-proof/resume-multisource/authorized_resume_bundle_adapter_v1.py)" = '7259610da7ba8824f8382fda93d06d9b997d2b8a'
+          test "$(git hash-object temporary-proof/resume-multisource/test_authorized_resume_bundle_adapter_v1.py)" = '655087b89c651f59be049d58192bd910a9c1d418'
+          test "$(git hash-object temporary-proof/resume-multisource/requirements-authorized-bundle.txt)" = '020e1f4de23efbc6aea7576bc6d5be028b840e6b'
+          test "$(git hash-object temporary-proof/resume-multisource/us-resume-export-connectors.v1.json)" = '828e70977178f25e4ce21b7434827200a7c7e860'
+          test "$(git hash-object temporary-proof/resume-multisource/resume_detector.py)" = '5f14ddf52ac5c9247ac943a9e041e8af69ea6fdf'
+      - name: Install bundle extraction dependency
+        run: pip install -r temporary-proof/resume-multisource/requirements-authorized-bundle.txt
       - name: Compile
         run: python -m py_compile temporary-proof/resume-multisource/*.py
       - name: Execute qualification
@@ -35,8 +44,10 @@ jobs:
           mkdir -p control-plane/resume-corpus tools/resume-corpus
           cp temporary-proof/resume-multisource/source-registry.v1.json control-plane/resume-corpus/
           cp temporary-proof/resume-multisource/source-discovery-ledger.v4.json control-plane/resume-corpus/
+          cp temporary-proof/resume-multisource/us-resume-export-connectors.v1.json control-plane/resume-corpus/
           cp temporary-proof/resume-multisource/*.py tools/resume-corpus/
           python tools/resume-corpus/test_multisource_orchestrator_v1.py
           python tools/resume-corpus/test_authorized_export_adapter_v1.py
           python tools/resume-corpus/test_rank_source_discovery_v1.py
           python tools/resume-corpus/rank_source_discovery_v1.py
+          python tools/resume-corpus/test_authorized_resume_bundle_adapter_v1.py
