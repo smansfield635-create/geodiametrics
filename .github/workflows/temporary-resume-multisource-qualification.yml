@@ -18,6 +18,11 @@ jobs:
           test "$(git hash-object temporary-proof/resume-multisource/multisource_orchestrator_v1.py)" = 'c0f34ac436e6eed18fd470f071d53ef8a25d1fb4'
           test "$(git hash-object temporary-proof/resume-multisource/test_multisource_orchestrator_v1.py)" = '6cd7f97222420813667fd0b84e4976ee985efda9'
           test "$(git hash-object temporary-proof/resume-multisource/source-registry.v1.json)" = 'cda7cbdf6b979c170975028c45c4a45aba2f3e9b'
+      - name: Verify authorized adapter blobs
+        run: |
+          test "$(git hash-object temporary-proof/resume-multisource/authorized_export_adapter_v1.py)" = 'e2d8f3bf9d318e243e9951b2b72ffb77edbb4343'
+          test "$(git hash-object temporary-proof/resume-multisource/test_authorized_export_adapter_v1.py)" = '87051e1009330794e0b240ba2029c7271e9c8612'
+          test "$(git hash-object temporary-proof/resume-multisource/authorized-source-allowlist.v1.json)" = '4b3269d778d5909f6fc6bc5d23cb1224a1378c2a'
       - name: Compile
         run: python -m py_compile temporary-proof/resume-multisource/*.py
       - name: Execute qualification
@@ -26,3 +31,4 @@ jobs:
           cp temporary-proof/resume-multisource/source-registry.v1.json control-plane/resume-corpus/
           cp temporary-proof/resume-multisource/*.py tools/resume-corpus/
           python tools/resume-corpus/test_multisource_orchestrator_v1.py
+          python tools/resume-corpus/test_authorized_export_adapter_v1.py
