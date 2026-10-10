@@ -46,3 +46,5 @@ print(json.dumps(out,sort_keys=True))
 sys.exit(0 if out["result"]=="PARTIAL_PREVALENCE_MEASURED" else 1)
 
 # execution-trigger: compiled-prevalence-v3
+
+# execution-trigger: distributions-v1
