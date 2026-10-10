@@ -31,7 +31,7 @@ jobs:
       - name: Verify authorized U.S. bundle connector blobs
         run: |
           test "$(git hash-object temporary-proof/resume-multisource/authorized_resume_bundle_adapter_v1.py)" = '3183a0eea629bb7166199b418d55881cde1f5e21'
-          test "$(git hash-object temporary-proof/resume-multisource/test_authorized_resume_bundle_adapter_v1.py)" = '194a6fe2713173dcaacc87cfb3c340affb1b33e6'
+          test "$(git hash-object temporary-proof/resume-multisource/test_authorized_resume_bundle_adapter_v1.py)" = '51f7a7a2090815cceb6029bcab87c79ecc1e920a'
           test "$(git hash-object temporary-proof/resume-multisource/requirements-authorized-bundle.txt)" = '020e1f4de23efbc6aea7576bc6d5be028b840e6b'
           test "$(git hash-object temporary-proof/resume-multisource/us-resume-export-connectors.v1.json)" = '828e70977178f25e4ce21b7434827200a7c7e860'
           test "$(git hash-object temporary-proof/resume-multisource/resume_detector.py)" = '5f14ddf52ac5c9247ac943a9e041e8af69ea6fdf'
