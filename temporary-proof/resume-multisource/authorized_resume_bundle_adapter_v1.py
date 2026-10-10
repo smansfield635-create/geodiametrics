@@ -56,7 +56,9 @@ def authority_ok(a,source_id):
             a.get("sourceId")==source_id and
             a.get("authorityState")=="EXPLICIT_AUTHORIZED" and
             a.get("usMarketState")=="VERIFIED_US_MARKET_CHANNEL" and
-            bool(a.get("authorizationBasis")))
+            a.get("documentPopulationState")=="VERIFIED_HUMAN_SUBMITTED_RESUMES" and
+            bool(a.get("authorizationBasis")) and
+            bool(a.get("authenticityBasis")))
 
 def process(source_id,bundle,authority,ledger_path):
     if not authority_ok(authority,source_id): raise PermissionError("SOURCE_AUTHORITY_NOT_ESTABLISHED")
