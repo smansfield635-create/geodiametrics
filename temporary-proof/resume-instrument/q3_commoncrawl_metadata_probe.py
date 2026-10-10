@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Bounded public Common Crawl URL Index metadata probe; aggregate only."""
 import json,urllib.request,urllib.parse,io,sys,re
-PREFIX="cc-index/table/cc-main/warc/crawl=CC-MAIN-2026-39/subset=warc/"
+PREFIX="cc-index/table/cc-main/warc/crawl=CC-MAIN-2026-39/subset=warc/"\nPATHS_URL="https://data.commoncrawl.org/crawl-data/CC-MAIN-2026-39/cc-index-table.paths.gz"
 BASE="https://data.commoncrawl.org/"
 receipt={"schema":"LBS_Q3_COMMON_CRAWL_BOUNDED_METADATA_PROBE_v1","crawl":"CC-MAIN-2026-39","subset":"warc","result":"NOT_EXECUTED","scope":"ONE_PARQUET_FILE_ONLY","actualResumeCount":None,"usResumeCount":None,"uniqueResumeCount":None,"millionCapable":False,"personalDataRetained":False}
 try:
