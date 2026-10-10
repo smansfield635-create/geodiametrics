@@ -38,6 +38,11 @@ jobs:
           test "$(git hash-object temporary-proof/resume-multisource/source-authority-assertion.template.v1.json)" = '08c0ef94482cff46fd5d5c869d49280742ae6d6e'
       - name: Install bundle extraction dependency
         run: pip install -r temporary-proof/resume-multisource/requirements-authorized-bundle.txt
+      - name: Verify zero-cost U.S. source queue blobs
+        run: |
+          test "$(git hash-object temporary-proof/resume-multisource/zero-cost-us-resume-book-leads.v1.json)" = '0697430c4e93fc482405546837b0928adad9436b'
+          test "$(git hash-object temporary-proof/resume-multisource/rank_zero_cost_us_sources_v1.py)" = 'ba87d3a020ea7428a98d97a5b19b9e3ffb7dbd70'
+          test "$(git hash-object temporary-proof/resume-multisource/test_rank_zero_cost_us_sources_v1.py)" = '4720baedaaabb83b2b2e1a391a2bff842d260cc1'
       - name: Compile
         run: python -m py_compile temporary-proof/resume-multisource/*.py
       - name: Execute qualification
@@ -46,9 +51,12 @@ jobs:
           cp temporary-proof/resume-multisource/source-registry.v1.json control-plane/resume-corpus/
           cp temporary-proof/resume-multisource/source-discovery-ledger.v4.json control-plane/resume-corpus/
           cp temporary-proof/resume-multisource/us-resume-export-connectors.v1.json control-plane/resume-corpus/
+          cp temporary-proof/resume-multisource/zero-cost-us-resume-book-leads.v1.json control-plane/resume-corpus/
           cp temporary-proof/resume-multisource/*.py tools/resume-corpus/
           python tools/resume-corpus/test_multisource_orchestrator_v1.py
           python tools/resume-corpus/test_authorized_export_adapter_v1.py
           python tools/resume-corpus/test_rank_source_discovery_v1.py
           python tools/resume-corpus/rank_source_discovery_v1.py
           python tools/resume-corpus/test_authorized_resume_bundle_adapter_v1.py
+          python tools/resume-corpus/test_rank_zero_cost_us_sources_v1.py
+          python tools/resume-corpus/rank_zero_cost_us_sources_v1.py
