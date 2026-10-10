@@ -1,0 +1,28 @@
+name: Temporary Resume Multisource Orchestrator Qualification
+on:
+  pull_request:
+    paths:
+      - 'temporary-proof/resume-multisource/**'
+      - '.github/workflows/temporary-resume-multisource-qualification.yml'
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11.15'}
+      - name: Verify exact staged blobs
+        run: |
+          test "$(git hash-object temporary-proof/resume-multisource/multisource_orchestrator_v1.py)" = 'c0f34ac436e6eed18fd470f071d53ef8a25d1fb4'
+          test "$(git hash-object temporary-proof/resume-multisource/test_multisource_orchestrator_v1.py)" = '6cd7f97222420813667fd0b84e4976ee985efda9'
+          test "$(git hash-object temporary-proof/resume-multisource/source-registry.v1.json)" = 'cda7cbdf6b979c170975028c45c4a45aba2f3e9b'
+      - name: Compile
+        run: python -m py_compile temporary-proof/resume-multisource/*.py
+      - name: Execute qualification
+        run: |
+          mkdir -p control-plane/resume-corpus tools/resume-corpus
+          cp temporary-proof/resume-multisource/source-registry.v1.json control-plane/resume-corpus/
+          cp temporary-proof/resume-multisource/*.py tools/resume-corpus/
+          python tools/resume-corpus/test_multisource_orchestrator_v1.py
