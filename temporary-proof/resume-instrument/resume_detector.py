@@ -3,6 +3,7 @@ RESUME_HEADINGS={"experience","work experience","professional experience","emplo
 def normalize_text(text):
     text=text.lower().replace("\r","\n")
     text=re.sub(r'https?://\S+|\b[\w.+-]+@[\w.-]+\.\w+\b',' ',text)
+    text=re.sub(r'(?im)^\s*(?:email|e-mail|phone|telephone|mobile|cell)\s*[:|-].*$',' ',text)
     text=re.sub(r'\+?\d[\d\s().-]{7,}\d',' ',text)
     text=re.sub(r'\b\d{1,5}\s+[a-z0-9 .-]+(?:street|st|road|rd|avenue|ave|drive|dr|lane|ln)\b',' ',text)
     text=re.sub(r'[^a-z0-9+#.\n ]+',' ',text)
@@ -19,8 +20,7 @@ def classify_resume(text):
     score=(2*min(f["headings"],4)+min(f["dateRanges"],3)+min(f["employmentTerms"],4)+(1 if f["years"]>=2 else 0))
     return {"isResume":score>=6,"score":score,"features":f}
 def semantic_fingerprint(text):
-    n=normalize_text(text)
-    return hashlib.sha256(n.encode()).hexdigest()
+    return hashlib.sha256(normalize_text(text).encode()).hexdigest()
 if __name__=="__main__":
     import sys
     text=sys.stdin.read()
